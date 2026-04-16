@@ -104,7 +104,7 @@ function iniciar() {
 }// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
 // el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
 function start() {
-    tiempo = 2;
+    tiempo = 25;
     puntos = tiempo + 1;
     ganaste = false;
     perdiste = false;
