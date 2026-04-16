@@ -36,9 +36,31 @@ function iniciar() {
     }
     //*/// esto era lo que use antes de pensar en lo de abajo
     let imagenes = document.getElementById("imagenes");
+    //*
     let generarImagenes = "";
+    /*/
+    let generarCartas = '<svg width="' + numCartas * 200 + Math.floor(window.innerWidth / 200 ) + '" height="' + '">';
+    //*/
+    /*
+    1600 width = w
+    16 num cartas = nc
+    200 px width carta = wc
+    4 px margen carta = mc
+    w / (wc + (nc / 2 + mc * (nc / 2 - 1)))
+    1600 / (200 + (16 / 2 + 4 * (16 / 2 - 1)))
+    1600 / (200 + (8 + 4 * (7)))
+    1600 / (200 + (8 + 28))
+    1600 / (200 + (16 / 2 * 4 - 1 * 4))
+    1600 / (200 + 28)
+
+
+    */
     for (let i = 0; i < numCartas; i++) {
+        //*
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
+        /*/
+        generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + '" width="200" height="350" fill="rgb(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256))"/>';
+        //*/
         /*
         if (Math.floor(window.innerWidth / 200) % i + 1 == 0) { // le falta que si por ejemplo es 1600px JUSTO eso daria para 8 parejas pero cada carta tiene un margen de x pixeles
             console.log(Math.floor(window.innerWidth / 200) + " i: " + i);
@@ -49,9 +71,12 @@ function iniciar() {
             generarImagenes += '<br>';
         }//*/
     }
+    //*
     imagenes.innerHTML = generarImagenes;
-    //imagenes.innerHTML += '<center><div style="display: flex; justify-content: center;"><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div></div></center>';
-    imagenes.innerHTML += '<svg width="404" height="350"><rect x="0" y="0" width="200" height="350" fill="black"/><rect x="204" y="0" width="200" height="350" fill="red"/></svg>';
+    /*/
+    generarCartas += '</svg>';
+    imagenes.innerHTML = generarCartas;
+    //*/
 }// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
 // el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
 function start() {
