@@ -15,7 +15,7 @@ let parejasEncontradas = 0;
 let tiempo;
 let ganaste;
 let perdiste;
-let puntos;
+let puntos; // UN PUNTUAJE PERFECTO ES SOLO USAR EL TIEMPO QUE NUMERO DE CARTAS HAY EJEMPLO 16 cartas y si no pasan mas de 16 segundo fue perfecto
 let cartasDesapareciendo;
 let ordenDesaparicion;
 let msDesaparecer = 250;
@@ -104,7 +104,7 @@ function iniciar() {
 }// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
 // el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
 function start() {
-    tiempo = 30;
+    tiempo = 25;
     puntos = tiempo + 1;
     ganaste = false;
     perdiste = false;
@@ -207,7 +207,7 @@ function mostrarCarta() {
        return;
     }
     if (!perdiste) {
-    switch(cartasMostradas.length - parejasEncontradas * 2) {
+        switch(cartasMostradas.length - parejasEncontradas * 2) {
             case 0:
                 cartasMostradas.push(this);
                 this.setAttribute("fill", this.dataset.color);
