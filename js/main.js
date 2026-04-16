@@ -1,6 +1,6 @@
 let cartas = ["img/amarillo.png", "img/azul.png", "img/celeste.png", "img/gris.png", "img/lima.png", "img/marron.png", "img/morado.png", "img/naranja.png", "img/rojo.png", "img/rosa.png", "img/verde.png"];
 let dorso = "img/negro.png";
-let numCartas = 20; // lo puse por si lo quiero expandir
+let numCartas = 4; // lo puse por si lo quiero expandir
 if (numCartas % 2 != 0) {
     numCartas--; // Por si pones un numero impar
 }
@@ -44,12 +44,13 @@ function iniciar() {
             console.log(Math.floor(window.innerWidth / 200) + " i: " + i);
             generarImagenes += '<br>';
         }*/
-        /*
+        //*
         if (i + 1 == numCartas / 2) {
             generarImagenes += '<br>';
-        }*/
+        }//*/
     }
     imagenes.innerHTML = generarImagenes;
+    imagenes.innerHTML += '<center><div style="display: flex; justify-content: center;"><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div></div></center>';
 }
 
 function start() {
