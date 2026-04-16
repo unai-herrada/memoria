@@ -104,11 +104,11 @@ function iniciar() {
 }// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
 // el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
 function start() {
-    tiempo = 25;
+    tiempo = 2;
     puntos = tiempo + 1;
     ganaste = false;
     perdiste = false;
-    cartasDesapareciendo = false;
+    cartasMostradas = [];
     butStart.style.visibility = "hidden";
     butGuia.style.visibility = "hidden";
     imagenes.style.visibility = "visible";
@@ -206,7 +206,7 @@ function mostrarCarta() {
     if (this.getAttribute("fill") != "rgb(0, 0, 0)") {
        return;
     }
-    if (!perdiste) {
+    if (!perdiste && !ganaste) {
         switch(cartasMostradas.length - parejasEncontradas * 2) {
             case 0:
                 cartasMostradas.push(this);
@@ -232,6 +232,14 @@ function mostrarCarta() {
             default:
                 return;
         }
+    } else if (!cartasDesapareciendo) {
+        if (this.getAttribute("fill") == "rgb(0, 0, 0)") {
+            console.log(this + "a");
+            this.setAttribute("fill", this.dataset.color);
+        } else {
+            console.log(this + "a"); // FALTA ESTO Y DE LUJO DE MOMENTO
+            this.setAttribute("fill", "rgb(0, 0, 0)");
+        }
     }
 }
 
@@ -247,7 +255,7 @@ function juegoFinalizado() {
 }
 
 function reseteandoJuego() {
-    cartasMostradas = [];
+    cartasDesapareciendo = false;
     parejasEncontradas = 0;
     butStart.innerHTML = "<h1>Volver a jugar</h1>";
     butStart.style.visibility = "visible";
@@ -256,6 +264,7 @@ function reseteandoJuego() {
 
 function desaparecerCartas() {
     if (!cartasDesapareciendo) {
+        cartasDesapareciendo = true;
         ordenDesaparicion = [];
         for (let i = 0; i < numCartas; i++) {
             ordenDesaparicion.push(i);
@@ -265,7 +274,6 @@ function desaparecerCartas() {
             [ordenDesaparicion[i], ordenDesaparicion[j]] = [ordenDesaparicion[j], ordenDesaparicion[i]];
         }
     }
-    cartasDesapareciendo = true;
     if (ordenDesaparicion.length > 0) {
         //let imagen = document.getElementById("img" + ordenDesaparicion[ordenDesaparicion.length - 1]);
         let carta = document.getElementById("carta" + ordenDesaparicion[ordenDesaparicion.length - 1]);
