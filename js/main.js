@@ -1,6 +1,6 @@
 let cartas = ["img/amarillo.png", "img/azul.png", "img/celeste.png", "img/gris.png", "img/lima.png", "img/marron.png", "img/morado.png", "img/naranja.png", "img/rojo.png", "img/rosa.png", "img/verde.png"];
 let dorso = "img/negro.png";
-let numCartas = 4; // lo puse por si lo quiero expandir
+let numCartas = 16; // lo puse por si lo quiero expandir
 if (numCartas % 2 != 0) {
     numCartas--; // Por si pones un numero impar
 }
@@ -36,10 +36,10 @@ function iniciar() {
     }
     //*/// esto era lo que use antes de pensar en lo de abajo
     let imagenes = document.getElementById("imagenes");
-    //*
+    /*
     let generarImagenes = "";
     /*/
-    let generarCartas = '<svg width="' +  + '" height="' + '">';
+    let generarCartas = '<svg width="1500" height="350">';
     //*/
     /*
     1600 width = w
@@ -63,12 +63,12 @@ function iniciar() {
     8
 
     1600 + 4 / 204
-    (window.innerWidth + 4) / 204
+    Math.floor((window.innerWidth + 4) / 204)
     LOGICA PARA CALCULAR CUANTAS CARTAS PUEDEN ENTRAR
     y necesito logica una vez ya se calcule esto y mid game cambies el width que se pueda corregir de alguna forma poniendo en una array todas las cartas para hacerlo rapido de vuelta (QUIZA PONER UN NUMERO DENTRO DE LA CARTA?)
     */
     for (let i = 0; i < numCartas; i++) {
-        //*
+        /*
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
         /*/
         generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + '" width="200" height="350" fill="rgb(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256))"/>';
@@ -83,6 +83,19 @@ function iniciar() {
             generarImagenes += '<br>';
         }//*/
     }
+    /**
+    a
+    /*/
+    b
+    /*//**/
+    c
+    //
+    d
+    //
+    e
+    //*/
+
+
     //*
     imagenes.innerHTML = generarImagenes;
     /*/
