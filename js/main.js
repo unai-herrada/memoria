@@ -75,12 +75,15 @@ function iniciar() {
     y =
     (Math.floor(numCartas / 2 / maxCartasPorWidth) * 350 + Math.floor(numCartas / 2 / maxCartasPorWidth) * 4)
     let minimoDivisiones = Math.ceil(numCartas / maxCartasPorWidth)
+    numCartas / minimoDivisiones
+    BRO HACEMOS UN DESPLEGABLE PARA QUE EL JUGADOR ESCOGA EL NUMERO DE CARTAS EN X e Y y YA
     */
     for (let i = 0; i < numCartas; i++) {
         /**
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
         /*/
-        generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + ((i * 200 + i * 4) * 0 + (i * 350 + i * 4)) + '" width="200" height="350" fill="rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')"/>';
+        // if () {}
+        generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + (Math.floor(i / maxCartasPorWidth) * 350 + Math.floor(i / maxCartasPorWidth) * 4) + '" width="200" height="350" fill="rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')"/>';
         //*/
         /*
         if (Math.floor(window.innerWidth / 200) % i + 1 == 0) { // le falta que si por ejemplo es 1600px JUSTO eso daria para 8 parejas pero cada carta tiene un margen de x pixeles
