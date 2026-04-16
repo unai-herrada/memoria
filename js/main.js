@@ -1,11 +1,14 @@
 let cartas = ["img/amarillo.png", "img/azul.png", "img/celeste.png", "img/gris.png", "img/lima.png", "img/marron.png", "img/morado.png", "img/naranja.png", "img/rojo.png", "img/rosa.png", "img/verde.png"];
 let dorso = "img/negro.png";
-let numCartas = 14; // lo puse por si lo quiero expandir
+let numCartas = 20; // lo puse por si lo quiero expandir
 if (numCartas % 2 != 0) {
     numCartas--; // Por si pones un numero impar
-} else if (numCartas > cartas.length * 2 - 2) { // no hay mas cartas :C y el menos 2 es por lo de abajo
+}
+/*
+if (numCartas > cartas.length * 2 - 2) { // no hay mas cartas :C y el menos 2 es por lo de abajo
     numCartas = 20; // antes era 22 porque eso serian todas las cartas pero luego vi que quedaba mal con 22 cartas
 }
+//*/
 let cartasMostradas = [];
 let parejasEncontradas = 0;
 let tiempo;
@@ -36,9 +39,15 @@ function iniciar() {
     let generarImagenes = "";
     for (let i = 0; i < numCartas; i++) {
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
+        /*
+        if (Math.floor(window.innerWidth / 200) % i + 1 == 0) {
+            console.log(Math.floor(window.innerWidth / 200) + " i: " + i);
+            generarImagenes += '<br>';
+        }*/
+        /*
         if (i + 1 == numCartas / 2) {
             generarImagenes += '<br>';
-        }
+        }*/
     }
     imagenes.innerHTML = generarImagenes;
 }
