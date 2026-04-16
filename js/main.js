@@ -203,7 +203,7 @@ function mostrarCarta() {
         }
     }
     */
-    if (this.getAttribute("fill") != "rgb(0, 0, 0)") {
+    if (this.getAttribute("fill") != "rgb(0, 0, 0)" && !ganaste && !perdiste) {
        return;
     }
     if (!perdiste && !ganaste) {
@@ -234,10 +234,8 @@ function mostrarCarta() {
         }
     } else if (!cartasDesapareciendo) {
         if (this.getAttribute("fill") == "rgb(0, 0, 0)") {
-            console.log(this + "a");
             this.setAttribute("fill", this.dataset.color);
         } else {
-            console.log(this + "a"); // FALTA ESTO Y DE LUJO DE MOMENTO
             this.setAttribute("fill", "rgb(0, 0, 0)");
         }
     }
