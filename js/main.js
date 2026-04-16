@@ -39,7 +39,7 @@ function iniciar() {
     //*
     let generarImagenes = "";
     /*/
-    let generarCartas = '<svg width="' + numCartas * 200 + Math.floor(window.innerWidth / 200 ) + '" height="' + '">';
+    let generarCartas = '<svg width="' +  + '" height="' + '">';
     //*/
     /*
     1600 width = w
@@ -62,6 +62,10 @@ function iniciar() {
     f(8.X)
     8
 
+    1600 + 4 / 204
+    (window.innerWidth + 4) / 204
+    LOGICA PARA CALCULAR CUANTAS CARTAS PUEDEN ENTRAR
+    y necesito logica una vez ya se calcule esto y mid game cambies el width que se pueda corregir de alguna forma poniendo en una array todas las cartas para hacerlo rapido de vuelta (QUIZA PONER UN NUMERO DENTRO DE LA CARTA?)
     */
     for (let i = 0; i < numCartas; i++) {
         //*
