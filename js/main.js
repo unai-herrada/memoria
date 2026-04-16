@@ -40,19 +40,20 @@ function iniciar() {
     for (let i = 0; i < numCartas; i++) {
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
         /*
-        if (Math.floor(window.innerWidth / 200) % i + 1 == 0) {
+        if (Math.floor(window.innerWidth / 200) % i + 1 == 0) { // le falta que si por ejemplo es 1600px JUSTO eso daria para 8 parejas pero cada carta tiene un margen de x pixeles
             console.log(Math.floor(window.innerWidth / 200) + " i: " + i);
             generarImagenes += '<br>';
         }*/
-        //*
+        /*
         if (i + 1 == numCartas / 2) {
             generarImagenes += '<br>';
         }//*/
     }
     imagenes.innerHTML = generarImagenes;
-    imagenes.innerHTML += '<center><div style="display: flex; justify-content: center;"><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div></div></center>';
-}
-
+    //imagenes.innerHTML += '<center><div style="display: flex; justify-content: center;"><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div><div style="width: 200px; height: 350px; background-color: #000000; border: 2px solid white;"></div></div></center>';
+    imagenes.innerHTML += '<svg width="404" height="350"><rect x="0" y="0" width="200" height="350" fill="black"/><rect x="204" y="0" width="200" height="350" fill="red"/></svg>';
+}// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
+// el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
 function start() {
     tiempo = 60;
     puntos = tiempo + 1;
