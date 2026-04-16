@@ -4,6 +4,7 @@ let numCartas = 16; // lo puse por si lo quiero expandir
 if (numCartas % 2 != 0) {
     numCartas--; // Por si pones un numero impar
 }
+let numParejasCartas = numCartas / 2;
 /*
 if (numCartas > cartas.length * 2 - 2) { // no hay mas cartas :C y el menos 2 es por lo de abajo
     numCartas = 20; // antes era 22 porque eso serian todas las cartas pero luego vi que quedaba mal con 22 cartas
@@ -36,10 +37,11 @@ function iniciar() {
     }
     //*/// esto era lo que use antes de pensar en lo de abajo
     let imagenes = document.getElementById("imagenes");
-    /*
+    /**
     let generarImagenes = "";
     /*/
-    let generarCartas = '<svg width="1500" height="350">';
+    let maxCartasPorWidth = Math.floor((window.innerWidth + 4) / 204);
+    let generarCartas = '<svg width="' + window.innerWidth + '" height="704">';
     //*/
     /*
     1600 width = w
@@ -66,12 +68,19 @@ function iniciar() {
     Math.floor((window.innerWidth + 4) / 204)
     LOGICA PARA CALCULAR CUANTAS CARTAS PUEDEN ENTRAR
     y necesito logica una vez ya se calcule esto y mid game cambies el width que se pueda corregir de alguna forma poniendo en una array todas las cartas para hacerlo rapido de vuelta (QUIZA PONER UN NUMERO DENTRO DE LA CARTA?)
+    
+    numCartas = 16
+    maxCartasPorWidth = 7
+    Math.floor(numCartas / 2 / maxCartasPorWidth) * 350 + Math.floor(numCartas / 2 / maxCartasPorWidth) * 4
+    y =
+    (Math.floor(numCartas / 2 / maxCartasPorWidth) * 350 + Math.floor(numCartas / 2 / maxCartasPorWidth) * 4)
+    let minimoDivisiones = Math.ceil(numCartas / maxCartasPorWidth)
     */
     for (let i = 0; i < numCartas; i++) {
-        /*
+        /**
         generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
         /*/
-        generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + '" width="200" height="350" fill="rgb(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256))"/>';
+        generarCartas += '<rect x="' + (i * 200 + i * 4) + '" y="' + ((i * 200 + i * 4) * 0 + (i * 350 + i * 4)) + '" width="200" height="350" fill="rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')"/>';
         //*/
         /*
         if (Math.floor(window.innerWidth / 200) % i + 1 == 0) { // le falta que si por ejemplo es 1600px JUSTO eso daria para 8 parejas pero cada carta tiene un margen de x pixeles
@@ -84,19 +93,6 @@ function iniciar() {
         }//*/
     }
     /**
-    a
-    /*/
-    b
-    /*//**/
-    c
-    //
-    d
-    //
-    e
-    //*/
-
-
-    //*
     imagenes.innerHTML = generarImagenes;
     /*/
     generarCartas += '</svg>';
