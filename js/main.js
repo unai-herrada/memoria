@@ -1,21 +1,14 @@
-//let cartas = ["img/amarillo.png", "img/azul.png", "img/celeste.png", "img/gris.png", "img/lima.png", "img/marron.png", "img/morado.png", "img/naranja.png", "img/rojo.png", "img/rosa.png", "img/verde.png"];
-//let dorso = "img/negro.png";
-let numCartas = 16; // lo puse por si lo quiero expandir
+let numCartas = 16;
 if (numCartas % 2 != 0) {
-    numCartas--; // Por si pones un numero impar
+    numCartas--;
 }
 let numParejasCartas = numCartas / 2;
-/*
-if (numCartas > cartas.length * 2 - 2) { // no hay mas cartas :C y el menos 2 es por lo de abajo
-    numCartas = 20; // antes era 22 porque eso serian todas las cartas pero luego vi que quedaba mal con 22 cartas
-}
-//*/
 let cartasMostradas = [];
 let parejasEncontradas = 0;
 let tiempo;
 let ganaste;
 let perdiste;
-let puntos; // UN PUNTUAJE PERFECTO ES SOLO USAR EL TIEMPO QUE NUMERO DE CARTAS HAY EJEMPLO 16 cartas y si no pasan mas de 16 segundo fue perfecto
+let puntos;
 let cartasDesapareciendo;
 let ordenDesaparicion;
 let msDesaparecer = 250;
@@ -28,81 +21,16 @@ function iniciar() {
     let butGuia = document.getElementById("butGuia");
     butGuia.addEventListener("click", mostrarGuia);
     let contador = document.getElementById("contador");
-    /*
-    for (let i = 0; i < numCartas; i++) {
-        let id = "img" + i;
-        let imagen = document.getElementById(id);
-        console.log(imagen);
-        imagen.src = "img/negro.png";
-    }
-    //*/// esto era lo que use antes de pensar en lo de abajo
     let imagenes = document.getElementById("imagenes");
-    /**
-    let generarImagenes = "";
-    /*/
     let maxCartasPorWidth = Math.floor((window.innerWidth + 4) / 204);
     let generarCartas = '<svg width="' + (maxCartasPorWidth * 204 - 4) + '" height="' + (Math.ceil(numCartas / maxCartasPorWidth) * 350 + Math.floor(numCartas / maxCartasPorWidth) * 4) + '">';
-    //*/
-    /*
-    1600 width = w
-    16 num cartas = nc
-    200 px width carta = wc
-    4 px margen carta = mc
-    Math.floor() = f()
-    w / (wc + (nc / 2 + mc * (nc / 2 - 1)))
-    1600 / (200 + (16 / 2 + 4 * (16 / 2 - 1)))
-    1600 / (200 + (8 + 4 * (7)))
-    1600 / (200 + (8 + 28))
-    1600 / (200 + (16 / 2 * 4 - 1 * 4))
-    1600 / (200 + 28)
-    (nc / 2 - 1 * mc + w) / wc
-
-    f(((16 / 2 - 1) * 4 + 1600) / 200)
-    f((7 * 4 + 1600) / 200)
-    f((28 + 1600) / 200)
-    f(1628 / 200)
-    f(8.X)
-    8
-
-    1600 + 4 / 204
-    Math.floor((window.innerWidth + 4) / 204)
-    LOGICA PARA CALCULAR CUANTAS CARTAS PUEDEN ENTRAR
-    y necesito logica una vez ya se calcule esto y mid game cambies el width que se pueda corregir de alguna forma poniendo en una array todas las cartas para hacerlo rapido de vuelta (QUIZA PONER UN NUMERO DENTRO DE LA CARTA?)
-    
-    numCartas = 16
-    maxCartasPorWidth = 7
-    Math.floor(numCartas / 2 / maxCartasPorWidth) * 350 + Math.floor(numCartas / 2 / maxCartasPorWidth) * 4
-    y =
-    (Math.floor(numCartas / 2 / maxCartasPorWidth) * 350 + Math.floor(numCartas / 2 / maxCartasPorWidth) * 4)
-    let minimoDivisiones = Math.ceil(numCartas / maxCartasPorWidth)
-    numCartas / minimoDivisiones
-    BRO HACEMOS UN DESPLEGABLE PARA QUE EL JUGADOR ESCOGA EL NUMERO DE CARTAS EN X e Y y YA
-    */
     for (let i = 0; i < numCartas; i++) {
-        /**
-        generarImagenes += '<img id="img' + i + '" src="' + dorso + '"></img>\n';
-        /*/
-        //
         generarCartas += '<rect id="carta' + i + '" x="' + ((i * 200 + i * 4) - Math.floor(i / maxCartasPorWidth) * (maxCartasPorWidth * 200 + maxCartasPorWidth * 4)) + '" y="' + (Math.floor(i / maxCartasPorWidth) * 350 + Math.floor(i / maxCartasPorWidth) * 4) + '" width="200" height="350" fill="rgb(0, 0, 0)"/>';
-        //*/
-        /*
-        if (Math.floor(window.innerWidth / 200) % i + 1 == 0) { // le falta que si por ejemplo es 1600px JUSTO eso daria para 8 parejas pero cada carta tiene un margen de x pixeles
-            console.log(Math.floor(window.innerWidth / 200) + " i: " + i);
-            generarImagenes += '<br>';
-        }*/
-        /*
-        if (i + 1 == numCartas / 2) {
-            generarImagenes += '<br>';
-        }//*/
     }
-    /**
-    imagenes.innerHTML = generarImagenes;
-    /*/
     generarCartas += '</svg>';
     imagenes.innerHTML = generarCartas;
-    //*/
-}// el svg width y height se calculan de ante mano para hacer todo esto con logica pura
-// el x se puede hacer asi, i * 200 + 1 * 4, algo asi no lo he testeado
+}
+
 function start() {
     tiempo = 25;
     puntos = tiempo + 1;
@@ -116,19 +44,7 @@ function start() {
     guia.innerHTML = "";
     contador.innerHTML = tiempo;
     setTimeout(tiempoRestante, 0);
-    let cartasSelecionadas = [];
     let coloresSelecionados = [];
-    /*
-    for (let i = 0; i < numCartas / 2; i++) {
-        let numero = Math.floor(Math.random() * cartas.length);
-        if (!cartasSelecionadas.includes(cartas[numero])) {
-            cartasSelecionadas.push(cartas[numero]);
-            cartasSelecionadas.push(cartas[numero]);
-        } else {
-            i--;
-        }
-    }
-        */
     for (let i = 0; i < numParejasCartas; i++) {
         let rgb = "rgb(" + Math.floor(Math.random() * 256) + ", " + Math.floor(Math.random() * 256) + ", " + Math.floor(Math.random() * 256) + ")";
         if (rgb == "rgb(0, 0, 0)") {
@@ -138,23 +54,10 @@ function start() {
             coloresSelecionados.push(rgb);
         }
     }
-    /*
-    for (let i = cartasSelecionadas.length - 1; i > 0; i--) { // Algoritmo Fisher-Yates
-        let j = Math.floor(Math.random() * (i + 1));
-        [cartasSelecionadas[i], cartasSelecionadas[j]] = [cartasSelecionadas[j], cartasSelecionadas[i]];
-    }
-    */
     for (let i = coloresSelecionados.length - 1; i > 0; i--) { // Algoritmo Fisher-Yates
         let j = Math.floor(Math.random() * (i + 1));
         [coloresSelecionados[i], coloresSelecionados[j]] = [coloresSelecionados[j], coloresSelecionados[i]];
     }
-    /*
-    for (let i = 0; i < numCartas; i++) {
-        let imagen = document.getElementById("img" + i);
-        imagen.alt = cartasSelecionadas[i];
-        imagen.addEventListener("click", mostrarCarta);
-    }
-    */
     for (let i = 0; i < numCartas; i++) {
         let carta = document.getElementById("carta" + i);
         carta.dataset.color = coloresSelecionados[i];
@@ -171,38 +74,6 @@ function mostrarGuia() {
 }
 
 function mostrarCarta() {
-    /*
-    if (!this.src.includes("negro.png")) {
-        return;
-    }
-    if (!perdiste) {
-    switch(cartasMostradas.length - parejasEncontradas * 2) {
-            case 0:
-                cartasMostradas.push(this);
-                this.src = this.alt;
-                break;
-            case 1:
-                if (cartasMostradas[cartasMostradas.length - 1].id != this.id) {
-                    cartasMostradas.push(this);
-                    this.src = this.alt;
-                    if (cartasMostradas[cartasMostradas.length - 2].src == cartasMostradas[cartasMostradas.length - 1].src) {
-                        parejasEncontradas++;
-                        if (parejasEncontradas == numCartas / 2) {
-                            ganaste = true;
-                            setTimeout(juegoFinalizado, 3000);
-                        }
-                    } else {
-                        setTimeout(esconderCartas, 3000); // me parece MUCHO 3 segundos, quiza porque lo testeaba con 10-15 segs
-                    }
-                } else {
-                    return;
-                }
-                break;
-            default:
-                return;
-        }
-    }
-    */
     if (this.getAttribute("fill") != "rgb(0, 0, 0)" && !ganaste && !perdiste) {
        return;
     }
@@ -273,10 +144,8 @@ function desaparecerCartas() {
         }
     }
     if (ordenDesaparicion.length > 0) {
-        //let imagen = document.getElementById("img" + ordenDesaparicion[ordenDesaparicion.length - 1]);
         let carta = document.getElementById("carta" + ordenDesaparicion[ordenDesaparicion.length - 1]);
         ordenDesaparicion.splice(-1, 1);
-        //imagen.src = dorso;
         carta.setAttribute("fill", "rgb(0, 0, 0)");
         setTimeout(desaparecerCartas, msDesaparecer);
     }
