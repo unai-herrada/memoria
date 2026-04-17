@@ -58,7 +58,7 @@ function seleccionandoCeldas() {
 
 function celdaSeleccionada() {
     if (seleccionando) {
-        if (this.style.backgroundColor == "") {
+        if (this.style.backgroundColor == "" || this.style.backgroundColor == "cyan") {
             celdasSeleccionadas.push(this);
             queCeldasEstanSeleccionadas(this);
         }
@@ -66,6 +66,13 @@ function celdaSeleccionada() {
 }
 
 function queCeldasEstanSeleccionadas(last_td) {
+    for (let x = 0; x < 10; x++) { // table length
+        for (let y = 0; y < 10; y++) { // tr length
+            if (document.getElementById(xyToCoordinates(x, y, true)).style.background == "cyan") {
+                document.getElementById(xyToCoordinates(x, y, true)).style.background = "";
+            }
+        }
+    }
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     if (clicked_td_coords[0] == last_td_coords[0]) {
@@ -97,8 +104,9 @@ function queCeldasEstanSeleccionadas(last_td) {
             }
         }
     } else {
-
+        celdasSeleccionadas.pop();
     }
+    console.log(celdasSeleccionadas);
 }
 
 function xyToCoordinates(x, y, reverseOrder) {
@@ -138,4 +146,5 @@ el mejor movimiento siempre sera la posicion donde poniendo todas las posiciones
     background-color: rgba(0, 0, 0, 0.5);
 }
 </style>
+HACER BUSCAMINAS
 */
