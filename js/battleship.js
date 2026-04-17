@@ -20,9 +20,9 @@ function iniciar() {
 function createTable(columns, rows, withCoordinates) { // x horizontal y vertical
     let table = document.createElement("table");
     let tbody = document.createElement("tbody");
-    for (let x = 0; x < columns; x++) {
+    for (let y = 0; x < columns; y++) {
         let tr = document.createElement("tr");
-        for (let y = 0; y < rows; y++) {
+        for (let x = 0; y < rows; x++) {
             let td = document.createElement("td");
             td.id = xyToCoordinates(x, y, true);
             td.style.width = "25px";
@@ -67,8 +67,8 @@ function celdaSeleccionada() {
 function queCeldasEstanSeleccionadas(last_td) {
     for (let x = 0; x < 10; x++) { // table length
         for (let y = 0; y < 10; y++) { // tr length
-            if (document.getElementById(xyToCoordinates(x, y, true)).style.background == "cyan") {
-                document.getElementById(xyToCoordinates(x, y, true)).style.background = "";
+            if (document.getElementById(xyToCoordinates(x, y, true)).style.backgroundColor == "cyan") {
+                document.getElementById(xyToCoordinates(x, y, true)).style.backgroundColor = "";
             }
         }
     }
@@ -80,14 +80,14 @@ function queCeldasEstanSeleccionadas(last_td) {
             let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
             if (clicked_td_coords[1] < last_td_coords[1]) {
                 i++;
-                if (actual_td.style.background == "") {
-                    actual_td.style.background = "cyan";
+                if (actual_td.style.backgroundColor == "") {
+                    actual_td.style.backgroundColor = "cyan";
                     celdasSeleccionadas.push(actual_td);
                 }
             } else {
                 i--;
-                if (actual_td.style.background == "") {
-                    actual_td.style.background = "cyan";
+                if (actual_td.style.backgroundColor == "") {
+                    actual_td.style.backgroundColor = "cyan";
                     celdasSeleccionadas.push(actual_td);
                 }
             }
@@ -98,14 +98,14 @@ function queCeldasEstanSeleccionadas(last_td) {
             let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
             if (clicked_td_coords[0] < last_td_coords[0]) {
                 i++;
-                if (actual_td.style.background == "") {
-                    actual_td.style.background = "cyan";
+                if (actual_td.style.backgroundColor == "") {
+                    actual_td.style.backgroundColor = "cyan";
                     celdasSeleccionadas.push(actual_td);
                 }
             } else {
                 i--;
-                if (actual_td.style.background == "") {
-                    actual_td.style.background = "cyan";
+                if (actual_td.style.backgroundColor == "") {
+                    actual_td.style.backgroundColor = "cyan";
                     celdasSeleccionadas.push(actual_td);
                 }
             }
@@ -126,6 +126,14 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
+COSAS QUE ARREGLAR:
+
+ESTAN REVERTIDAS LAS COORDS? DONT ASK ME HOW - SEMI IMPORTANTE
+Esto es al mandarle a la funcion xyToCoordinates si swapeo la x y la y funca bien xd
+ESTA 1 DETRAS LO DE PONER EN CELESTE - IMPORTANTE
+y quiza que el ultimo que hoverees sea en si azul? total ya de porsi tiene delay de 1
+
+
 cursor: not-allowed;
 en el popup quiero que el jugador escoja su posicion de los barcos
 y tambien la dificultad de a AI con un desplegable
