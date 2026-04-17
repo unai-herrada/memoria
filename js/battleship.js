@@ -23,10 +23,10 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
             let td = document.createElement("td");
             td.style.width = "25px";
             td.style.height = "25px";
-            td.addEventListener("click", cambiarColor)
+            td.addEventListener("mouseup", cambiarColor)
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
-            td.addEventListener("mouseup", cambiarColor);
+            
             let txt = document.createTextNode("");
             td.appendChild(txt);
             tr.appendChild(td);
@@ -40,13 +40,17 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 }
 
 function cambiarColor() {
+    console.log("d");
     seleccionando = false;
     this.style.backgroundColor = "blue";
+    clicked_td.style.backgroundColor = "blue";
 }
 
 function seleccionandoCeldas() {
-    seleccionando = seleccionando;
+    seleccionando = true;
     this.style.backgroundColor = "cyan";
+    console.log("c");
+    clicked_td = this;
 }
 
 function celdaSeleccionada() {
