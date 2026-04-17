@@ -192,3 +192,32 @@ function tiempoRestante() {
         }   
     }
 }
+
+/*
+IDEA AL PRINCIPIO SE ENSEÑAN LAS CARTAS Y LOS COLORES
+AL ACABAR LA PARTIDA UN MENU QUE TE DIGA TU PUNTUACION blur al fondo
+UN BOTON DENTRO QUE TE DIGA DE VOLVER AL MENU (donde se escoges juegos)
+Y OTRO BOTON PARA VOLVER A JUGAR
+LAS INSTRUCCIONES ESTARAN ANTES DE ESCOGER EL JUEGO EN EL MENU
+
+
+<button popovertarget="menu">Abrir Popup</button>
+<div id="menu" popover>
+  <h2>¡Hola!</h2>
+  <p>Este es un ejemplo de popup nativo.</p>
+  <button popovertarget="menu" popovertargetaction="hide">Cerrar</button>
+</div>
+
+<style>
+[popover] {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    margin: auto;
+}
+
+[popover]::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+</style>
+*/
