@@ -54,7 +54,7 @@ function start() {
             coloresSelecionados.push(rgb);
         }
     }
-    for (let i = coloresSelecionados.length - 1; i > 0; i--) { // Algoritmo Fisher-Yates
+    for (let i = coloresSelecionados.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [coloresSelecionados[i], coloresSelecionados[j]] = [coloresSelecionados[j], coloresSelecionados[i]];
     }
@@ -94,7 +94,7 @@ function mostrarCarta() {
                             setTimeout(juegoFinalizado, 3000);
                         }
                     } else {
-                        setTimeout(esconderCartas, 1000); // me parece MUCHO 3 segundos, quiza porque lo testeaba con 10-15 segs
+                        setTimeout(esconderCartas, 1000);
                     }
                 } else {
                     return;
@@ -138,7 +138,7 @@ function desaparecerCartas() {
         for (let i = 0; i < numCartas; i++) {
             ordenDesaparicion.push(i);
         }
-        for (let i = ordenDesaparicion.length - 1; i > 0; i--) { // Algoritmo Fisher-Yates
+        for (let i = ordenDesaparicion.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [ordenDesaparicion[i], ordenDesaparicion[j]] = [ordenDesaparicion[j], ordenDesaparicion[i]];
         }
