@@ -2,6 +2,7 @@ let seleccionando = false;
 let clicked_td;
 let unclicked_td;
 let celdasSeleccionadas = [];
+let colocandoCeldas = false;
 window.onload = iniciar;
 function iniciar() {
     let table = createTable(10, 10, true);
@@ -44,63 +45,84 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 }
 
 function cambiarColor() {
-    seleccionando = false;
-    unclicked_td = this;
-    unclicked_td.style.backgroundColor = "blue";
-    clicked_td.style.backgroundColor = "blue";
+    if (!colocandoCeldas) {
+        seleccionando = false;
+        if (celdasSeleccionadas.length == 0) {
+            clicked_td.style.backgroundColor = "";
+        } else {
+            setTimeout(poniendoBarco, 50);
+        }
+    }
+}
+
+function poniendoBarco() {
+    colocandoCeldas = true;
+    document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
+    celdasSeleccionadas.shift();
+    if (celdasSeleccionadas.length > 0) {
+        setTimeout(poniendoBarco, 75);
+    } else {
+        colocandoCeldas = false;
+    }
 }
 
 function seleccionandoCeldas() {
-    seleccionando = true;
-    this.style.backgroundColor = "blue";
-    clicked_td = this;
+    if (!colocandoCeldas) {
+        if (seleccionando) {
+            clicked_td.style.backgroundColor = "";
+            removerCeldasCyan();
+        }
+        seleccionando = true;
+        clicked_td = this;
+        clicked_td.style.backgroundColor = "blue";
+    }   
 }
 
 function celdaSeleccionada() {
-    if (seleccionando) {
+    if (seleccionando && !colocandoCeldas) {
         if (this.style.backgroundColor == "" || this.style.backgroundColor == "cyan") {
             queCeldasEstanSeleccionadas(this);
         }
     }
 }
 
-function queCeldasEstanSeleccionadas(last_td) {
-    for (let x = 0; x < 10; x++) { // table length
-        for (let y = 0; y < 10; y++) { // tr length
-            if (document.getElementById(xyToCoordinates(x, y, true)).style.backgroundColor == "cyan") {
-                document.getElementById(xyToCoordinates(x, y, true)).style.backgroundColor = "";
-            }
-        }
+function removerCeldasCyan() {
+    for (let i = 0; i < celdasSeleccionadas.length; i++) {
+        document.getElementById(celdasSeleccionadas[i]).style.backgroundColor = "";
     }
+    celdasSeleccionadas = [];
+}
+
+function queCeldasEstanSeleccionadas(last_td) {
+    removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
-    celdasSeleccionadas = [];
     if (clicked_td_coords[0] == last_td_coords[0]) {
         for (let i = clicked_td_coords[1]; i != last_td_coords[1];) {
+            if (clicked_td_coords[1] < last_td_coords[1]) {
+                i++;
+            } else {
+                i--;
+            }
             let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
             if (actual_td.style.backgroundColor == "") {
                 actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td);
+                celdasSeleccionadas.push(actual_td.id);
             }
-            if (clicked_td_coords[1] < last_td_coords[1])
-                i++;
-            i--;
         }
-        celdasSeleccionadas.push(last_td);
-        last_td.style.backgroundColor = "cyan";
     } else if (clicked_td_coords[1] == last_td_coords[1]) {
         for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
+            if (clicked_td_coords[0] < last_td_coords[0]) {
+                i++;
+            } else {
+                i--;
+            }
             let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
             if (actual_td.style.backgroundColor == "") {
                 actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td);
+                celdasSeleccionadas.push(actual_td.id);
             }
-            if (clicked_td_coords[0] < last_td_coords[0])
-                i++;
-            i--;
         }
-        celdasSeleccionadas.push(last_td);
-        last_td.style.backgroundColor = "cyan";
     }
     console.log(celdasSeleccionadas);
 }
