@@ -5,13 +5,14 @@ if (numCartas % 2 != 0) {
 let numParejasCartas = numCartas / 2;
 let cartasMostradas = [];
 let parejasEncontradas = 0;
-let tiempo;
+let temporizador = 25;
 let ganaste;
 let perdiste;
 let puntos;
 let cartasDesapareciendo;
 let ordenDesaparicion;
 let msDesaparecer = 250;
+let toggle = true;
 window.onload = iniciar;
 function iniciar() {
     let guia = document.getElementById("guia");
@@ -21,25 +22,37 @@ function iniciar() {
     let butGuia = document.getElementById("butGuia");
     butGuia.addEventListener("click", mostrarGuia);
     let contador = document.getElementById("contador");
-    let imagenes = document.getElementById("imagenes");
-    let maxCartasPorWidth = Math.floor((window.innerWidth + 4) / 204);
+    contador.innerHTML = temporizador;
+    setTimeout(toggleTemporizador, 0);
+    let cartas = document.getElementById("cartas");
+    let maxCartasPorWidth = Math.floor((window.innerWidth + 4 - 600) / 204); // quitar lo del 600 en el futuro
     let generarCartas = '<svg width="' + (maxCartasPorWidth * 204 - 4) + '" height="' + (Math.ceil(numCartas / maxCartasPorWidth) * 350 + Math.floor(numCartas / maxCartasPorWidth) * 4) + '">';
     for (let i = 0; i < numCartas; i++) {
         generarCartas += '<rect id="carta' + i + '" x="' + ((i * 200 + i * 4) - Math.floor(i / maxCartasPorWidth) * (maxCartasPorWidth * 200 + maxCartasPorWidth * 4)) + '" y="' + (Math.floor(i / maxCartasPorWidth) * 350 + Math.floor(i / maxCartasPorWidth) * 4) + '" width="200" height="350" fill="rgb(0, 0, 0)"/>';
     }
     generarCartas += '</svg>';
-    imagenes.innerHTML = generarCartas;
+    cartas.innerHTML = generarCartas;
+}
+
+function toggleTemporizador() {
+    toggle = !toggle;
+    if (toggle) {
+        contador.style.visibility = "visible";
+    } else {
+        contador.style.visibility = "hidden";
+    }
+    setTimeout(toggleTemporizador, 500);
 }
 
 function start() {
-    tiempo = 25;
+    tiempo = temporizador;
     puntos = tiempo + 1;
     ganaste = false;
     perdiste = false;
     cartasMostradas = [];
     butStart.style.visibility = "hidden";
     butGuia.style.visibility = "hidden";
-    imagenes.style.visibility = "visible";
+    cartas.style.visibility = "visible";
     guia.style.visibility = "hidden";
     guia.innerHTML = "";
     contador.innerHTML = tiempo;
@@ -67,8 +80,8 @@ function start() {
 
 function mostrarGuia() {
     butGuia.style.visibility = "hidden";
-    let imagenes = document.getElementById("imagenes");
-    imagenes.style.visibility = "hidden";
+    let cartas = document.getElementById("cartas");
+    cartas.style.visibility = "hidden";
     guia.style.visibility = "visible";
     guia.innerHTML = "<h1>Instrucciones:</h1>\n<h3>Para inciar el juego pulse el botón que esta más arriba.\n<br>Al darle al botón se le podran dar click a las cartas por parejas\n<br>Si encuentras la pareja de una carta se quedaran descubiertas\n<br>Descubre todas las parejas para parar el tiempo y ganar el juego\n<br>Si el tiempo se agota perderás la partida\n<br>Recuerda darle a volver a jugar cuando acabes para iniciar otra partida\n<br>Puedes ganar puntos si encuentras todas las parejas pero también hay una galleta oculta :D</h3>"
 }
@@ -120,7 +133,7 @@ function esconderCartas() {
 
 function juegoFinalizado() {
     setTimeout(desaparecerCartas(msDesaparecer), 0);
-    setTimeout(reseteandoJuego, msDesaparecer * numCartas + msDesaparecer)
+    setTimeout(reseteandoJuego, msDesaparecer * cartasMostradas.length + msDesaparecer)
 }
 
 function reseteandoJuego() {
@@ -146,8 +159,12 @@ function desaparecerCartas() {
     if (ordenDesaparicion.length > 0) {
         let carta = document.getElementById("carta" + ordenDesaparicion[ordenDesaparicion.length - 1]);
         ordenDesaparicion.splice(-1, 1);
-        carta.setAttribute("fill", "rgb(0, 0, 0)");
-        setTimeout(desaparecerCartas, msDesaparecer);
+        if (carta.getAttribute("fill") == "rgb(0, 0, 0)") {
+            setTimeout(desaparecerCartas, 0);
+        } else {
+            carta.setAttribute("fill", "rgb(0, 0, 0)");
+            setTimeout(desaparecerCartas, msDesaparecer);
+        }
     }
 }
 
