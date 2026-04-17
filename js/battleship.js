@@ -20,9 +20,9 @@ function iniciar() {
 function createTable(columns, rows, withCoordinates) { // x horizontal y vertical
     let table = document.createElement("table");
     let tbody = document.createElement("tbody");
-    for (let y = 0; x < columns; y++) {
+    for (let y = 0; y < columns; y++) {
         let tr = document.createElement("tr");
-        for (let x = 0; y < rows; x++) {
+        for (let x = 0; x < rows; x++) {
             let td = document.createElement("td");
             td.id = xyToCoordinates(x, y, true);
             td.style.width = "25px";
@@ -74,45 +74,33 @@ function queCeldasEstanSeleccionadas(last_td) {
     }
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
+    celdasSeleccionadas = [];
     if (clicked_td_coords[0] == last_td_coords[0]) {
-        celdasSeleccionadas = [];
         for (let i = clicked_td_coords[1]; i != last_td_coords[1];) {
             let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
-            if (clicked_td_coords[1] < last_td_coords[1]) {
-                i++;
-                if (actual_td.style.backgroundColor == "") {
-                    actual_td.style.backgroundColor = "cyan";
-                    celdasSeleccionadas.push(actual_td);
-                }
-            } else {
-                i--;
-                if (actual_td.style.backgroundColor == "") {
-                    actual_td.style.backgroundColor = "cyan";
-                    celdasSeleccionadas.push(actual_td);
-                }
+            if (actual_td.style.backgroundColor == "") {
+                actual_td.style.backgroundColor = "cyan";
+                celdasSeleccionadas.push(actual_td);
             }
-        }
-    } else if (clicked_td_coords[1] == last_td_coords[1]) {
-        celdasSeleccionadas = [];
-        for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
-            let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
-            if (clicked_td_coords[0] < last_td_coords[0]) {
+            if (clicked_td_coords[1] < last_td_coords[1])
                 i++;
-                if (actual_td.style.backgroundColor == "") {
-                    actual_td.style.backgroundColor = "cyan";
-                    celdasSeleccionadas.push(actual_td);
-                }
-            } else {
-                i--;
-                if (actual_td.style.backgroundColor == "") {
-                    actual_td.style.backgroundColor = "cyan";
-                    celdasSeleccionadas.push(actual_td);
-                }
-            }
+            i--;
         }
         celdasSeleccionadas.push(last_td);
-    } else {
-        celdasSeleccionadas = [];
+        last_td.style.backgroundColor = "cyan";
+    } else if (clicked_td_coords[1] == last_td_coords[1]) {
+        for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
+            let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
+            if (actual_td.style.backgroundColor == "") {
+                actual_td.style.backgroundColor = "cyan";
+                celdasSeleccionadas.push(actual_td);
+            }
+            if (clicked_td_coords[0] < last_td_coords[0])
+                i++;
+            i--;
+        }
+        celdasSeleccionadas.push(last_td);
+        last_td.style.backgroundColor = "cyan";
     }
     console.log(celdasSeleccionadas);
 }
