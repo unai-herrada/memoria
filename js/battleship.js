@@ -69,28 +69,34 @@ function queCeldasEstanSeleccionadas(last_td) {
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     if (clicked_td_coords[0] == last_td_coords[0]) {
-        for (let i = clicked_td_coords[1]; i == last_td_coords[1];) {
+        for (let i = clicked_td_coords[1]; i != last_td_coords[1];) {
             if (clicked_td_coords[1] < last_td_coords[1]) {
                 i++;
-                console.log(document.getElementById(xyToCoordinates(i, clicked_td_coords[0], true)).style.background + " A");
-                if (document.getElementById(xyToCoordinates(i, clicked_td_coords[0], true)).style.background = "") {
-                    document.getElementById(xyToCoordinates(i, clicked_td_coords[0], true)).style.background == "cyan";
+                if (document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background == "") {
+                    document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background = "cyan";
                 }
             } else {
-                //console.log(clicked_td_coords[1]+ "   "+ last_td_coords[1]);
                 i--;
+                if (document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background == "") {
+                    document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background = "cyan";
+                }
             }
         }
-    }/* else if (clicked_td_coords[1] == last_td_coords[1]) {
-        for (let i = clicked_td_coords[0]; i = last_td_coords[0];) {
+    } else if (clicked_td_coords[1] == last_td_coords[1]) {
+        for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
             if (clicked_td_coords[0] < last_td_coords[0]) {
                 i++;
-                
+                if (document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background == "") {
+                    document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background = "cyan";
+                }
             } else {
                 i--;
+                if (document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background == "") {
+                    document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background = "cyan";
+                }
             }
         }
-    }*/ else {
+    } else {
 
     }
 }
