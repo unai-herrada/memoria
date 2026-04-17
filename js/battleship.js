@@ -59,7 +59,6 @@ function seleccionandoCeldas() {
 function celdaSeleccionada() {
     if (seleccionando) {
         if (this.style.backgroundColor == "" || this.style.backgroundColor == "cyan") {
-            celdasSeleccionadas.push(this);
             queCeldasEstanSeleccionadas(this);
         }
     }
@@ -76,35 +75,44 @@ function queCeldasEstanSeleccionadas(last_td) {
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     if (clicked_td_coords[0] == last_td_coords[0]) {
+        celdasSeleccionadas = [];
         for (let i = clicked_td_coords[1]; i != last_td_coords[1];) {
+            let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
             if (clicked_td_coords[1] < last_td_coords[1]) {
                 i++;
-                if (document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background == "") {
-                    document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background = "cyan";
+                if (actual_td.style.background == "") {
+                    actual_td.style.background = "cyan";
+                    celdasSeleccionadas.push(actual_td);
                 }
             } else {
                 i--;
-                if (document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background == "") {
-                    document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true)).style.background = "cyan";
+                if (actual_td.style.background == "") {
+                    actual_td.style.background = "cyan";
+                    celdasSeleccionadas.push(actual_td);
                 }
             }
         }
     } else if (clicked_td_coords[1] == last_td_coords[1]) {
+        celdasSeleccionadas = [];
         for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
+            let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
             if (clicked_td_coords[0] < last_td_coords[0]) {
                 i++;
-                if (document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background == "") {
-                    document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background = "cyan";
+                if (actual_td.style.background == "") {
+                    actual_td.style.background = "cyan";
+                    celdasSeleccionadas.push(actual_td);
                 }
             } else {
                 i--;
-                if (document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background == "") {
-                    document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true)).style.background = "cyan";
+                if (actual_td.style.background == "") {
+                    actual_td.style.background = "cyan";
+                    celdasSeleccionadas.push(actual_td);
                 }
             }
         }
+        celdasSeleccionadas.push(last_td);
     } else {
-        celdasSeleccionadas.pop();
+        celdasSeleccionadas = [];
     }
     console.log(celdasSeleccionadas);
 }
