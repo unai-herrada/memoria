@@ -1,3 +1,4 @@
+let seleccionando = false;
 window.onload = iniciar;
 function iniciar() {
     let table = createTable(10, 10, true);
@@ -20,9 +21,13 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
         let tr = document.createElement("tr");
         for (let y = 0; y < rows; y++) {
             let td = document.createElement("td");
-            let txt = document.createTextNode("");
             td.style.width = "25px";
             td.style.height = "25px";
+            td.addEventListener("click", cambiarColor)
+            td.addEventListener("mousedown", seleccionandoCeldas);
+            td.addEventListener("mouseover", celdaSeleccionada);
+            td.addEventListener("mouseup", cambiarColor);
+            let txt = document.createTextNode("");
             td.appendChild(txt);
             tr.appendChild(td);
         }
@@ -33,6 +38,25 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
     table.appendChild(tbody);
     return table;
 }
+
+function cambiarColor() {
+    seleccionando = false;
+    this.style.backgroundColor = "blue";
+}
+
+function seleccionandoCeldas() {
+    seleccionando = seleccionando;
+    this.style.backgroundColor = "cyan";
+}
+
+function celdaSeleccionada() {
+    console.log("a");
+    if (seleccionando) {
+        console.log("b");
+        this.style.backgroundColor = "cyan";
+    }
+}
+
 /*
 en el popup quiero que el jugador escoja su posicion de los barcos
 y tambien la dificultad de a AI con un desplegable
