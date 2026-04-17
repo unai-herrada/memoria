@@ -23,7 +23,7 @@ function iniciar() {
     butGuia.addEventListener("click", mostrarGuia);
     let contador = document.getElementById("contador");
     contador.innerHTML = temporizador;
-    setTimeout(toggleTemporizador, 0);
+    setTimeout(parpadeo, 0);
     let cartas = document.getElementById("cartas");
     let maxCartasPorWidth = Math.floor((window.innerWidth + 4 - 600) / 204); // quitar lo del 600 en el futuro
     let generarCartas = '<svg width="' + (maxCartasPorWidth * 204 - 4) + '" height="' + (Math.ceil(numCartas / maxCartasPorWidth) * 350 + Math.floor(numCartas / maxCartasPorWidth) * 4) + '">';
@@ -34,14 +34,14 @@ function iniciar() {
     cartas.innerHTML = generarCartas;
 }
 
-function toggleTemporizador() {
+function parpadeo() {
     toggle = !toggle;
     if (toggle) {
         contador.style.visibility = "visible";
     } else {
         contador.style.visibility = "hidden";
     }
-    setTimeout(toggleTemporizador, 500);
+    setTimeout(parpadeo, 500);
 }
 
 function start() {
