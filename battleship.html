@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battleship</title>
+	<meta charset="UTF-8">
+	<script src="js/battleship.js"></script>
+</head>
+<body>
+    <button popovertarget="menu">Coloca tus barcos</button>
+    <div id="menu" popover></div>
+
+    <style>
+        [popover] {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: auto;
+        }
+
+        [popover]::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</body>
+</html>
