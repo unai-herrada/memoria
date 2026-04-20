@@ -5,23 +5,32 @@ let celdasSeleccionadas = [];
 let colocandoCeldas = false;
 window.onload = iniciar;
 function iniciar() {
+    let popup = document.getElementById("popup");
+    popup.addEventListener("click", crearContenidoPopup);
+}
+
+function crearContenidoPopup() {;
     let table = createTable(10, 10, true);
     let menu = document.getElementById("menu");
     menu.appendChild(table);
     let center = document.createElement("center");
     menu.appendChild(center);
     let button = document.createElement("button");
-    button.setAttribute("popovertarget", "menu");
-    button.setAttribute("popovertargetaction", "hide");
-    button.innerHTML = "Listo";
+    //button.setAttribute("popovertarget", "menu");
+    //button.setAttribute("popovertargetaction", "hide");
+    button.innerHTML = "Reiniciar";
     button.style.marginTop = "20px";
     center.appendChild(button);
+    button.addEventListener("click", function(){
+        menu.removeChild(table);
+        menu.appendChild(createTable(10, 10, true));
+        menu.appendChild(center);
+    });
 }
 
 function createTable(columns, rows, withCoordinates) { // x horizontal y vertical
     let table = document.createElement("table");
     table.addEventListener("dragstart", (e) => {
-        console.log("A");
         e.preventDefault();
     });
     let tbody = document.createElement("tbody");
@@ -48,29 +57,29 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 }
 
 function cambiarColor() {
-    if (!colocandoCeldas) {
+    console.log(seleccionando + " < " + colocandoCeldas);
+    if (!colocandoCeldas && seleccionando) {
+        console.log(seleccionando + " > " + colocandoCeldas);
         seleccionando = false;
-        if (celdasSeleccionadas.length == 0) {
+        colocandoCeldas = true;
+        if (celdasSeleccionadas.length == 0)
             clicked_td.style.backgroundColor = "";
-        } else {
-            setTimeout(poniendoBarco, 50);
-        }
+        setTimeout(poniendoBarco, 50);
     }
 }
 
 function poniendoBarco() {
-    colocandoCeldas = true;
-    document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
-    celdasSeleccionadas.shift();
     if (celdasSeleccionadas.length > 0) {
+        document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
+        celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
         colocandoCeldas = false;
+        console.log("---");
     }
 }
 
 function seleccionandoCeldas() {
-    isMouseDown = false;
     if (!colocandoCeldas) {
         if (seleccionando) {
             clicked_td.style.backgroundColor = "";
@@ -83,7 +92,6 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
-    removerCeldasCyan();
     if (seleccionando && !colocandoCeldas) {
         queCeldasEstanSeleccionadas(this);
     }
@@ -97,6 +105,7 @@ function removerCeldasCyan() {
 }
 
 function queCeldasEstanSeleccionadas(last_td) {
+    removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     if (clicked_td_coords[0] == last_td_coords[0]) {
