@@ -20,6 +20,10 @@ function iniciar() {
 
 function createTable(columns, rows, withCoordinates) { // x horizontal y vertical
     let table = document.createElement("table");
+    table.addEventListener("dragstart", (e) => {
+        console.log("A");
+        e.preventDefault();
+    });
     let tbody = document.createElement("tbody");
     for (let y = 0; y < columns; y++) {
         let tr = document.createElement("tr");
@@ -28,10 +32,9 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
             td.id = xyToCoordinates(x, y, true);
             td.style.width = "25px";
             td.style.height = "25px";
-            td.addEventListener("mouseup", cambiarColor)
+            td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
-            
             let txt = document.createTextNode("");
             td.appendChild(txt);
             tr.appendChild(td);
@@ -67,6 +70,7 @@ function poniendoBarco() {
 }
 
 function seleccionandoCeldas() {
+    isMouseDown = false;
     if (!colocandoCeldas) {
         if (seleccionando) {
             clicked_td.style.backgroundColor = "";
@@ -79,10 +83,9 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
+    removerCeldasCyan();
     if (seleccionando && !colocandoCeldas) {
-        if (this.style.backgroundColor == "" || this.style.backgroundColor == "cyan") {
-            queCeldasEstanSeleccionadas(this);
-        }
+        queCeldasEstanSeleccionadas(this);
     }
 }
 
@@ -94,7 +97,6 @@ function removerCeldasCyan() {
 }
 
 function queCeldasEstanSeleccionadas(last_td) {
-    removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     if (clicked_td_coords[0] == last_td_coords[0]) {
@@ -124,7 +126,6 @@ function queCeldasEstanSeleccionadas(last_td) {
             }
         }
     }
-    console.log(celdasSeleccionadas);
 }
 
 function xyToCoordinates(x, y, reverseOrder) {
