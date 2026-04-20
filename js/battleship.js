@@ -23,7 +23,8 @@ function crearContenidoPopup() {;
     center.appendChild(button);
     button.addEventListener("click", function(){
         menu.removeChild(table);
-        menu.appendChild(createTable(10, 10, true));
+        table = createTable(10, 10, true);
+        menu.appendChild(table);
         menu.appendChild(center);
     });
 }
@@ -57,9 +58,7 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 }
 
 function cambiarColor() {
-    console.log(seleccionando + " < " + colocandoCeldas);
     if (!colocandoCeldas && seleccionando) {
-        console.log(seleccionando + " > " + colocandoCeldas);
         seleccionando = false;
         colocandoCeldas = true;
         if (celdasSeleccionadas.length == 0)
@@ -75,7 +74,6 @@ function poniendoBarco() {
         setTimeout(poniendoBarco, 75);
     } else {
         colocandoCeldas = false;
-        console.log("---");
     }
 }
 
