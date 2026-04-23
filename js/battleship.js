@@ -9,9 +9,11 @@ function iniciar() {
     popup.addEventListener("click", crearContenidoPopup);
 }
 
-function crearContenidoPopup() {;
+function crearContenidoPopup() {
     let table = createTable(10, 10, true);
     let menu = document.getElementById("menu");
+    console.log(menu);
+    menu.innerHTML = "";
     menu.appendChild(table);
     let center = document.createElement("center");
     menu.appendChild(center);
@@ -21,7 +23,7 @@ function crearContenidoPopup() {;
     button.innerHTML = "Reiniciar";
     button.style.marginTop = "20px";
     center.appendChild(button);
-    button.addEventListener("click", function(){
+    button.addEventListener("click", function() {
         menu.removeChild(table);
         table = createTable(10, 10, true);
         menu.appendChild(table);
