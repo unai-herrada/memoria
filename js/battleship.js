@@ -3,6 +3,9 @@ let clicked_td;
 let unclicked_td;
 let celdasSeleccionadas = [];
 let colocandoCeldas = false;
+//let colorDefault = "#e3f2fd";
+let colorDefault = "rgb(227, 242, 253)";
+let barcosPorColocar = [2, 3, 3, 4, 5];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -12,7 +15,7 @@ function iniciar() {
 function crearContenidoPopup() {
     let table = createTable(10, 10, true);
     let menu = document.getElementById("menu");
-    console.log(menu);
+    //console.log(menu);
     menu.innerHTML = "";
     menu.appendChild(table);
     let center = document.createElement("center");
@@ -28,6 +31,7 @@ function crearContenidoPopup() {
         table = createTable(10, 10, true);
         menu.appendChild(table);
         menu.appendChild(center);
+        barcosPorColocar = [2, 3, 3, 4, 5];
     });
 }
 
@@ -44,6 +48,10 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
             td.id = xyToCoordinates(x, y, true);
             td.style.width = "25px";
             td.style.height = "25px";
+            td.style.backgroundColor = colorDefault;
+            td.style.cursor = "pointer";
+            //td.style.borderRadius = "4px";
+            //td.style.border = "1px solid #FFFFFF";
             td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
@@ -55,6 +63,8 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
     }
     table.style.borderCollapse = "collapse";
     table.setAttribute("border", "2");
+    //table.style.borderSpacing = "0";
+    //table.setAttribute("border", "0");
     table.appendChild(tbody);
     return table;
 }
@@ -63,8 +73,10 @@ function cambiarColor() {
     if (!colocandoCeldas && seleccionando) {
         seleccionando = false;
         colocandoCeldas = true;
+        //console.log(barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1));
+        barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1);
         if (celdasSeleccionadas.length == 0)
-            clicked_td.style.backgroundColor = "";
+            clicked_td.style.backgroundColor = colorDefault;
         setTimeout(poniendoBarco, 50);
     }
 }
@@ -80,9 +92,9 @@ function poniendoBarco() {
 }
 
 function seleccionandoCeldas() {
-    if (!colocandoCeldas) {
+    if (!colocandoCeldas && barcosPorColocar.length != 0) {
         if (seleccionando) {
-            clicked_td.style.backgroundColor = "";
+            clicked_td.style.backgroundColor = colorDefault;
             removerCeldasCyan();
         }
         seleccionando = true;
@@ -99,7 +111,7 @@ function celdaSeleccionada() {
 
 function removerCeldasCyan() {
     for (let i = 0; i < celdasSeleccionadas.length; i++) {
-        document.getElementById(celdasSeleccionadas[i]).style.backgroundColor = "";
+        document.getElementById(celdasSeleccionadas[i]).style.backgroundColor = colorDefault;
     }
     celdasSeleccionadas = [];
 }
@@ -116,9 +128,15 @@ function queCeldasEstanSeleccionadas(last_td) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
-            if (actual_td.style.backgroundColor == "") {
+            if (celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+                break;
+            }
+            if (actual_td.style.backgroundColor == colorDefault) {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td.id);
+            } else if (actual_td.style.backgroundColor == "blue") {
+                removerCeldasCyan();
+                break;
             }
         }
     } else if (clicked_td_coords[1] == last_td_coords[1]) {
@@ -129,9 +147,19 @@ function queCeldasEstanSeleccionadas(last_td) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
-            if (actual_td.style.backgroundColor == "") {
+            console.log(celdasSeleccionadas + " + 1");
+            console.log(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1));
+            console.log(celdasSeleccionadas.length + " == " + barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]);
+            console.log(celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]);
+            if (celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+                break;
+            }
+            if (actual_td.style.backgroundColor == colorDefault) {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td.id);
+            } else if (actual_td.style.backgroundColor == "blue") {
+                removerCeldasCyan();
+                break;
             }
         }
     }
