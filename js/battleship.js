@@ -5,7 +5,7 @@ let celdasSeleccionadas = [];
 let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
-let barcosPorColocar = [2, 3, 3, 4, 5];
+let barcosPorColocar = [2, 3, 3, 4, 5]; // si un barco es mayor que 10 entoces si intentas crear ese ultimo barco imposible el input se bugea de vuelta osea que hay que arreglar este bug inexistente
 let celdasRojas = [];
 window.onload = iniciar;
 function iniciar() {
@@ -78,11 +78,11 @@ function cambiarColor() {
             barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
             setTimeout(poniendoBarco, 50);
         } else {
-            clicked_td.style.backgroundColor = colorDefault;
             for (let i = 0; i < celdasRojas.length; i++) {
                 celdasRojas[i].style.backgroundColor = colorDefault;
             }
             celdasRojas = [];
+            clicked_td.style.backgroundColor = colorDefault;
         }
     }
 }
@@ -94,6 +94,7 @@ function poniendoBarco() {
         } else {
             document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = colorDefault;
         }
+        //document.getElementById(celdasSeleccionadas[0]).style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
@@ -103,9 +104,10 @@ function poniendoBarco() {
 
 function seleccionandoCeldas() {
     if (!colocandoCeldas && barcosPorColocar.length != 0 && this.style.backgroundColor != "blue") {
+        celdasRojas = []; // no me gusta que tenga que poner esta linea
         if (seleccionando) {
-            clicked_td.style.backgroundColor = colorDefault;
             removerCeldasCyan();
+            clicked_td.style.backgroundColor = colorDefault;
         }
         seleccionando = true;
         clicked_td = this;
@@ -134,11 +136,11 @@ function queCeldasEstanSeleccionadas(last_td) {
     removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
-    deMomentoSinNombre(clicked_td_coords, last_td_coords, true);
-    deMomentoSinNombre(clicked_td_coords, last_td_coords, false);
+    drawLine(clicked_td_coords, last_td_coords, true);
+    drawLine(clicked_td_coords, last_td_coords, false);
 }
 
-function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
+function drawLine(td_coords_1, td_coords_2, boolean) {
     let num1 = 0, num2 = 1;
     if (!boolean) {
         [num1, num2] = [num2, num1];
@@ -178,6 +180,27 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
+DISEÑO:
+Menu principal con 3 botones en el medio
+Jugar online
+Partida custom (tambien puede ser con IA o con codigo para meterse)
+Jugar offline
+En el popup arriba derecha ponemos el boton de help y con el cursor ese de help que existe
+y explicamos como poner barcos
+https://vibhorjaiswal.github.io/Cursor-Test/
+*/
+
+/*
+COMO VOY A TENER QUE HACER QUE DOS JUGADORES SE ENFRENTEN ENTRE ELLOS
+Sistema ELO
+y opcion de partida custom en la que pueden cambiar opciones como barcos etc (no cuenta para ELO)
+*/
+
+
+/*
+TAMBIEN QUIERO QUE EN VEZ DE PONER LAS CELLS AUZL DE UNA QUE LAS AÑADO EN ARRAY
+Y DESPUES SI ACASO LAS HAGO AZUL
+
 
 nuevoBarco.length suena mejor cambiar la variable celdasSeleccionadas a eso
 newShip en ingles obviamente
@@ -186,6 +209,14 @@ ENCIMA ESTA VARIABLE NO SE PORQUE DECIDI PUSHEAR SOLO LA ID???
 MAKES NO SENSE
 */
 
+/*
+PUES DEBAJO DE DONDE COLOCAS TUS BARCOS
+QUIERO un barco de dos hacia abajo
+a la derecha num barcos restantes
+y debajo barco de dos hacia la derecha
+para hacer cuadrado
+quiza encima de eso el nombre del barco o algo
+*/
 
 
 /*
