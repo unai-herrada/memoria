@@ -35,16 +35,16 @@ function crearContenidoPopup() {
         barcosPorColocar = [2, 3, 3, 4, 5];
     });
 }
-
-function createTable(columns, rows, withCoordinates) { // x horizontal y vertical
+// quiza se elimine eso de withCoordinates es pereza usarlo
+function createTable(rows, columns, withCoordinates) { // x horizontal y vertical
     let table = document.createElement("table");
     table.addEventListener("dragstart", (e) => {
         e.preventDefault();
     });
     let tbody = document.createElement("tbody");
-    for (let y = 0; y < columns; y++) {
+    for (let y = 0; y < rows; y++) {
         let tr = document.createElement("tr");
-        for (let x = 0; x < rows; x++) {
+        for (let x = 0; x < columns; x++) {
             let td = document.createElement("td");
             td.id = xyToCoordinates(x, y, true);
             td.style.width = "25px";
