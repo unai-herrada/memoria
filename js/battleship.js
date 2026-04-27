@@ -121,13 +121,13 @@ function queCeldasEstanSeleccionadas(last_td) {
     removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
-    deMomentoSinNombre(clicked_td_coords, last_td_coords, false);
     deMomentoSinNombre(clicked_td_coords, last_td_coords, true);
+    deMomentoSinNombre(clicked_td_coords, last_td_coords, false);
 }
 
 function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
     let num1 = 0, num2 = 1;
-    if (boolean) {
+    if (!boolean) {
         [num1, num2] = [num2, num1];
     }
     if (td_coords_1[num1] == td_coords_2[num1]) {
@@ -138,7 +138,6 @@ function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
-            console.log(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)] || actual_td.style.backgroundColor == "blue") {
                 break;
             } else if (actual_td.style.backgroundColor == colorDefault) {
@@ -153,9 +152,9 @@ function xyToCoordinates(x, y, reverseOrder) {
     if (reverseOrder) {
         [x, y] = [y, x];
     }
-    let xCoordinate = x + 1;
-    let yCoordinate = String.fromCharCode(65 + y);
-    return yCoordinate + xCoordinate;
+    let xCoordinate = String.fromCharCode(65 + x);
+    let yCoordinate = y + 1;
+    return xCoordinate + yCoordinate;
 }
 
 /*
