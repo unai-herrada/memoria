@@ -142,15 +142,16 @@ function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
-            if (actual_td.style.backgroundColor == "blue") {
-                break;
-            } else if (actual_td.style.backgroundColor == colorDefault) {
+            if (actual_td.style.backgroundColor == colorDefault) {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td.id);
+            } else {
+                break;
             }
         }
         if (celdasSeleccionadas.length != 0 && celdasSeleccionadas.length + 1 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
             document.getElementById(celdasSeleccionadas[celdasSeleccionadas.length - 1]).style.backgroundColor = "red";
+            //document.getElementById(celdasSeleccionadas.pop());
         }
     }
 }
