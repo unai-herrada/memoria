@@ -72,12 +72,13 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 function cambiarColor() {
     if (!colocandoCeldas && seleccionando) {
         seleccionando = false;
-        colocandoCeldas = true;
-        //console.log(barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1));
-        barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1);
-        if (celdasSeleccionadas.length == 0)
+        if (celdasSeleccionadas.length == 0) {
             clicked_td.style.backgroundColor = colorDefault;
-        setTimeout(poniendoBarco, 50);
+        } else {
+            colocandoCeldas = true;
+            barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1);
+            setTimeout(poniendoBarco, 50);
+        }
     }
 }
 
@@ -87,6 +88,7 @@ function poniendoBarco() {
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
+        console.log("A");
         colocandoCeldas = false;
     }
 }
@@ -128,7 +130,7 @@ function queCeldasEstanSeleccionadas(last_td) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
-            if (celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+            if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)]) {
                 break;
             }
             if (actual_td.style.backgroundColor == colorDefault) {
@@ -147,11 +149,7 @@ function queCeldasEstanSeleccionadas(last_td) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
-            console.log(celdasSeleccionadas + " + 1");
-            console.log(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1));
-            console.log(celdasSeleccionadas.length + " == " + barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]);
-            console.log(celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]);
-            if (celdasSeleccionadas.length == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+            if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)]) {
                 break;
             }
             if (actual_td.style.backgroundColor == colorDefault) {
