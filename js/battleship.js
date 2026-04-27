@@ -84,7 +84,11 @@ function cambiarColor() {
 
 function poniendoBarco() {
     if (celdasSeleccionadas.length > 0) {
-        document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
+        if (document.getElementById(celdasSeleccionadas[0]).style.backgroundColor != "red") {
+            document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
+        } else {
+            document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = colorDefault;
+        }
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
@@ -138,12 +142,15 @@ function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
-            if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)] || actual_td.style.backgroundColor == "blue") {
+            if (actual_td.style.backgroundColor == "blue") {
                 break;
             } else if (actual_td.style.backgroundColor == colorDefault) {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td.id);
             }
+        }
+        if (celdasSeleccionadas.length != 0 && celdasSeleccionadas.length + 1 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+            document.getElementById(celdasSeleccionadas[celdasSeleccionadas.length - 1]).style.backgroundColor = "red";
         }
     }
 }
@@ -158,9 +165,12 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
+
 nuevoBarco.length suena mejor cambiar la variable celdasSeleccionadas a eso
 newShip en ingles obviamente
 y hacer una funcion 
+ENCIMA ESTA VARIABLE NO SE PORQUE DECIDI PUSHEAR SOLO LA ID???
+MAKES NO SENSE
 */
 
 
