@@ -6,6 +6,7 @@ let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
 let barcosPorColocar = [2, 3, 3, 4, 5];
+let celdasRojas = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -72,12 +73,16 @@ function createTable(columns, rows, withCoordinates) { // x horizontal y vertica
 function cambiarColor() {
     if (!colocandoCeldas && seleccionando) {
         seleccionando = false;
-        if (celdasSeleccionadas.length != 0) {
+        if (celdasSeleccionadas.length - celdasRojas.length != 0) {
             colocandoCeldas = true;
-            barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length + 1), 1);
+            barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
             setTimeout(poniendoBarco, 50);
         } else {
             clicked_td.style.backgroundColor = colorDefault;
+            for (let i = 0; i < celdasRojas.length; i++) {
+                celdasRojas[i].style.backgroundColor = colorDefault;
+            }
+            celdasRojas = [];
         }
     }
 }
@@ -119,6 +124,10 @@ function removerCeldasCyan() {
         document.getElementById(celdasSeleccionadas[i]).style.backgroundColor = colorDefault;
     }
     celdasSeleccionadas = [];
+    for (let i = 0; i < celdasRojas.length; i++) {
+        celdasRojas[i].style.backgroundColor = colorDefault;
+    }
+    celdasRojas = [];
 }
 
 function queCeldasEstanSeleccionadas(last_td) {
@@ -142,16 +151,19 @@ function deMomentoSinNombre(td_coords_1, td_coords_2, boolean) {
                 i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
-            if (actual_td.style.backgroundColor == colorDefault) {
+            if (actual_td.style.backgroundColor != "blue") {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td.id);
             } else {
                 break;
             }
+            celdasRojas.push(actual_td);
+            if (celdasSeleccionadas.length + 1 == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+                celdasRojas = [];
+            }
         }
-        if (celdasSeleccionadas.length != 0 && celdasSeleccionadas.length + 1 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
-            document.getElementById(celdasSeleccionadas[celdasSeleccionadas.length - 1]).style.backgroundColor = "red";
-            //document.getElementById(celdasSeleccionadas.pop());
+        for (let i = 0; i < celdasRojas.length; i++) {
+            celdasRojas[i].style.backgroundColor = "red";
         }
     }
 }
