@@ -142,8 +142,13 @@ function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
         dragging = true;
         grabbed_td = this;
+        grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
+        selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
         grabbed_ship = getGrabbedShip(grabbed_td);
         //addClassSiblings(this, "grabbing");
+        /*
+        COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
+        */
     } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging) {
         removeCyanCells();
         if (seleccionando) {
