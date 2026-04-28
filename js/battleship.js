@@ -1,17 +1,18 @@
 let seleccionando = false;
 let clicked_td;
 let unclicked_td;
-let celdasSeleccionadas = [];
+let newShip = [];
 let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
 let colorSelected = "rgb(0, 127, 255)";
-let barcos = [2, 3, 3, 4, 5];
-let barcosPorColocar = barcos;
+let barcosDisponibles = [2, 3, 3, 4, 5, 1];
+let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
 let nColumns = 10;
-let arrastrando = false;
+let dragging = false;
+let barcos = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -38,7 +39,7 @@ function crearContenidoPopup() {
         table = createTable(nRows, nColumns);
         menu.appendChild(table);
         menu.appendChild(center);
-        barcosPorColocar = barcos;
+        barcosPorColocar = Array.from(barcosDisponibles);
     });
 }
 
@@ -80,13 +81,14 @@ function createTable(rows, columns) { // x horizontal y vertical
 function cambiarColor() {
     if (!colocandoCeldas && seleccionando) {
         seleccionando = false;
-        if (celdasSeleccionadas.length - celdasRojas.length != 0) {
+        if (newShip.length - celdasRojas.length != 0 && barcosPorColocar.includes(newShip.length - celdasRojas.length)) {
             colocandoCeldas = true;
-            barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
+            barcosPorColocar.splice(barcosPorColocar.indexOf(newShip.length - celdasRojas.length), 1);
             //clicked_td.classList.add("grab");
+            barcos.push(Array.from(newShip));
             setTimeout(poniendoBarco, 50);
         } else {
-            celdasSeleccionadas = [];
+            newShip = [];
             for (let i = 0; i < celdasRojas.length; i++) {
                 celdasRojas[i].style.backgroundColor = colorDefault;
             }
@@ -96,15 +98,26 @@ function cambiarColor() {
     }
 }
 
+function uniteTDs(td_1, td_2, sameColumn) {
+    if (sameColumn) {
+        td_1.style.borderBottom = "none";
+        td_2.style.borderTop = "none";
+    } else {
+        td_1.style.borderRight = "none";
+        td_2.style.borderLeft = "none";   
+    }
+}
+
 function poniendoBarco() {
-    if (celdasSeleccionadas.length > 0) {
-        if (celdasSeleccionadas[0].style.backgroundColor != "red") {
-            celdasSeleccionadas[0].style.backgroundColor = "blue";
+    if (newShip.length > 0) {
+        if (newShip[0].style.backgroundColor != "red") {
+            newShip[0].style.backgroundColor = "blue";
         } else {
-            celdasSeleccionadas[0].style.backgroundColor = colorDefault;
+            newShip[0].style.backgroundColor = colorDefault;
         }
-        //celdasSeleccionadas[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
-        celdasSeleccionadas.shift();
+        //newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
+        //uniteShips();
+        newShip.shift();
         setTimeout(poniendoBarco, 75);
     } else {
         colocandoCeldas = false;
@@ -113,7 +126,8 @@ function poniendoBarco() {
 
 function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
-        arrastrando = true;
+        dragging = true;
+        gragged_td = this;
         //addClassSiblings(this, "grabbing");
     } else if (!colocandoCeldas && barcosPorColocar.length != 0) {
         celdasRojas = []; // no me gusta que tenga que poner esta linea
@@ -123,13 +137,13 @@ function seleccionandoCeldas() {
         }
         seleccionando = true;
         clicked_td = this;
-        clicked_td.style.backgroundColor = "blue";
-        //celdasSeleccionadas.push(clicked_td);
+        clicked_td.style.backgroundColor = colorSelected;
+        newShip.push(clicked_td);
     }   
 }
 
 function celdaSeleccionada() {
-    if (arrastrando) {
+    if (dragging) {
         //addClassSiblings(this, "grabbing");
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
@@ -138,10 +152,10 @@ function celdaSeleccionada() {
 }
 
 function removeCyanCells() {
-    for (let i = 0; i < celdasSeleccionadas.length; i++) {
-        celdasSeleccionadas[i].style.backgroundColor = colorDefault;
+    for (let i = 1; i < newShip.length; i++) {
+        newShip[i].style.backgroundColor = colorDefault;
     }
-    celdasSeleccionadas = [];
+    newShip = [];
     for (let i = 0; i < celdasRojas.length; i++) {
         celdasRojas[i].style.backgroundColor = colorDefault;
     }
@@ -151,6 +165,7 @@ function removeCyanCells() {
 function calculateLine(last_td) {
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
+    newShip.push(clicked_td);
     drawLine(clicked_td_coords, last_td_coords, true);
     drawLine(clicked_td_coords, last_td_coords, false);
 }
@@ -167,15 +182,15 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             } else {
                 i--; //actual_td.style.borderLeft = "none";
             }
-            let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));//actual_td.style.borderLeft = "none";actual_td.style.borderRight = "none";
+            let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
                 actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td);
+                newShip.push(actual_td);
             } else {
                 break;
             }
             celdasRojas.push(actual_td);
-            if (celdasSeleccionadas.length + 1 == barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 1)]) {
+            if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)]) {
                 celdasRojas = [];
             }
         }
