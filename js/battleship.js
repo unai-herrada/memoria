@@ -10,6 +10,7 @@ let barcosPorColocar = barcos;
 let celdasRojas = [];
 let nRows = 10;
 let nColumns = 10;
+let arrastrando = false;
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -46,6 +47,7 @@ function createTable(rows, columns) { // x horizontal y vertical
         e.preventDefault();
     });
     let tbody = document.createElement("tbody");
+    tbody.style.cursor = "pointer";
     for (let x = 0; x < rows; x++) {
         let tr = document.createElement("tr");
         for (let y = 0; y < columns; y++) {
@@ -54,7 +56,7 @@ function createTable(rows, columns) { // x horizontal y vertical
             td.style.width = "25px";
             td.style.height = "25px";
             td.style.backgroundColor = colorDefault;
-            td.style.cursor = "pointer";
+            //td.style.cursor = "pointer";
             //td.style.borderRadius = "4px";
             //td.style.border = "1px solid #FFFFFF";
             td.addEventListener("mouseup", cambiarColor);
@@ -80,6 +82,7 @@ function cambiarColor() {
         if (celdasSeleccionadas.length - celdasRojas.length != 0) {
             colocandoCeldas = true;
             barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
+            clicked_td.style.cursor = "grab";
             setTimeout(poniendoBarco, 50);
         } else {
             celdasSeleccionadas = [];
@@ -99,7 +102,7 @@ function poniendoBarco() {
         } else {
             celdasSeleccionadas[0].style.backgroundColor = colorDefault;
         }
-        //celdasSeleccionadas[0].style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
+        celdasSeleccionadas[0].style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
@@ -108,7 +111,27 @@ function poniendoBarco() {
 }
 
 function seleccionandoCeldas() {
-    if (!colocandoCeldas && barcosPorColocar.length != 0 && this.style.backgroundColor != "blue") {
+    if (this.style.backgroundColor == "blue") {
+        arrastrando = true;
+        this.classList.add("grabbing");
+        this.style.cursor = "grabbing";
+        if (this.previousSibling != null) {
+            this.previousSibling.style.cursor = "grabbing";
+        }
+        if (this.nextSibling != null) {
+            this.nextSibling.style.cursor = "grabbing";
+        }
+        if (this.parentElement.previousSibling != null) {
+            if (this.parentElement.previousSibling.children[this.id.slice(1) - 1] != null) {
+                this.parentElement.previousSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
+            }
+        }
+        if (this.parentElement.nextSibling != null) {
+            if (this.parentElement.nextSibling.children[this.id.slice(1) - 1] != null) {
+                this.parentElement.nextSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
+            }
+        }
+    } else if (!colocandoCeldas && barcosPorColocar.length != 0) {
         celdasRojas = []; // no me gusta que tenga que poner esta linea
         if (seleccionando) {
             removerCeldasCyan();
@@ -121,7 +144,25 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
-    if (seleccionando && !colocandoCeldas) {
+    if (arrastrando) {
+        this.style.cursor = "grabbing";
+        if (this.previousSibling != null) {
+            this.previousSibling.style.cursor = "grabbing";
+        }
+        if (this.nextSibling != null) {
+            this.nextSibling.style.cursor = "grabbing";
+        }
+        if (this.parentElement.previousSibling != null) {
+            if (this.parentElement.previousSibling.children[this.id.slice(1) - 1] != null) {
+                this.parentElement.previousSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
+            }
+        }
+        if (this.parentElement.nextSibling != null) {
+            if (this.parentElement.nextSibling.children[this.id.slice(1) - 1] != null) {
+                this.parentElement.nextSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
+            }
+        }
+    } else if (seleccionando && !colocandoCeldas) {
         removerCeldasCyan();
         queCeldasEstanSeleccionadas(this);
     }
@@ -294,4 +335,10 @@ if (clicked_td_coords[0] == last_td_coords[0]) {
             }
         }
     }
+
+
+    console.log(this.previousSibling);
+        console.log(this.nextSibling);
+        console.log(this.parentElement.previousSibling.children[this.id.slice(1) - 1]);
+        console.log(this.parentElement.nextSibling.children[this.id.slice(1) - 1]);
 */
