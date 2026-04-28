@@ -314,6 +314,12 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
+BUGGGGG
+UNA VEZ QUE YA TENGO EL SHIP DEBO DE LIMPIAR EL CLICKED_TD
+PORQUE SINO SE ELIMINA EN EL DRAG AL FINALIZARSE
+*/
+
+/*
 Añadir boton al menu de que si ya escoge esas posiciones de barcos
 y algo que verifice que todos los barcos estan puestos y los guarda en variables
 Tambien hacer algo que si un barco.lenght > que nRows y nColumns eliminar barco de array barcosPorColocar
