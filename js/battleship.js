@@ -78,6 +78,7 @@ function cambiarColor() {
             barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
             setTimeout(poniendoBarco, 50);
         } else {
+            celdasSeleccionadas = [];
             for (let i = 0; i < celdasRojas.length; i++) {
                 celdasRojas[i].style.backgroundColor = colorDefault;
             }
@@ -117,6 +118,7 @@ function seleccionandoCeldas() {
 
 function celdaSeleccionada() {
     if (seleccionando && !colocandoCeldas) {
+        removerCeldasCyan();
         queCeldasEstanSeleccionadas(this);
     }
 }
@@ -133,7 +135,6 @@ function removerCeldasCyan() {
 }
 
 function queCeldasEstanSeleccionadas(last_td) {
-    removerCeldasCyan();
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     drawLine(clicked_td_coords, last_td_coords, true);
@@ -178,6 +179,10 @@ function xyToCoordinates(x, y, reverseOrder) {
     let yCoordinate = y + 1;
     return xCoordinate + yCoordinate;
 }
+
+/*
+BUG SI INTENTAS HACER UN BARCO PEQUEÑO EMPEZASNDO EN ANTERIOR CASILLA ROJA Y NO PUEDES PORQUE SOLO QUEDAN MAS BARCOS PEQUEÑOS TU CLICKED TD SE VUELVE COLORDEAFULT
+*/
 
 /*
 DISEÑO:
