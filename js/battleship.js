@@ -15,6 +15,7 @@ let dragging = false;
 let barcos = [];
 let grabbed_td;
 let grabbed_ship;
+let selectedCells = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -81,8 +82,9 @@ function createTable(rows, columns) { // x horizontal y vertical
 }
 
 function cambiarColor() {
-    if (!colocandoCeldas && seleccionando) {
+    if (!colocandoCeldas && seleccionando/* || dragging*/) {
         seleccionando = false;
+        dragging = false;
         if (newShip.length - celdasRojas.length != 0 && barcosPorColocar.includes(newShip.length - celdasRojas.length)) {
             colocandoCeldas = true;
             barcosPorColocar.splice(barcosPorColocar.indexOf(newShip.length - celdasRojas.length), 1);
@@ -155,18 +157,34 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
-    if (dragging) {
+    if (dragging) { // TODO ESTO DEBERIA DE ESTAR DENTRO DEL SELECIONANDO !COLOCANDO CELDAS
+        // ya que solo se actualizara la posicion final cuando suelte el click
+        // y cuando lo suelte esto dejara de funcar
         //addClassSiblings(this, "grabbing");
+        /*
+        si llega a una esquina como no deberias pushear mas dragged_td se convierte la esquina :D
+        moviendo todo asi uno a la izquierda si es que vamos a la derecha
+
+        si posicion es invalida (hay un barco ahi)
+        ponemos la casilla que este en la posicion unvalida en rojo 
+        luego la devolveremos a azul
+        guardando la esta en celdasRojas
+        si sueltas el click en posicion unvalida
+        vuelve a su posicion original
+        por lo tanto areNewCoordsValid es algo que se tiene que chekear para cada cell con un for
+        y si no es valido se pone en rojo o se cambia las coords del draggable
+        */
         if (areNewCoordsValid()) {
+            removeSelectedCells();
             this.style.backgroundColor = colorSelected;
             id1 = getCoords(this);
             id2 = getCoords(this.nextSibling);
             // necesitamos guncion de getLast or whatever
             // getFirst(this, dragged_td, dragged_ship[0]);
             // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
+            selectedCells.push(this);
             drawLine(id1, id2, true);// se calcula las cosas
-            drawLine(id1, id2, false)
-            removeSelectedCells();
+            drawLine(id1, id2, false);
         }
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
@@ -175,10 +193,10 @@ function celdaSeleccionada() {
 }
 
 function removeSelectedCells() {
-    for (let i = 0; i < newShip.length; i++) {
-        newShip[i].style.backgroundColor = colorDefault;
+    for (let i = 0; i < selectedCells.length; i++) {
+        selectedCells[i].style.backgroundColor = colorDefault;
     }
-    newShip = [];
+    selectedCells = [];
 }
 
 function areNewCoordsValid() {
@@ -233,6 +251,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             if (actual_td.style.backgroundColor != "blue") {
                 if (dragging) {
                     actual_td.style.backgroundColor = colorSelected;
+                    selectedCells.push(actual_td);
                 } else {
                     actual_td.style.backgroundColor = "cyan";
                     newShip.push(actual_td);
