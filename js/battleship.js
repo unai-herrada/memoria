@@ -82,7 +82,7 @@ function createTable(rows, columns) { // x horizontal y vertical
 }
 
 function cambiarColor() {
-    if (!colocandoCeldas && seleccionando/* || dragging*/) {
+    if ((!colocandoCeldas && seleccionando) || dragging) {
         seleccionando = false;
         dragging = false;
         if (newShip.length - celdasRojas.length != 0 && barcosPorColocar.includes(newShip.length - celdasRojas.length)) {
@@ -184,7 +184,7 @@ function celdaSeleccionada() {
         se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
         quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
         */
-        if (areNewCoordsValid()) {
+        if (areNewCoordsValid(grabbed_td, grabbed_ship, this)) {
             removeSelectedCells();
             this.style.backgroundColor = colorSelected;
             id1 = getCoords(this);
@@ -202,16 +202,29 @@ function celdaSeleccionada() {
     }
 }
 
+function areNewCoordsValid(td, ship, this_td) {
+    let td_position;
+    for (let i = 0; i < ship.length; i++) {
+        if (ship[i] == td) {
+            td_position = i;
+        }
+    }
+    console.log(parseInt(this_td.id.slice(1) - 1));
+    console.log(grabbed_td);
+    if (parseInt(this_td.id.slice(1) - 1) < td_position) {
+        grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
+        // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
+    }
+    console.log(grabbed_td);
+    console.log(td_position);
+    return true;
+}
+
 function removeSelectedCells() {
     for (let i = 0; i < selectedCells.length; i++) {
         selectedCells[i].style.backgroundColor = colorDefault;
     }
     selectedCells = [];
-}
-
-function areNewCoordsValid() {
-
-    return true;
 }
 
 function getGrabbedShip(grabbed_td) {
@@ -441,4 +454,13 @@ Lineas que quiza hay que cambiar
 88, 93, 121, 141
 Linea 153-154 PUSHEAMOS clicked alli es una opcion
 PLUS las lineas que afectas colores porque ahora las cells seleccionadas tendran el color: colorSelected
+*/
+
+/*
+recuerda para darle la vuelta a un numero
+1, 10
+y lo queremos al reves
+maxNum (10) + minNUm(1) - num
+si num era 1 ahora es 10
+si num era 10 ahora es 1
 */
