@@ -173,6 +173,11 @@ function celdaSeleccionada() {
         vuelve a su posicion original
         por lo tanto areNewCoordsValid es algo que se tiene que chekear para cada cell con un for
         y si no es valido se pone en rojo o se cambia las coords del draggable
+
+        TAMBIEN
+        quiero que si haces Shift + Click en un barco lo eliminas y lo puedes volver a colocar despues
+        se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
+        quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
         */
         if (areNewCoordsValid()) {
             removeSelectedCells();
