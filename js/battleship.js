@@ -5,8 +5,11 @@ let celdasSeleccionadas = [];
 let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
-let barcosPorColocar = [2, 3, 3, 4, 5]; // si un barco es mayor que 10 entoces si intentas crear ese ultimo barco imposible el input se bugea de vuelta osea que hay que arreglar este bug inexistente
+let barcos = [2, 3, 3, 4, 5];
+let barcosPorColocar = barcos;
 let celdasRojas = [];
+let nRows = 10;
+let nColumns = 10;
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -14,7 +17,8 @@ function iniciar() {
 }
 
 function crearContenidoPopup() {
-    let table = createTable(10, 10, true);
+    //barcosPorColocar = barcos; // bug aunque ponga esto si pones todos los barcos y clikeas fuera del popup y lo abres de vuelta no se reinicia
+    let table = createTable(nRows, nColumns);
     let menu = document.getElementById("menu");
     //console.log(menu);
     menu.innerHTML = "";
@@ -29,24 +33,24 @@ function crearContenidoPopup() {
     center.appendChild(button);
     button.addEventListener("click", function() {
         menu.removeChild(table);
-        table = createTable(10, 10, true);
+        table = createTable(nRows, nColumns);
         menu.appendChild(table);
         menu.appendChild(center);
-        barcosPorColocar = [2, 3, 3, 4, 5];
+        barcosPorColocar = barcos;
     });
 }
-// quiza se elimine eso de withCoordinates es pereza usarlo
-function createTable(rows, columns, withCoordinates) { // x horizontal y vertical
+
+function createTable(rows, columns) { // x horizontal y vertical
     let table = document.createElement("table");
     table.addEventListener("dragstart", (e) => {
         e.preventDefault();
     });
     let tbody = document.createElement("tbody");
-    for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < rows; x++) {
         let tr = document.createElement("tr");
-        for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < columns; y++) {
             let td = document.createElement("td");
-            td.id = xyToCoordinates(x, y, true);
+            td.id = xyToCoordinates(x, y, false);
             td.style.width = "25px";
             td.style.height = "25px";
             td.style.backgroundColor = colorDefault;
@@ -56,8 +60,8 @@ function createTable(rows, columns, withCoordinates) { // x horizontal y vertica
             td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
-            let txt = document.createTextNode("");
-            td.appendChild(txt);
+            //let txt = document.createTextNode("");
+            //td.appendChild(txt);
             tr.appendChild(td);
         }
         tbody.appendChild(tr);
@@ -90,12 +94,12 @@ function cambiarColor() {
 
 function poniendoBarco() {
     if (celdasSeleccionadas.length > 0) {
-        if (document.getElementById(celdasSeleccionadas[0]).style.backgroundColor != "red") {
-            document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = "blue";
+        if (celdasSeleccionadas[0].style.backgroundColor != "red") {
+            celdasSeleccionadas[0].style.backgroundColor = "blue";
         } else {
-            document.getElementById(celdasSeleccionadas[0]).style.backgroundColor = colorDefault;
+            celdasSeleccionadas[0].style.backgroundColor = colorDefault;
         }
-        //document.getElementById(celdasSeleccionadas[0]).style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
+        //celdasSeleccionadas[0].style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
@@ -125,7 +129,7 @@ function celdaSeleccionada() {
 
 function removerCeldasCyan() {
     for (let i = 0; i < celdasSeleccionadas.length; i++) {
-        document.getElementById(celdasSeleccionadas[i]).style.backgroundColor = colorDefault;
+        celdasSeleccionadas[i].style.backgroundColor = colorDefault;
     }
     celdasSeleccionadas = [];
     for (let i = 0; i < celdasRojas.length; i++) {
@@ -156,7 +160,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
                 actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td.id);
+                celdasSeleccionadas.push(actual_td);
             } else {
                 break;
             }
@@ -179,10 +183,6 @@ function xyToCoordinates(x, y, reverseOrder) {
     let yCoordinate = y + 1;
     return xCoordinate + yCoordinate;
 }
-
-/*
-BUG SI INTENTAS HACER UN BARCO PEQUEÑO EMPEZASNDO EN ANTERIOR CASILLA ROJA Y NO PUEDES PORQUE SOLO QUEDAN MAS BARCOS PEQUEÑOS TU CLICKED TD SE VUELVE COLORDEAFULT
-*/
 
 /*
 DISEÑO:
