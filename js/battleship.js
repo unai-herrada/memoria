@@ -5,6 +5,7 @@ let celdasSeleccionadas = [];
 let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
+let colorSelected = "rgb(0, 127, 255)";
 let barcos = [2, 3, 3, 4, 5];
 let barcosPorColocar = barcos;
 let celdasRojas = [];
@@ -47,7 +48,7 @@ function createTable(rows, columns) { // x horizontal y vertical
         e.preventDefault();
     });
     let tbody = document.createElement("tbody");
-    tbody.style.cursor = "pointer";
+    //tbody.classList.add("pointer");
     for (let x = 0; x < rows; x++) {
         let tr = document.createElement("tr");
         for (let y = 0; y < columns; y++) {
@@ -58,7 +59,7 @@ function createTable(rows, columns) { // x horizontal y vertical
             td.style.backgroundColor = colorDefault;
             //td.style.cursor = "pointer";
             //td.style.borderRadius = "4px";
-            //td.style.border = "1px solid #FFFFFF";
+            //td.setAttribute("border", "2px solid black");//td.style.border = "1px solid #FFFFFF";
             td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
@@ -82,7 +83,7 @@ function cambiarColor() {
         if (celdasSeleccionadas.length - celdasRojas.length != 0) {
             colocandoCeldas = true;
             barcosPorColocar.splice(barcosPorColocar.indexOf(celdasSeleccionadas.length - celdasRojas.length + 1), 1);
-            clicked_td.style.cursor = "grab";
+            //clicked_td.classList.add("grab");
             setTimeout(poniendoBarco, 50);
         } else {
             celdasSeleccionadas = [];
@@ -102,7 +103,7 @@ function poniendoBarco() {
         } else {
             celdasSeleccionadas[0].style.backgroundColor = colorDefault;
         }
-        celdasSeleccionadas[0].style.cursor = "grab"; // grab or move esta divertido quiza futura funcion
+        //celdasSeleccionadas[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
         celdasSeleccionadas.shift();
         setTimeout(poniendoBarco, 75);
     } else {
@@ -113,62 +114,30 @@ function poniendoBarco() {
 function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
         arrastrando = true;
-        this.classList.add("grabbing");
-        this.style.cursor = "grabbing";
-        if (this.previousSibling != null) {
-            this.previousSibling.style.cursor = "grabbing";
-        }
-        if (this.nextSibling != null) {
-            this.nextSibling.style.cursor = "grabbing";
-        }
-        if (this.parentElement.previousSibling != null) {
-            if (this.parentElement.previousSibling.children[this.id.slice(1) - 1] != null) {
-                this.parentElement.previousSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
-            }
-        }
-        if (this.parentElement.nextSibling != null) {
-            if (this.parentElement.nextSibling.children[this.id.slice(1) - 1] != null) {
-                this.parentElement.nextSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
-            }
-        }
+        //addClassSiblings(this, "grabbing");
     } else if (!colocandoCeldas && barcosPorColocar.length != 0) {
         celdasRojas = []; // no me gusta que tenga que poner esta linea
         if (seleccionando) {
-            removerCeldasCyan();
+            removeCyanCells();
             clicked_td.style.backgroundColor = colorDefault;
         }
         seleccionando = true;
         clicked_td = this;
         clicked_td.style.backgroundColor = "blue";
+        //celdasSeleccionadas.push(clicked_td);
     }   
 }
 
 function celdaSeleccionada() {
     if (arrastrando) {
-        this.style.cursor = "grabbing";
-        if (this.previousSibling != null) {
-            this.previousSibling.style.cursor = "grabbing";
-        }
-        if (this.nextSibling != null) {
-            this.nextSibling.style.cursor = "grabbing";
-        }
-        if (this.parentElement.previousSibling != null) {
-            if (this.parentElement.previousSibling.children[this.id.slice(1) - 1] != null) {
-                this.parentElement.previousSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
-            }
-        }
-        if (this.parentElement.nextSibling != null) {
-            if (this.parentElement.nextSibling.children[this.id.slice(1) - 1] != null) {
-                this.parentElement.nextSibling.children[this.id.slice(1) - 1].style.cursor = "grabbing";
-            }
-        }
+        //addClassSiblings(this, "grabbing");
     } else if (seleccionando && !colocandoCeldas) {
-        removerCeldasCyan();
-        queCeldasEstanSeleccionadas(this);
+        removeCyanCells();
+        calculateLine(this);
     }
 }
 
-function removerCeldasCyan() {
+function removeCyanCells() {
     for (let i = 0; i < celdasSeleccionadas.length; i++) {
         celdasSeleccionadas[i].style.backgroundColor = colorDefault;
     }
@@ -179,7 +148,7 @@ function removerCeldasCyan() {
     celdasRojas = [];
 }
 
-function queCeldasEstanSeleccionadas(last_td) {
+function calculateLine(last_td) {
     let clicked_td_coords = [clicked_td.id.slice(1) - 1, clicked_td.id[0].charCodeAt(0) - 65];
     let last_td_coords = [last_td.id.slice(1) - 1, last_td.id[0].charCodeAt(0) - 65];
     drawLine(clicked_td_coords, last_td_coords, true);
@@ -194,11 +163,11 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
     if (td_coords_1[num1] == td_coords_2[num1]) {
         for (let i = td_coords_1[num2]; i != td_coords_2[num2];) {
             if (td_coords_1[num2] < td_coords_2[num2]) {
-                i++;
+                i++; //actual_td.style.borderRight = "none";
             } else {
-                i--;
+                i--; //actual_td.style.borderLeft = "none";
             }
-            let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
+            let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));//actual_td.style.borderLeft = "none";actual_td.style.borderRight = "none";
             if (actual_td.style.backgroundColor != "blue") {
                 actual_td.style.backgroundColor = "cyan";
                 celdasSeleccionadas.push(actual_td);
@@ -226,6 +195,36 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
+Añadir boton al menu de que si ya escoge esas posiciones de barcos
+y algo que verifice que todos los barcos estan puestos y los guarda en variables
+Tambien hacer algo que si un barco.lenght > que nRows y nColumns eliminar barco de array barcosPorColocar
+no se elimina de barcos porque quiza cambia el nRows o nColumns despues
+y la verificacion de eso se hace despues de que barcosPorColocar = barcos
+*/
+
+/*
+function addClassSiblings(cell, className) {
+    cell.classList.add(className);
+    if (cell.previousSibling != null) {
+        cell.previousSibling.classList.add(className);
+    }
+    if (cell.nextSibling != null) {
+        cell.nextSibling.classList.add(className);
+    }
+    if (cell.parentElement.previousSibling != null) {
+        if (cell.parentElement.previousSibling.children[cell.id.slice(1) - 1] != null) {
+            cell.parentElement.previousSibling.children[cell.id.slice(1) - 1].classList.add(className);
+        }
+    }
+    if (cell.parentElement.nextSibling != null) {
+        if (cell.parentElement.nextSibling.children[cell.id.slice(1) - 1] != null) {
+            cell.parentElement.nextSibling.children[cell.id.slice(1) - 1].classList.add(className);
+        }
+    }
+}
+*/
+
+/*
 DISEÑO:
 Menu principal con 3 botones en el medio
 Jugar online
@@ -242,11 +241,9 @@ Sistema ELO
 y opcion de partida custom en la que pueden cambiar opciones como barcos etc (no cuenta para ELO)
 */
 
-
 /*
 TAMBIEN QUIERO QUE EN VEZ DE PONER LAS CELLS AUZL DE UNA QUE LAS AÑADO EN ARRAY
 Y DESPUES SI ACASO LAS HAGO AZUL
-
 
 nuevoBarco.length suena mejor cambiar la variable celdasSeleccionadas a eso
 newShip en ingles obviamente
@@ -264,7 +261,6 @@ para hacer cuadrado
 quiza encima de eso el nombre del barco o algo
 */
 
-
 /*
 COSAS QUE ARREGLAR:
 
@@ -279,9 +275,8 @@ en el popup quiero que el jugador escoja su posicion de los barcos
 y tambien la dificultad de a AI con un desplegable
 el desplegable marca el % de random de hacer el mejor movimiento
 el mejor movimiento siempre sera la posicion donde poniendo todas las posiciones de barcos hay mas probabilidad
-
-
 */
+
 /*
 <button popovertarget="menu">Abrir Popup</button>
 <div id="menu" popover>
@@ -336,9 +331,17 @@ if (clicked_td_coords[0] == last_td_coords[0]) {
         }
     }
 
-
     console.log(this.previousSibling);
-        console.log(this.nextSibling);
-        console.log(this.parentElement.previousSibling.children[this.id.slice(1) - 1]);
-        console.log(this.parentElement.nextSibling.children[this.id.slice(1) - 1]);
+    console.log(this.nextSibling);
+    console.log(this.parentElement.previousSibling.children[this.id.slice(1) - 1]);
+    console.log(this.parentElement.nextSibling.children[this.id.slice(1) - 1]);
+*/
+
+/*
+Lineas que hay que cambiar si clicked_td lo pusheamos en celdasSeleccionadas
+82, 84, 99, 100, 101, 103, 105, 177
+Lineas que quiza hay que cambiar
+88, 93, 121, 141
+Linea 153-154 PUSHEAMOS clicked alli es una opcion
+PLUS las lineas que afectas colores porque ahora las cells seleccionadas tendran el color: colorSelected
 */
