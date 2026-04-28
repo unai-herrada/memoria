@@ -158,16 +158,27 @@ function celdaSeleccionada() {
     if (dragging) {
         //addClassSiblings(this, "grabbing");
         if (areNewCoordsValid()) {
-            console.log("a");
-            console.log(grabbed_ship[0].nextSibling)
-            drawLine(getCoords(grabbed_ship[0].nextSibling), getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling), true);// se calcula las cosas
-            drawLine(getCoords(grabbed_ship[0].nextSibling), getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling), false)
+            this.style.backgroundColor = colorSelected;
+            id1 = getCoords(this);
+            id2 = getCoords(this.nextSibling);
+            // necesitamos guncion de getLast or whatever
+            // getFirst(this, dragged_td, dragged_ship[0]);
+            // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
+            drawLine(id1, id2, true);// se calcula las cosas
+            drawLine(id1, id2, false)
+            removeSelectedCells();
         }
-
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
     }
+}
+
+function removeSelectedCells() {
+    for (let i = 0; i < newShip.length; i++) {
+        newShip[i].style.backgroundColor = colorDefault;
+    }
+    newShip = [];
 }
 
 function areNewCoordsValid() {
@@ -220,14 +231,20 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
-                actual_td.style.backgroundColor = "cyan";
-                newShip.push(actual_td);
+                if (dragging) {
+                    actual_td.style.backgroundColor = colorSelected;
+                } else {
+                    actual_td.style.backgroundColor = "cyan";
+                    newShip.push(actual_td);
+                }
             } else {
                 break;
             }
-            celdasRojas.push(actual_td);
-            if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)]) {
-                celdasRojas = [];
+            if (!dragging) {
+                celdasRojas.push(actual_td);
+                if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)]) {
+                    celdasRojas = [];
+                }
             }
         }
         for (let i = 0; i < celdasRojas.length; i++) {
