@@ -214,6 +214,15 @@ function areNewCoordsValid(td, ship, this_td) {
     if (parseInt(this_td.id.slice(1) - 1) < td_position) {
         grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
         // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
+        // incluso si es negativo o positivo funcionaria igualmente
+        // 10 - 10 fuck eso no tiene sentido un ship de 10 whatever no voy a pensar eso mucho
+        // quiza tan solo que esta funcion devuelva la diferencia esa en vez de mirar si es valido o no, si es valido after all
+        // la diferencia seria 0
+        // y si no es valida la diferencia lo hara valida y recordemos que las azules se haran rojas
+        // simple
+        // 
+        // claro devolvemos la td_position osea ship[td_position]
+        // y en este if es donde actualizamos la posicion para enviarla despues
     }
     console.log(grabbed_td);
     console.log(td_position);
