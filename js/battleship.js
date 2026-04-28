@@ -85,8 +85,11 @@ function cambiarColor() {
             colocandoCeldas = true;
             barcosPorColocar.splice(barcosPorColocar.indexOf(newShip.length - celdasRojas.length), 1);
             //clicked_td.classList.add("grab");
+            /*if (newShip.length > 1) {
+                se podria poner aqui y hacer q la funcion reciba la array de una en vez de placingShip
+            }*/
             barcos.push(Array.from(newShip));
-            setTimeout(poniendoBarco, 50);
+            setTimeout(placingShip, 50);
         } else {
             newShip = [];
             for (let i = 0; i < celdasRojas.length; i++) {
@@ -98,7 +101,12 @@ function cambiarColor() {
     }
 }
 
-function uniteTDs(td_1, td_2, sameColumn) {
+function uniteTDs(td_1, td_2) {
+    let sameColumn = newShip[0].id.slice(1) == newShip[1].id.slice(1);
+    let lowToHigh = (parseInt(newShip[0].id.slice(1)) < parseInt(newShip[1].id.slice(1)) || (newShip[0].id[0] < newShip[1].id[0] && newShip[0].id.slice(1) == newShip[1].id.slice(1)));
+    if (!lowToHigh) {
+        [td_1, td_2] = [td_2, td_1];
+    }
     if (sameColumn) {
         td_1.style.borderBottom = "none";
         td_2.style.borderTop = "none";
@@ -108,17 +116,19 @@ function uniteTDs(td_1, td_2, sameColumn) {
     }
 }
 
-function poniendoBarco() {
+function placingShip() {
     if (newShip.length > 0) {
         if (newShip[0].style.backgroundColor != "red") {
             newShip[0].style.backgroundColor = "blue";
+            if (newShip.length > 1 && newShip[1].style.backgroundColor != "red") {
+                uniteTDs(newShip[0], newShip[1]);
+            }
         } else {
             newShip[0].style.backgroundColor = colorDefault;
         }
         //newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
-        //uniteShips();
         newShip.shift();
-        setTimeout(poniendoBarco, 75);
+        setTimeout(placingShip, 75);
     } else {
         colocandoCeldas = false;
     }
