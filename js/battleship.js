@@ -16,6 +16,7 @@ let barcos = [];
 let grabbed_td;
 let grabbed_ship;
 let selectedCells = [];
+let ghostShip = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -162,47 +163,15 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
-    if (dragging) { // TODO ESTO DEBERIA DE ESTAR DENTRO DEL SELECIONANDO !COLOCANDO CELDAS
-        // ya que solo se actualizara la posicion final cuando suelte el click
-        // y cuando lo suelte esto dejara de funcar
-        //addClassSiblings(this, "grabbing");
-        /*
-        si llega a una esquina como no deberias pushear mas dragged_td se convierte la esquina :D
-        moviendo todo asi uno a la izquierda si es que vamos a la derecha
+    if (dragging) {
 
-        si posicion es invalida (hay un barco ahi)
-        ponemos la casilla que este en la posicion unvalida en rojo 
-        luego la devolveremos a azul
-        guardando la esta en celdasRojas
-        si sueltas el click en posicion unvalida
-        vuelve a su posicion original
-        por lo tanto areNewCoordsValid es algo que se tiene que chekear para cada cell con un for
-        y si no es valido se pone en rojo o se cambia las coords del draggable
-
-        TAMBIEN
-        quiero que si haces Shift + Click en un barco lo eliminas y lo puedes volver a colocar despues
-        se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
-        quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
-        */
-        if (areNewCoordsValid(grabbed_td, grabbed_ship, this)) {
-            removeSelectedCells();
-            this.style.backgroundColor = colorSelected;
-            id1 = getCoords(this);
-            id2 = getCoords(this/*.nextSibling*/);
-            // necesitamos guncion de getLast or whatever
-            // getFirst(this, dragged_td, dragged_ship[0]);
-            // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
-            selectedCells.push(this);
-            drawLine(id1, id2, true);// se calcula las cosas
-            drawLine(id1, id2, false);
-        }
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
     }
 }
 
-function areNewCoordsValid(td, ship, this_td) {
+function updateGrabbed_td(td, ship, this_td) {
     let td_position;
     for (let i = 0; i < ship.length; i++) {
         if (ship[i] == td) {
@@ -222,44 +191,6 @@ function areNewCoordsValid(td, ship, this_td) {
         grabbed_td = ship[this_td_coords[1]];
     }
     console.log(grabbed_td);
-    /*
-    if (ship.length != 1 && ship[0].id[0] != ship[1].id[0]) {
-        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
-        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
-            console.log("barco out of bounds");
-        }
-        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
-        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
-            console.log("barco out of bounds");
-        }
-    } else {
-        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
-        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
-            console.log("barco out of bounds");
-        }
-        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
-        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
-            console.log("barco out of bounds");
-        }
-    }*/
-    //console.log(parseInt(this_td.id.slice(1) - 1));
-    //console.log(grabbed_td);
-    /*if (parseInt(this_td.id.slice(1) - 1) < td_position) {
-        grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
-        // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
-        // incluso si es negativo o positivo funcionaria igualmente
-        // 10 - 10 fuck eso no tiene sentido un ship de 10 whatever no voy a pensar eso mucho
-        // quiza tan solo que esta funcion devuelva la diferencia esa en vez de mirar si es valido o no, si es valido after all
-        // la diferencia seria 0
-        // y si no es valida la diferencia lo hara valida y recordemos que las azules se haran rojas
-        // simple
-        // 
-        // claro devolvemos la td_position osea ship[td_position]
-        // y en este if es donde actualizamos la posicion para enviarla despues
-    }*/
-    //console.log(grabbed_td);
-    //console.log(td_position);
-    return true;
 }
 
 function removeSelectedCells() {
@@ -516,3 +447,93 @@ si num era 10 ahora es 1
 /*
 BUG: CUANDO HAGO UN BARCO CON ERROR Y LO DRAGGEO APARECE DE VUELTA LA CELDA ROJA
 */
+
+/*
+dije shift click para eliminar pero y si es para rotar la ficha?
+despues la tendras que mover arrastandola con mecanica grabbing
+*/
+
+/*
+        // TODO ESTO DEBERIA DE ESTAR DENTRO DEL SELECIONANDO !COLOCANDO CELDAS
+        // ya que solo se actualizara la posicion final cuando suelte el click
+        // y cuando lo suelte esto dejara de funcar
+        //addClassSiblings(this, "grabbing");
+        /*
+        si llega a una esquina como no deberias pushear mas dragged_td se convierte la esquina :D
+        moviendo todo asi uno a la izquierda si es que vamos a la derecha
+
+        si posicion es invalida (hay un barco ahi)
+        ponemos la casilla que este en la posicion unvalida en rojo 
+        luego la devolveremos a azul
+        guardando la esta en celdasRojas
+        si sueltas el click en posicion unvalida
+        vuelve a su posicion original
+        por lo tanto areNewCoordsValid es algo que se tiene que chekear para cada cell con un for
+        y si no es valido se pone en rojo o se cambia las coords del draggable
+
+        TAMBIEN
+        quiero que si haces Shift + Click en un barco lo eliminas y lo puedes volver a colocar despues
+        se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
+        quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
+        *//*
+        removeSelectedCells();
+        this.style.backgroundColor = colorSelected;
+        updateGrabbed_td(grabbed_td, grabbed_ship, this);
+        //ghostShip; // quiero usar newShip como nombre para el futuro luego se optimiza esto
+        grabbed_td_coords = getCoords(grabbed_td);
+        this_coords = getCoords(this);
+        drawLine(this_coords, grabbed_td_coords, true);
+        drawLine(this_coords, grabbed_td_coords, false);
+        /*
+        if (true) {
+            removeSelectedCells();
+            this.style.backgroundColor = colorSelected;
+            id1 = getCoords(this);
+            id2 = getCoords(this.nextSibling);
+            // necesitamos guncion de getLast or whatever
+            // getFirst(this, dragged_td, dragged_ship[0]);
+            // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
+            selectedCells.push(this);
+            drawLine(id1, id2, true);// se calcula las cosas
+            drawLine(id1, id2, false);
+        }*/
+
+            /*
+/*
+    if (ship.length != 1 && ship[0].id[0] != ship[1].id[0]) {
+        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
+        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
+            console.log("barco out of bounds");
+        }
+        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
+        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
+            console.log("barco out of bounds");
+        }
+    } else {
+        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
+        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
+            console.log("barco out of bounds");
+        }
+        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
+        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
+            console.log("barco out of bounds");
+        }
+    }*/
+    //console.log(parseInt(this_td.id.slice(1) - 1));
+    //console.log(grabbed_td);
+    /*if (parseInt(this_td.id.slice(1) - 1) < td_position) {
+        grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
+        // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
+        // incluso si es negativo o positivo funcionaria igualmente
+        // 10 - 10 fuck eso no tiene sentido un ship de 10 whatever no voy a pensar eso mucho
+        // quiza tan solo que esta funcion devuelva la diferencia esa en vez de mirar si es valido o no, si es valido after all
+        // la diferencia seria 0
+        // y si no es valida la diferencia lo hara valida y recordemos que las azules se haran rojas
+        // simple
+        // 
+        // claro devolvemos la td_position osea ship[td_position]
+        // y en este if es donde actualizamos la posicion para enviarla despues
+    }*/
+    //console.log(grabbed_td);
+    //console.log(td_position);
+    //return grabbed_td;
