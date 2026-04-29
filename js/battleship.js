@@ -229,7 +229,7 @@ function celdaSeleccionada() {
         newShip = [];
         toggleBorder(grabbed_ship);
         toggleSelectShip(grabbed_ship);
-        updateGrabbed_td(grabbed_ship, grabbed_td, this);
+        updateGrabbed_td(grabbed_ship_copia, grabbed_td, this);
         if (isShipVertical(grabbed_ship)) {
             //xyToCoordinates(a, parseInt(this.id.slice(1)));
         } else {// el vertical siempre tiene los mismos numeros
@@ -240,12 +240,26 @@ function celdaSeleccionada() {
         //let id1 = getCoords(grabbed_ship[0].nextSibling);
         //let id2 = getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling);
         //console.log(grabbed_td);
-        let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - parseInt(grabbed_td.id.slice(1)) + 1));
-        let id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + grabbed_ship.length - (getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
+        //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - parseInt(grabbed_td.id.slice(1)) + 1));
+        //let id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + grabbed_ship.length - (getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
         //console.log(id1); // parseInt(grabbed_ship[0].id.slice(1))  parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) - 1
         // AHORA CREO ES PORQUE NO SE ACTUALIZA GRABBED LO JURO ES ESO
-        console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
-        console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) + 1) + grabbed_ship.length - 1)));
+        let id1;
+        let id2;
+        let this_td_coords = getCoords(this);
+        if (isShipVertical(grabbed_ship_copia)) {
+            console.log("Vertical");
+            id1 = document.getElementById((this_td_coords[0] - getPositionTD(grabbed_ship_copia, grabbed_td)), this.id.slice(1));
+            id2 = document.getElementById((this_td_coords[0] - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1), this.id.slice(1));
+        } else {
+            console.log("Horizontal");
+            id1 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)));
+            id2 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1));
+        }
+        console.log(id1);
+        console.log(id2);
+        //console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
+        //console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
         //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)));
         //let id2 = document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1));
         //console.log(id2);
@@ -351,7 +365,7 @@ function calculateLine(last_td) {
 }
 
 function getCoords(td) {
-    return [td.id[0].charCodeAt(0) - 65, td.id.slice(1) - 1];
+    return [parseInt(td.id[0].charCodeAt(0) - 65), parseInt(td.id.slice(1) - 1)];
 }
 
 function drawLine(td_coords_1, td_coords_2, boolean) {
