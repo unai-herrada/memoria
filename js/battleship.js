@@ -214,33 +214,42 @@ function seleccionandoCeldas() {
 function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
-        updateGrabbed_td(grabbed_td, grabbed_ship, this);
+        updateGrabbed_td(grabbed_ship, grabbed_td, this);
+        let id1 = getCoords(this);
+        let id2 = getCoords(this.nextSibling);
+        drawLine(id1, id2, true);
+        drawLine(id1, id2, false);
+        /*
+            let clicked_td_coords = getCoords(clicked_td);
+            let last_td_coords = getCoords(last_td);
+            newShip.push(clicked_td);
+            drawLine(clicked_td_coords, last_td_coords, true);
+            drawLine(clicked_td_coords, last_td_coords, false);
+        */
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
     }
 }
 
-function updateGrabbed_td(td, ship, this_td) {
-    let td_position;
-    for (let i = 0; i < ship.length; i++) {
-        if (ship[i] == td) {
-            td_position = i;
-        }
-    }
+function updateGrabbed_td(ship, td, this_td) {
+    let td_position = getPositionTD(ship, td);
     let this_td_coords = getCoords(this_td);
-    //console.log(this_td_coords);
     if (this_td_coords[1] - td_position < 0) {
-        //console.log(td_position + " + " + this_td_coords[1] + " - " + td_position);
         grabbed_td = ship[this_td_coords[1]];
     }
-    //console.log(this_td_coords[1] + " + " + ship.length + " - " + td_position + " > 10")
     if (this_td_coords[1] + ship.length - td_position > 10) {
-        //console.log(this_td_coords[1] + " - " + td_position);
-        //console.log(this_td_coords[1]);
         grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
     }
     console.log(grabbed_td);
+}
+
+function getPositionTD(ship, td) {
+    for (let i = 0; i < ship.length; i++) {
+        if (ship[i] == td) {
+            return i;
+        }
+    }
 }
 
 function removeSelectedCells() {
@@ -295,22 +304,22 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
-                if (dragging) {
+                /*if (dragging) {
                     actual_td.style.backgroundColor = colorSelected;
                     selectedCells.push(actual_td);
-                } else {
+                } else {*/
                     actual_td.style.backgroundColor = "cyan";
                     newShip.push(actual_td);
-                }
+                //}
             } else {
                 break;
             }
-            if (!dragging) {
+            //if (!dragging) {// en vez de esto hago en el if un || dragging asi clereo las rojas
                 celdasRojas.push(actual_td);
-                if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)]) {
+                if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)] || dragging) {
                     celdasRojas = [];
                 }
-            }
+            //} // o un if dragging y hago mi logica de si actual_td = blue push :D
         }
         for (let i = 0; i < celdasRojas.length; i++) {
             celdasRojas[i].style.backgroundColor = "red";
