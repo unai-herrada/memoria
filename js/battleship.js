@@ -6,7 +6,7 @@ let colocandoCeldas = false;
 //let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5, 1, 10];
+let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10];
 let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
@@ -188,7 +188,7 @@ function celdaSeleccionada() {
             removeSelectedCells();
             this.style.backgroundColor = colorSelected;
             id1 = getCoords(this);
-            id2 = getCoords(this.nextSibling);
+            id2 = getCoords(this/*.nextSibling*/);
             // necesitamos guncion de getLast or whatever
             // getFirst(this, dragged_td, dragged_ship[0]);
             // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
@@ -209,9 +209,42 @@ function areNewCoordsValid(td, ship, this_td) {
             td_position = i;
         }
     }
-    console.log(parseInt(this_td.id.slice(1) - 1));
+    let this_td_coords = getCoords(this_td);
+    //console.log(this_td_coords);
+    if (this_td_coords[1] - td_position < 0) {
+        //console.log(td_position + " + " + this_td_coords[1] + " - " + td_position);
+        grabbed_td = ship[this_td_coords[1]];
+    }
+    //console.log(this_td_coords[1] + " + " + ship.length + " - " + td_position + " > 10")
+    if (this_td_coords[1] + ship.length - td_position > 10) {
+        //console.log(this_td_coords[1] + " - " + td_position);
+        //console.log(this_td_coords[1]);
+        grabbed_td = ship[this_td_coords[1]];
+    }
     console.log(grabbed_td);
-    if (parseInt(this_td.id.slice(1) - 1) < td_position) {
+    /*
+    if (ship.length != 1 && ship[0].id[0] != ship[1].id[0]) {
+        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
+        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
+            console.log("barco out of bounds");
+        }
+        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
+        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
+            console.log("barco out of bounds");
+        }
+    } else {
+        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
+        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
+            console.log("barco out of bounds");
+        }
+        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
+        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
+            console.log("barco out of bounds");
+        }
+    }*/
+    //console.log(parseInt(this_td.id.slice(1) - 1));
+    //console.log(grabbed_td);
+    /*if (parseInt(this_td.id.slice(1) - 1) < td_position) {
         grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
         // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
         // incluso si es negativo o positivo funcionaria igualmente
@@ -223,9 +256,9 @@ function areNewCoordsValid(td, ship, this_td) {
         // 
         // claro devolvemos la td_position osea ship[td_position]
         // y en este if es donde actualizamos la posicion para enviarla despues
-    }
-    console.log(grabbed_td);
-    console.log(td_position);
+    }*/
+    //console.log(grabbed_td);
+    //console.log(td_position);
     return true;
 }
 
@@ -264,12 +297,12 @@ function calculateLine(last_td) {
 }
 
 function getCoords(td) {
-    return [td.id.slice(1) - 1, td.id[0].charCodeAt(0) - 65];
+    return [td.id[0].charCodeAt(0) - 65, td.id.slice(1) - 1];
 }
 
 function drawLine(td_coords_1, td_coords_2, boolean) {
     let num1 = 0, num2 = 1;
-    if (!boolean) {
+    if (boolean) {
         [num1, num2] = [num2, num1];
     }
     if (td_coords_1[num1] == td_coords_2[num1]) {
@@ -478,4 +511,8 @@ y lo queremos al reves
 maxNum (10) + minNUm(1) - num
 si num era 1 ahora es 10
 si num era 10 ahora es 1
+*/
+
+/*
+BUG: CUANDO HAGO UN BARCO CON ERROR Y LO DRAGGEO APARECE DE VUELTA LA CELDA ROJA
 */
