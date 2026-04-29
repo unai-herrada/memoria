@@ -243,8 +243,9 @@ function celdaSeleccionada() {
         let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - parseInt(grabbed_td.id.slice(1)) + 1));
         let id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + grabbed_ship.length - (getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
         //console.log(id1); // parseInt(grabbed_ship[0].id.slice(1))  parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) - 1
-        console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
-        console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
+        // AHORA CREO ES PORQUE NO SE ACTUALIZA GRABBED LO JURO ES ESO
+        console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
+        console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) + 1) + grabbed_ship.length - 1)));
         //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)));
         //let id2 = document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1));
         //console.log(id2);
@@ -291,7 +292,7 @@ function updateGrabbed_td(ship, td, this_td) {
             grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
         }
     }
-    console.log(grabbed_td);
+    //console.log(grabbed_td);
     //return grabbed_td.id;
     //return 
 }
