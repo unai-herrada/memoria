@@ -215,10 +215,12 @@ function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
         updateGrabbed_td(grabbed_ship, grabbed_td, this);
+        /*
         let id1 = getCoords(this);
         let id2 = getCoords(this.nextSibling);
         drawLine(id1, id2, true);
         drawLine(id1, id2, false);
+        //*/
         /*
             let clicked_td_coords = getCoords(clicked_td);
             let last_td_coords = getCoords(last_td);
@@ -235,13 +237,23 @@ function celdaSeleccionada() {
 function updateGrabbed_td(ship, td, this_td) {
     let td_position = getPositionTD(ship, td);
     let this_td_coords = getCoords(this_td);
-    if (this_td_coords[1] - td_position < 0) {
-        grabbed_td = ship[this_td_coords[1]];
-    }
-    if (this_td_coords[1] + ship.length - td_position > 10) {
-        grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
+    if (isShipVertical(ship)) {
+        if (this_td_coords[0] - td_position < 0) {
+            grabbed_td = ship[this_td_coords[0]];
+        }
+        if (this_td_coords[0] + ship.length - td_position > 10) {
+            grabbed_td = ship[ship.length - nColumns + this_td_coords[0]];
+        }
+    } else {
+        if (this_td_coords[1] - td_position < 0) {
+            grabbed_td = ship[this_td_coords[1]];
+        }
+        if (this_td_coords[1] + ship.length - td_position > 10) {
+            grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
+        }
     }
     console.log(grabbed_td);
+    //return grabbed_td.id;
 }
 
 function getPositionTD(ship, td) {
