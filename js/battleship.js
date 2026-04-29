@@ -189,12 +189,12 @@ function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
         grabbed_ship = getGrabbedShip(this);
         toggleBorder(grabbed_ship);
-        /*
+        
         dragging = true;
         grabbed_td = this;
         grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
         selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
-        grabbed_ship = getGrabbedShip(grabbed_td);
+        //grabbed_ship = getGrabbedShip(grabbed_td);
         //addClassSiblings(this, "grabbing");
         /*//*
         COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
@@ -212,9 +212,9 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
-    dragging = false;
+    //dragging = false;
     if (dragging) {
-
+        updateGrabbed_td(grabbed_td, grabbed_ship, this);
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
@@ -238,7 +238,7 @@ function updateGrabbed_td(td, ship, this_td) {
     if (this_td_coords[1] + ship.length - td_position > 10) {
         //console.log(this_td_coords[1] + " - " + td_position);
         //console.log(this_td_coords[1]);
-        grabbed_td = ship[this_td_coords[1]];
+        grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
     }
     console.log(grabbed_td);
 }
