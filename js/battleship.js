@@ -94,7 +94,8 @@ function cambiarColor() {
             /*if (newShip.length > 1) {
                 se podria poner aqui y hacer q la funcion reciba la array de una en vez de placingShip
             }*/
-            barcos.push(Array.from(newShip));
+            barcos.push(fixShip(newShip));
+            toggleBorder(barcos[barcos.length - 1]);
             setTimeout(placingShip, 50);
         } else {
             newShip = [];
@@ -107,10 +108,27 @@ function cambiarColor() {
     }
 }
 
+function fixShip(shipToFix) {
+    let ship = [];
+    shipToFix = shipToFix.slice(0, shipToFix.length - celdasRojas.length);
+    if (shipToFix.length != 1 && (parseInt(shipToFix[0].id.slice(1)) > parseInt(shipToFix[1].id.slice(1)) || shipToFix[0].id[0] > shipToFix[1].id[0])) {
+        if (isShipVertical(shipToFix)) {
+            for (let i = 0; i < shipToFix.length; i++) {
+                ship.unshift(shipToFix[i]);
+            }
+        } else {
+            for (let i = 0; i < shipToFix.length; i++) {
+                ship.unshift(shipToFix[i]);
+            }
+        }
+        return ship;
+    }
+    return shipToFix;
+}
+
 function toggleBorder(ship) {
-    let vertical = isShipVertical(ship);
     for (let i = 1; i < ship.length; i++) {
-        if (vertical) {
+        if (isShipVertical(ship)) {
             if (getComputedStyle(ship[i - 1]).borderBottomStyle != "none") {
                 ship[i - 1].style.borderBottom = "none";
                 ship[i].style.borderTop = "none";
@@ -164,7 +182,7 @@ function placingShip() {
 }
 
 function isShipVertical(ship) {
-    return ship.length != 1 && ship[0].id[0] < ship[1].id[0];
+    return ship.length > 1 && ship[0].id[0] < ship[1].id[0];
 }
 
 function seleccionandoCeldas() {
