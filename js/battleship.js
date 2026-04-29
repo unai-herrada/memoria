@@ -245,6 +245,8 @@ function celdaSeleccionada() {
         //console.log(id1); // parseInt(grabbed_ship[0].id.slice(1))  parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) - 1
         console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
         console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
+        //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)));
+        //let id2 = document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1));
         //console.log(id2);
         //console.log(parseInt(this.id.slice(1)) + " - " + grabbed_ship.length + " + 1");
         //console.log(this.id[0] + "(" + parseInt(this.id.slice(1)) + " + (" + parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) + " - " + parseInt(grabbed_td.id.slice(1)) + "))");
