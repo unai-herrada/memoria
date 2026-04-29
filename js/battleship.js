@@ -16,6 +16,7 @@ let dragging = false;
 let barcos = [];
 let grabbed_td;
 let grabbed_ship;
+let grabbed_ship_copia;
 let selectedCells = [];
 let ghostShip = [];
 window.onload = iniciar;
@@ -201,6 +202,7 @@ function seleccionandoCeldas() {
         dragging = true;
         grabbed_td = this;
         grabbed_ship = getGrabbedShip(grabbed_td);
+        grabbed_ship_copia = Array.from(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         //grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
         //selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
@@ -224,33 +226,37 @@ function seleccionandoCeldas() {
 function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
-        newShip = Array.from(grabbed_ship);
-        toggleBorder(newShip);
-        toggleSelectShip(newShip);
-        updateGrabbed_td(newShip, grabbed_td, this);
-        if (isShipVertical(newShip)) {
+        newShip = [];
+        toggleBorder(grabbed_ship);
+        toggleSelectShip(grabbed_ship);
+        updateGrabbed_td(grabbed_ship, grabbed_td, this);
+        if (isShipVertical(grabbed_ship)) {
             //xyToCoordinates(a, parseInt(this.id.slice(1)));
         } else {// el vertical siempre tiene los mismos numeros
             //xyToCoordinates(this.id[0], );
         }
         //console.log(selectedCells);
         //newShip.push(grabbed_ship[0].nextSibling);
-        let id1 = getCoords(newShip[0].nextSibling);
-        let id2 = getCoords(newShip[newShip.length - 1].nextSibling);
-        id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - newShip.length + 1));
-        id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + getPositionTD(newShip, grabbed_td)));
-        console.log(id1);
+        //let id1 = getCoords(grabbed_ship[0].nextSibling);
+        //let id2 = getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling);
+        //console.log(grabbed_td);
+        let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - parseInt(grabbed_td.id.slice(1)) + 1));
+        let id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + grabbed_ship.length - (getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
+        //console.log(id1); // parseInt(grabbed_ship[0].id.slice(1))  parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) - 1
+        console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
+        console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
+        //console.log(id2);
+        //console.log(parseInt(this.id.slice(1)) + " - " + grabbed_ship.length + " + 1");
         //console.log(this.id[0] + "(" + parseInt(this.id.slice(1)) + " + (" + parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) + " - " + parseInt(grabbed_td.id.slice(1)) + "))");
-        console.log(id2);
-        console.log(getPositionTD(newShip, grabbed_td));
+        //console.log(getPositionTD(grabbed_ship, grabbed_td));
         newShip.push(id1);
         //console.log(document.getElementById(this.id[0] + grabbed_ship[0].id.slice(1)));
         //console.log(document.getElementById(this.id[0] + grabbed_ship[grabbed_ship.length - 1].id.slice(1)));
-        drawLine(getCoords(id1), getCoords(id2), isShipVertical(newShip));
-        //grabbed_ship = Array.from(newShip);
-        toggleBorder(newShip);
-        toggleSelectShip(newShip);
-        console.log(newShip);
+        drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship));
+        grabbed_ship = Array.from(newShip);
+        toggleBorder(grabbed_ship);
+        toggleSelectShip(grabbed_ship);
+        console.log(grabbed_ship);
         //*/
         /*
             let clicked_td_coords = getCoords(clicked_td);
@@ -283,9 +289,9 @@ function updateGrabbed_td(ship, td, this_td) {
             grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
         }
     }
-    //console.log(grabbed_td);
+    console.log(grabbed_td);
     //return grabbed_td.id;
-    return 
+    //return 
 }
 
 function getPositionTD(ship, td) {
@@ -653,3 +659,9 @@ despues la tendras que mover arrastandola con mecanica grabbing
     //console.log(grabbed_td);
     //console.log(td_position);
     //return grabbed_td;
+
+
+
+/*
+
+*/
