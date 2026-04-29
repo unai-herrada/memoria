@@ -224,31 +224,33 @@ function seleccionandoCeldas() {
 function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
-        newShip = [];
-        toggleBorder(grabbed_ship);
-        toggleSelectShip(grabbed_ship);
-        updateGrabbed_td(grabbed_ship, grabbed_td, this);
-        if (isShipVertical(grabbed_ship)) {
+        newShip = Array.from(grabbed_ship);
+        toggleBorder(newShip);
+        toggleSelectShip(newShip);
+        updateGrabbed_td(newShip, grabbed_td, this);
+        if (isShipVertical(newShip)) {
             //xyToCoordinates(a, parseInt(this.id.slice(1)));
         } else {// el vertical siempre tiene los mismos numeros
             //xyToCoordinates(this.id[0], );
         }
         //console.log(selectedCells);
         //newShip.push(grabbed_ship[0].nextSibling);
-        let id1 = getCoords(grabbed_ship[0].nextSibling);
-        let id2 = getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling);
-        id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - grabbed_ship.length + 1));
-        id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + (parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) - parseInt(grabbed_td.id.slice(1)))));
+        let id1 = getCoords(newShip[0].nextSibling);
+        let id2 = getCoords(newShip[newShip.length - 1].nextSibling);
+        id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - newShip.length + 1));
+        id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + getPositionTD(newShip, grabbed_td)));
         console.log(id1);
+        //console.log(this.id[0] + "(" + parseInt(this.id.slice(1)) + " + (" + parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) + " - " + parseInt(grabbed_td.id.slice(1)) + "))");
         console.log(id2);
+        console.log(getPositionTD(newShip, grabbed_td));
         newShip.push(id1);
         //console.log(document.getElementById(this.id[0] + grabbed_ship[0].id.slice(1)));
         //console.log(document.getElementById(this.id[0] + grabbed_ship[grabbed_ship.length - 1].id.slice(1)));
-        drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship));
-        grabbed_ship = Array.from(newShip);
-        toggleBorder(grabbed_ship);
-        toggleSelectShip(grabbed_ship);
-        console.log(grabbed_ship);
+        drawLine(getCoords(id1), getCoords(id2), isShipVertical(newShip));
+        //grabbed_ship = Array.from(newShip);
+        toggleBorder(newShip);
+        toggleSelectShip(newShip);
+        console.log(newShip);
         //*/
         /*
             let clicked_td_coords = getCoords(clicked_td);
