@@ -11,6 +11,7 @@ let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
 let nColumns = 10;
+//console.log(Math.abs(nColumns).toString().length);
 let dragging = false;
 let barcos = [];
 let grabbed_td;
@@ -83,9 +84,9 @@ function createTable(rows, columns) { // x horizontal y vertical
 }
 
 function cambiarColor() {
-    if ((!colocandoCeldas && seleccionando) || dragging) {
+    if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
         seleccionando = false;
-        dragging = false;
+        //dragging = false;
         if (newShip.length - celdasRojas.length != 0 && barcosPorColocar.includes(newShip.length - celdasRojas.length)) {
             colocandoCeldas = true;
             barcosPorColocar.splice(barcosPorColocar.indexOf(newShip.length - celdasRojas.length), 1);
@@ -102,6 +103,29 @@ function cambiarColor() {
             }
             celdasRojas = [];
             clicked_td.style.backgroundColor = colorDefault;
+        }
+    }
+}
+
+function toggleBorder(ship) {
+    let vertical = isShipVertical(ship);
+    for (let i = 1; i < ship.length; i++) {
+        if (vertical) {
+            if (getComputedStyle(ship[i - 1]).borderBottomStyle != "none") {
+                ship[i - 1].style.borderBottom = "none";
+                ship[i].style.borderTop = "none";
+            } else {
+                ship[i - 1].style.borderBottom = "1px inset grey";
+                ship[i].style.borderTop = "1px inset grey";
+            }
+        } else {
+            if (getComputedStyle(ship[i - 1]).borderRightStyle != "none") {
+                ship[i - 1].style.borderRight = "none";
+                ship[i].style.borderLeft = "none";
+            } else {
+                ship[i - 1].style.borderRight = "1px inset grey";
+                ship[i].style.borderLeft = "1px inset grey";
+            }
         }
     }
 }
@@ -126,7 +150,7 @@ function placingShip() {
         if (newShip[0].style.backgroundColor != "red") {
             newShip[0].style.backgroundColor = "blue";
             if (newShip.length > 1 && newShip[1].style.backgroundColor != "red") {
-                uniteTDs(newShip[0], newShip[1]);
+                //uniteTDs(newShip[0], newShip[1]);
             }
         } else {
             newShip[0].style.backgroundColor = colorDefault;
@@ -139,15 +163,22 @@ function placingShip() {
     }
 }
 
+function isShipVertical(ship) {
+    return ship.length != 1 && ship[0].id[0] < ship[1].id[0];
+}
+
 function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
+        grabbed_ship = getGrabbedShip(this);
+        toggleBorder(grabbed_ship);
+        /*
         dragging = true;
         grabbed_td = this;
         grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
         selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
         grabbed_ship = getGrabbedShip(grabbed_td);
         //addClassSiblings(this, "grabbing");
-        /*
+        /*//*
         COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
         */
     } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging) {
@@ -163,6 +194,7 @@ function seleccionandoCeldas() {
 }
 
 function celdaSeleccionada() {
+    dragging = false;
     if (dragging) {
 
     } else if (seleccionando && !colocandoCeldas) {
@@ -275,6 +307,11 @@ function xyToCoordinates(x, y, reverseOrder) {
     let xCoordinate = String.fromCharCode(65 + x);
     let yCoordinate = y + 1;
     return xCoordinate + yCoordinate;
+    /* esto para coger length de un numero para ponerlo en la id A01
+    Math.abs(numero).toString().length
+    tambien quiero la logica que cree una vez en el blockblast del excel
+    AA...AZ, BA y todo eso
+    */
 }
 
 /*
