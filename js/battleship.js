@@ -185,15 +185,25 @@ function isShipVertical(ship) {
     return ship.length > 1 && ship[0].id[0] < ship[1].id[0];
 }
 
+function toggleSelectShip(ship) {
+    for (let i = 0; i < ship.length; i++) {
+        if (ship[i].style.backgroundColor != colorSelected) {
+            ship[i].style.backgroundColor = colorSelected;
+        } else {
+            ship[i].style.backgroundColor = colorDefault;
+        }
+    }
+}
+
 function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
-        grabbed_ship = getGrabbedShip(this);
-        toggleBorder(grabbed_ship);
-        
+        //toggleBorder(grabbed_ship);
         dragging = true;
         grabbed_td = this;
-        grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
-        selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
+        grabbed_ship = getGrabbedShip(grabbed_td);
+        toggleSelectShip(grabbed_ship);
+        //grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
+        //selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
         //grabbed_ship = getGrabbedShip(grabbed_td);
         //addClassSiblings(this, "grabbing");
         /*//*
@@ -214,12 +224,31 @@ function seleccionandoCeldas() {
 function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
+        newShip = [];
+        toggleBorder(grabbed_ship);
+        toggleSelectShip(grabbed_ship);
         updateGrabbed_td(grabbed_ship, grabbed_td, this);
-        /*
-        let id1 = getCoords(this);
-        let id2 = getCoords(this.nextSibling);
-        drawLine(id1, id2, true);
-        drawLine(id1, id2, false);
+        if (isShipVertical(grabbed_ship)) {
+            //xyToCoordinates(a, parseInt(this.id.slice(1)));
+        } else {// el vertical siempre tiene los mismos numeros
+            //xyToCoordinates(this.id[0], );
+        }
+        //console.log(selectedCells);
+        //newShip.push(grabbed_ship[0].nextSibling);
+        let id1 = getCoords(grabbed_ship[0].nextSibling);
+        let id2 = getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling);
+        id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - grabbed_ship.length + 1));
+        id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + (parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) - parseInt(grabbed_td.id.slice(1)))));
+        console.log(id1);
+        console.log(id2);
+        newShip.push(id1);
+        //console.log(document.getElementById(this.id[0] + grabbed_ship[0].id.slice(1)));
+        //console.log(document.getElementById(this.id[0] + grabbed_ship[grabbed_ship.length - 1].id.slice(1)));
+        drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship));
+        grabbed_ship = Array.from(newShip);
+        toggleBorder(grabbed_ship);
+        toggleSelectShip(grabbed_ship);
+        console.log(grabbed_ship);
         //*/
         /*
             let clicked_td_coords = getCoords(clicked_td);
@@ -242,7 +271,7 @@ function updateGrabbed_td(ship, td, this_td) {
             grabbed_td = ship[this_td_coords[0]];
         }
         if (this_td_coords[0] + ship.length - td_position > 10) {
-            grabbed_td = ship[ship.length - nColumns + this_td_coords[0]];
+            grabbed_td = ship[ship.length - nRows + this_td_coords[0]];
         }
     } else {
         if (this_td_coords[1] - td_position < 0) {
@@ -252,8 +281,9 @@ function updateGrabbed_td(ship, td, this_td) {
             grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
         }
     }
-    console.log(grabbed_td);
+    //console.log(grabbed_td);
     //return grabbed_td.id;
+    return 
 }
 
 function getPositionTD(ship, td) {
@@ -291,11 +321,22 @@ function removeCyanCells() {
 }
 
 function calculateLine(last_td) {
-    let clicked_td_coords = getCoords(clicked_td);
-    let last_td_coords = getCoords(last_td);
     newShip.push(clicked_td);
-    drawLine(clicked_td_coords, last_td_coords, true);
-    drawLine(clicked_td_coords, last_td_coords, false);
+    drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
+    for (let i = 0; i < newShip.length; i++) {
+        if (newShip[i].style.backgroundColor != colorSelected) {
+            newShip[i].style.backgroundColor = "cyan";
+        }
+    }
+    for (let i = 0; i < celdasRojas.length; i++) {
+        celdasRojas[i].style.backgroundColor = "red";
+    }
+    /*
+    Podria hacer un fixship antes y guardarlo en shipX idk el nombre
+    Despues getCoordsSHIP[0] y asi
+    Y en drawLine se podra simplificar lo de sumar restar i porque estara fixed
+    NVM si esta fixed el primero podria ser last td q no queremos
+    */
 }
 
 function getCoords(td) {
@@ -320,7 +361,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
                     actual_td.style.backgroundColor = colorSelected;
                     selectedCells.push(actual_td);
                 } else {*/
-                    actual_td.style.backgroundColor = "cyan";
+                    //actual_td.style.backgroundColor = "cyan";
                     newShip.push(actual_td);
                 //}
             } else {
@@ -332,9 +373,6 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
                     celdasRojas = [];
                 }
             //} // o un if dragging y hago mi logica de si actual_td = blue push :D
-        }
-        for (let i = 0; i < celdasRojas.length; i++) {
-            celdasRojas[i].style.backgroundColor = "red";
         }
     }
 }
