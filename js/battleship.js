@@ -296,9 +296,6 @@ function celdaSeleccionada() {
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
         toggleBorder(grabbed_ship);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
-        /*if (ship[i].style.backgroundColor = "blue") {
-            ship[i].style.backgroundColor = "red";
-        }*/
         toggleSelectShip(grabbed_ship);
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
@@ -371,12 +368,6 @@ function calculateLine(last_td) {
     for (let i = 0; i < celdasRojas.length; i++) {
         celdasRojas[i].style.backgroundColor = "red";
     }
-    /*
-    Podria hacer un fixship antes y guardarlo en shipX idk el nombre
-    Despues getCoordsSHIP[0] y asi
-    Y en drawLine se podra simplificar lo de sumar restar i porque estara fixed
-    NVM si esta fixed el primero podria ser last td q no queremos
-    */
 }
 
 function getCoords(td) {
@@ -397,13 +388,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
-                /*if (dragging) {
-                    actual_td.style.backgroundColor = colorSelected;
-                    selectedCells.push(actual_td);
-                } else {*/
-                    //actual_td.style.backgroundColor = "cyan";
                     newShip.push(actual_td);
-                //}
             } else {
                 break;
             }
@@ -574,3 +559,10 @@ despues la tendras que mover arrastandola con mecanica grabbing
             //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
             toggleBorder(clicked_ship);
             */
+
+            /*
+    Podria hacer un fixship antes y guardarlo en shipX idk el nombre
+    Despues getCoordsSHIP[0] y asi
+    Y en drawLine se podra simplificar lo de sumar restar i porque estara fixed
+    NVM si esta fixed el primero podria ser last td q no queremos
+    */
