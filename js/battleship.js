@@ -3,7 +3,6 @@ let clicked_td;
 let unclicked_td;
 let newShip = [];
 let colocandoCeldas = false;
-//let colorDefault = "#e3f2fd";
 let colorDefault = "rgb(227, 242, 253)";
 let colorSelected = "rgb(0, 127, 255)";
 let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10];
@@ -20,6 +19,7 @@ let grabbed_ship_copia;
 let selectedCells = [];
 let ghostShip = [];
 let blueCells = [];
+let clicked_ship = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -30,7 +30,6 @@ function crearContenidoPopup() {
     //barcosPorColocar = barcos; // bug aunque ponga esto si pones todos los barcos y clikeas fuera del popup y lo abres de vuelta no se reinicia
     let table = createTable(nRows, nColumns);
     let menu = document.getElementById("menu");
-    //console.log(menu);
     menu.innerHTML = "";
     menu.appendChild(table);
     let center = document.createElement("center");
@@ -88,7 +87,7 @@ function createTable(rows, columns) { // x horizontal y vertical
 function cambiarColor() {
     if (dragging) {
         dragging = false;
-        setTimeout(placingShip, 0);
+        setTimeout(placingShip, 0, 0); // for now leave it like this
     } else if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
         seleccionando = false;
         //dragging = false;
@@ -101,7 +100,7 @@ function cambiarColor() {
             }*/
             barcos.push(fixShip(newShip));
             toggleBorder(barcos[barcos.length - 1]);
-            setTimeout(placingShip, 50);
+            setTimeout(placingShip, 50, 75);
         } else {
             newShip = [];
             for (let i = 0; i < celdasRojas.length; i++) {
@@ -113,22 +112,22 @@ function cambiarColor() {
     }
 }
 
-function fixShip(shipToFix) {
-    let ship = [];
-    shipToFix = shipToFix.slice(0, shipToFix.length - celdasRojas.length);
-    if (shipToFix.length != 1 && (parseInt(shipToFix[0].id.slice(1)) > parseInt(shipToFix[1].id.slice(1)) || shipToFix[0].id[0] > shipToFix[1].id[0])) {
-        if (isShipVertical(shipToFix)) {
-            for (let i = 0; i < shipToFix.length; i++) {
-                ship.unshift(shipToFix[i]);
+function fixShip(ship) {
+    let fixedShip = [];
+    ship = ship.slice(0, ship.length - celdasRojas.length);
+    if (ship.length != 1 && (parseInt(ship[0].id.slice(1)) > parseInt(ship[1].id.slice(1)) || ship[0].id[0] > ship[1].id[0])) {
+        if (isShipVertical(ship)) {
+            for (let i = 0; i < ship.length; i++) {
+                fixedShip.unshift(ship[i]);
             }
         } else {
-            for (let i = 0; i < shipToFix.length; i++) {
-                ship.unshift(shipToFix[i]);
+            for (let i = 0; i < ship.length; i++) {
+                fixedShip.unshift(ship[i]);
             }
         }
-        return ship;
+        return fixedShip;
     }
-    return shipToFix;
+    return ship;
 }
 
 function toggleBorder(ship) {
@@ -168,19 +167,19 @@ function uniteTDs(td_1, td_2) {
     }
 }
 
-function placingShip() {
+function placingShip(delay) {
     if (newShip.length > 0) {
         if (newShip[0].style.backgroundColor != "red") {
             newShip[0].style.backgroundColor = "blue";
-            if (newShip.length > 1 && newShip[1].style.backgroundColor != "red") {
-                //uniteTDs(newShip[0], newShip[1]);
-            }
+            /*if (newShip.length > 1 && newShip[1].style.backgroundColor != "red") {
+                uniteTDs(newShip[0], newShip[1]);
+            }*/
         } else {
             newShip[0].style.backgroundColor = colorDefault;
         }
         //newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
         newShip.shift();
-        setTimeout(placingShip, 75);
+        setTimeout(placingShip, delay);
     } else {
         colocandoCeldas = false;
     }
@@ -202,21 +201,58 @@ function toggleSelectShip(ship) {
     }
 }
 
+function rotateShip(ship, td_position) {
+    rotatedShip = [];
+    for (let i = 0; i < ship.length; i++) {
+
+    }
+}
+
+function getTD(row, column) {
+    return document.getElementById(xyToCoordinates(row, column, false));
+}
+
+function get_td_from(td, row, column) {
+    let xtd_coords = getCoords(td);
+    td_coords[0] = td_coords[0] + row;
+    if (td_coords[0] < 0) {
+        td_coords[0] = 0;
+    } else if (td_coords[0] >= nRows) {
+        td_coords[0] = nRows - 1;
+    }
+    td_coords[1] = td_coords[1] + column;
+    if (td_coords[1] < 0) {
+        td_coords[1] = 0;
+    } else if (td_coords[1] >= nColumns) {
+        td_coords[1] = nColumns - 1;
+    }
+    return getTD(td_coords[0], td_coords[1]);
+}
+
 function seleccionandoCeldas() {
-    if (this.style.backgroundColor == "blue") {
-        //toggleBorder(grabbed_ship);
+    if (this.style.backgroundColor == "blue" && event.shiftKey) {
+        clicked_ship = getGrabbedShip(this);
+        toggleBorder(clicked_ship);
+        //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
+        toggleBorder(clicked_ship);
+    } else if (this.style.backgroundColor == "blue") {
         dragging = true;
+        /*
+        console.log(barcos.length);
+        for (let i = 0; i < barcos.length; i++) {
+            console.log(barcos[i] == grabbed_ship_copia);
+            console.log(barcos[i] + " + " + grabbed_ship_copia);
+            if (barcos[i] == grabbed_ship_copia) {
+                barcos[0] = grabbed_ship;
+            }
+        }
+            */
         grabbed_td = this;
         grabbed_ship = getGrabbedShip(grabbed_td);
         grabbed_ship_copia = Array.from(grabbed_ship);
         toggleSelectShip(grabbed_ship);
-        //grabbed_td.style.backgroundColor = colorSelected; // esto deberia de ser TODO el barco
-        //selectedCells.push(grabbed_td); // lo mismo tambien deberia de ser todo el barco
-        //grabbed_ship = getGrabbedShip(grabbed_td);
         //addClassSiblings(this, "grabbing");
-        /*//*
-        COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
-        */
+        //COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
     } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging) {
         removeCyanCells();
         if (seleccionando) {
@@ -240,68 +276,34 @@ function tilesOverrided(ship) {
 }
 
 function celdaSeleccionada() {
-    //dragging = false;
     if (dragging) {
+        /*
+        grabbedShip = newShip;
+        de esta forma siempre tendremos grabbed ship
+        y podremos hacer que barcos guarde grabbed ship al instante
+        para el getGrabberSHip
+        */
         newShip = [];
         toggleBorder(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         updateGrabbed_td(grabbed_ship_copia, getPositionTD(grabbed_ship_copia, grabbed_td), this);
-        if (isShipVertical(grabbed_ship)) {
-            //xyToCoordinates(a, parseInt(this.id.slice(1)));
-        } else {// el vertical siempre tiene los mismos numeros
-            //xyToCoordinates(this.id[0], );
-        }
-        //console.log(selectedCells);
-        //newShip.push(grabbed_ship[0].nextSibling);
-        //let id1 = getCoords(grabbed_ship[0].nextSibling);
-        //let id2 = getCoords(grabbed_ship[grabbed_ship.length - 1].nextSibling);
-        //console.log(grabbed_td);
-        //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - parseInt(grabbed_td.id.slice(1)) + 1));
-        //let id2 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) + grabbed_ship.length - (getPositionTD(grabbed_ship_copia, grabbed_td) + 1)));
-        //console.log(id1); // parseInt(grabbed_ship[0].id.slice(1))  parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td) - 1
-        // AHORA CREO ES PORQUE NO SE ACTUALIZA GRABBED LO JURO ES ESO
         let id1;
         let id2;
         let this_td_coords = getCoords(this);
         if (isShipVertical(grabbed_ship_copia)) {
-            //console.log("Vertical");
             id1 = document.getElementById(numberToLetter(this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)) + this.id.slice(1));
             id2 = document.getElementById(numberToLetter(this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1) + this.id.slice(1));
         } else {
-            //console.log("Horizontal");
             id1 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)));
             id2 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1));
         }
-        //console.log(this_td_coords[0] + " + 1 - " + getPositionTD(grabbed_ship_copia, grabbed_td));
-        //console.log(numberToLetter((this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td))));
-        //console.log(this.id.slice(1));
-        //console.log(id1);
-        //console.log(id2);
-        //console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
-        //console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
-        //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)));
-        //let id2 = document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1));
-        //console.log(id2);
-        //console.log(parseInt(this.id.slice(1)) + " - " + grabbed_ship.length + " + 1");
-        //console.log(this.id[0] + "(" + parseInt(this.id.slice(1)) + " + (" + parseInt(grabbed_ship[grabbed_ship.length - 1].id.slice(1)) + " - " + parseInt(grabbed_td.id.slice(1)) + "))");
-        //console.log(getPositionTD(grabbed_ship, grabbed_td));
         newShip.push(id1);
-        //console.log(document.getElementById(this.id[0] + grabbed_ship[0].id.slice(1)));
-        //console.log(document.getElementById(this.id[0] + grabbed_ship[grabbed_ship.length - 1].id.slice(1)));
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
         toggleBorder(grabbed_ship);
         //tilesOverrided(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         console.log(grabbed_ship);
-        //*/
-        /*
-            let clicked_td_coords = getCoords(clicked_td);
-            let last_td_coords = getCoords(last_td);
-            newShip.push(clicked_td);
-            drawLine(clicked_td_coords, last_td_coords, true);
-            drawLine(clicked_td_coords, last_td_coords, false);
-        */
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
@@ -326,9 +328,6 @@ function updateGrabbed_td(ship, td_position, this_td) {
     if (this_td_coords[num] + ship.length - td_position > nSize) {
         grabbed_td = ship[ship.length - nRows + this_td_coords[num]];
     }
-    //console.log(grabbed_td);
-    //return grabbed_td.id;
-    //return 
 }
 
 function getPositionTD(ship, td) {
@@ -526,66 +525,6 @@ el mejor movimiento siempre sera la posicion donde poniendo todas las posiciones
 */
 
 /*
-<button popovertarget="menu">Abrir Popup</button>
-<div id="menu" popover>
-  <h2>¡Hola!</h2>
-  <p>Este es un ejemplo de popup nativo.</p>
-  <button popovertarget="menu" popovertargetaction="hide">Cerrar</button>
-</div>
-
-<style>
-[popover] {
-    border: 2px solid #333;
-    border-radius: 8px;
-    padding: 20px;
-    margin: auto;
-}
-
-[popover]::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-}
-</style>
-HACER BUSCAMINAS
-if (clicked_td_coords[0] == last_td_coords[0]) {
-        for (let i = clicked_td_coords[1]; i != last_td_coords[1];) {
-            if (clicked_td_coords[1] < last_td_coords[1]) {
-                i++;
-            } else {
-                i--;
-            }
-            let actual_td = document.getElementById(xyToCoordinates(clicked_td_coords[0], i, true));
-            if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)] || actual_td.style.backgroundColor == "blue") {
-                break;
-            } else if (actual_td.style.backgroundColor == colorDefault) {
-                actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td.id);
-            }
-        }
-    } else if (clicked_td_coords[1] == last_td_coords[1]) {
-        for (let i = clicked_td_coords[0]; i != last_td_coords[0];) {
-            if (clicked_td_coords[0] < last_td_coords[0]) {
-                i++;
-            } else {
-                i--;
-            }
-            let actual_td = document.getElementById(xyToCoordinates(i, clicked_td_coords[1], true));
-            if (celdasSeleccionadas.length + 2 != barcosPorColocar[barcosPorColocar.indexOf(celdasSeleccionadas.length + 2)] || actual_td.style.backgroundColor == "blue") {
-
-                break;
-            } else if (actual_td.style.backgroundColor == colorDefault) {
-                actual_td.style.backgroundColor = "cyan";
-                celdasSeleccionadas.push(actual_td.id);
-            }
-        }
-    }
-
-    console.log(this.previousSibling);
-    console.log(this.nextSibling);
-    console.log(this.parentElement.previousSibling.children[this.id.slice(1) - 1]);
-    console.log(this.parentElement.nextSibling.children[this.id.slice(1) - 1]);
-*/
-
-/*
 Lineas que hay que cambiar si clicked_td lo pusheamos en celdasSeleccionadas
 82, 84, 99, 100, 101, 103, 105, 177
 Lineas que quiza hay que cambiar
@@ -634,71 +573,4 @@ despues la tendras que mover arrastandola con mecanica grabbing
         quiero que si haces Shift + Click en un barco lo eliminas y lo puedes volver a colocar despues
         se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
         quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
-        *//*
-        removeSelectedCells();
-        this.style.backgroundColor = colorSelected;
-        updateGrabbed_td(grabbed_td, grabbed_ship, this);
-        //ghostShip; // quiero usar newShip como nombre para el futuro luego se optimiza esto
-        grabbed_td_coords = getCoords(grabbed_td);
-        this_coords = getCoords(this);
-        drawLine(this_coords, grabbed_td_coords, true);
-        drawLine(this_coords, grabbed_td_coords, false);
-        /*
-        if (true) {
-            removeSelectedCells();
-            this.style.backgroundColor = colorSelected;
-            id1 = getCoords(this);
-            id2 = getCoords(this.nextSibling);
-            // necesitamos guncion de getLast or whatever
-            // getFirst(this, dragged_td, dragged_ship[0]);
-            // getLast(this, dragged_td, dragged_ship[dragged_ship.lenght - 1]);
-            selectedCells.push(this);
-            drawLine(id1, id2, true);// se calcula las cosas
-            drawLine(id1, id2, false);
-        }*/
-
-            /*
-/*
-    if (ship.length != 1 && ship[0].id[0] != ship[1].id[0]) {
-        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
-        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
-            console.log("barco out of bounds");
-        }
-        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
-        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
-            console.log("barco out of bounds");
-        }
-    } else {
-        console.log(parseInt(this_td.id.slice(1) - 1) + " + " + ship.length + " - " + td_position + " > 10");
-        if (parseInt(this_td.id.slice(1) - 1) + ship.length - td_position > 10) {
-            console.log("barco out of bounds");
-        }
-        console.log(parseInt(this_td.id.slice(1) - 1) + " - " + td_position + " < 0");
-        if (parseInt(this_td.id.slice(1) - 1) - td_position < 0) {
-            console.log("barco out of bounds");
-        }
-    }*/
-    //console.log(parseInt(this_td.id.slice(1) - 1));
-    //console.log(grabbed_td);
-    /*if (parseInt(this_td.id.slice(1) - 1) < td_position) {
-        grabbed_td = ship[parseInt(this_td.id.slice(1) - 1)]; // esto no es lo que tenia que hacer
-        // tengo que hacer que el ship no se vaya a la izq por ejemplo por la diferencia de td_position - parseInt ese
-        // incluso si es negativo o positivo funcionaria igualmente
-        // 10 - 10 fuck eso no tiene sentido un ship de 10 whatever no voy a pensar eso mucho
-        // quiza tan solo que esta funcion devuelva la diferencia esa en vez de mirar si es valido o no, si es valido after all
-        // la diferencia seria 0
-        // y si no es valida la diferencia lo hara valida y recordemos que las azules se haran rojas
-        // simple
-        // 
-        // claro devolvemos la td_position osea ship[td_position]
-        // y en este if es donde actualizamos la posicion para enviarla despues
-    }*/
-    //console.log(grabbed_td);
-    //console.log(td_position);
-    //return grabbed_td;
-
-
-
-/*
-
-*/
+        */
