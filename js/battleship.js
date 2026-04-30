@@ -109,7 +109,7 @@ function cambiarColor() {
                 se podria poner aqui y hacer q la funcion reciba la array de una en vez de placingShip
             }*/
             barcos.push(fixShip(newShip));
-            toggleBorder(barcos[barcos.length - 1]);
+            toggleBorder(barcos[barcos.length - 1], false);
             setTimeout(placingShip, 50, 75);
         } else {
             newShip = [];
@@ -140,23 +140,23 @@ function fixShip(ship) {
     return ship;
 }
 
-function toggleBorder(ship) {
+function toggleBorder(ship, putBorders) {
     for (let i = 1; i < ship.length; i++) {
         if (isShipVertical(ship)) {
-            if (getComputedStyle(ship[i - 1]).borderBottomStyle != "none") {
-                ship[i - 1].style.borderBottom = "none";
-                ship[i].style.borderTop = "none";
-            } else {
+            if (putBorders) {
                 ship[i - 1].style.borderBottom = "1px inset grey";
                 ship[i].style.borderTop = "1px inset grey";
+            } else {
+                ship[i - 1].style.borderBottom = "none";
+                ship[i].style.borderTop = "none";
             }
         } else {
-            if (getComputedStyle(ship[i - 1]).borderRightStyle != "none") {
-                ship[i - 1].style.borderRight = "none";
-                ship[i].style.borderLeft = "none";
-            } else {
+            if (putBorders) {
                 ship[i - 1].style.borderRight = "1px inset grey";
                 ship[i].style.borderLeft = "1px inset grey";
+            } else {
+                ship[i - 1].style.borderRight = "none";
+                ship[i].style.borderLeft = "none";
             }
         }
     }
@@ -181,8 +181,13 @@ function isShipVertical(ship) {
 }
 
 function toggleSelectShip(ship) {
+    console.log(ship);
     for (let i = 0; i < ship.length; i++) {
-        if (ship[i].style.backgroundColor != colorSelected) {
+        if (ship[i].style.backgroundColor == "rgb(0, 181, 255)") {
+            ship[i].style.backgroundColor = "blue";
+        } else if (ship[i].style.backgroundColor == "red") {
+            ship[i].style.backgroundColor = "rgb(0, 181, 255)";
+        } else if (ship[i].style.backgroundColor != colorSelected) {
             ship[i].style.backgroundColor = colorSelected;
         } else {
             ship[i].style.backgroundColor = colorDefault;
@@ -225,7 +230,7 @@ function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
         if (event.shiftKey) {
             clicked_ship = getGrabbedShip(this);
-            toggleBorder(clicked_ship);
+            toggleBorder(clicked_ship, true);
             toggleSelectShip(clicked_ship);
             toggleSelectShip(clicked_ship);
             barcosPorColocar.push(clicked_ship.length);
@@ -263,7 +268,7 @@ function tilesOverrided(ship) {
 function celdaSeleccionada() {
     if (dragging) {
         newShip = [];
-        toggleBorder(grabbed_ship);//toggleRedAlert(grabbed_ship);
+        toggleBorder(grabbed_ship, true);//toggleRedAlert(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         updateGrabbed_td(grabbed_ship_copia, getPositionTD(grabbed_ship_copia, grabbed_td), this);
         let id1;
@@ -279,7 +284,7 @@ function celdaSeleccionada() {
         newShip.push(id1);
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
-        toggleBorder(grabbed_ship);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
+        toggleBorder(grabbed_ship, false);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         toggleSelectShip(grabbed_ship);
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
@@ -372,7 +377,10 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
-                    newShip.push(actual_td);
+                newShip.push(actual_td);
+            } else if (actual_td.style.backgroundColor == "blue" && dragging) {
+                actual_td.style.backgroundColor = "red";
+                newShip.push(actual_td);
             } else {
                 break;
             }
@@ -399,169 +407,12 @@ function xyToCoordinates(x, y, reverseOrder) {
 }
 
 /*
-BUGGGGG
-UNA VEZ QUE YA TENGO EL SHIP DEBO DE LIMPIAR EL CLICKED_TD
-PORQUE SINO SE ELIMINA EN EL DRAG AL FINALIZARSE
-*/
-
-/*
-Añadir boton al menu de que si ya escoge esas posiciones de barcos
-y algo que verifice que todos los barcos estan puestos y los guarda en variables
 Tambien hacer algo que si un barco.lenght > que nRows y nColumns eliminar barco de array barcosPorColocar
 no se elimina de barcos porque quiza cambia el nRows o nColumns despues
-y la verificacion de eso se hace despues de que barcosPorColocar = barcos
-*/
-
-/* en vez de add un switch osea que la nueva class sera la unica que tenga
-function addClassSiblings(cell, className) {
-    cell.classList.add(className);
-    if (cell.previousSibling != null) {
-        cell.previousSibling.classList.add(className);
-    }
-    if (cell.nextSibling != null) {
-        cell.nextSibling.classList.add(className);
-    }
-    if (cell.parentElement.previousSibling != null) {
-        if (cell.parentElement.previousSibling.children[cell.id.slice(1) - 1] != null) {
-            cell.parentElement.previousSibling.children[cell.id.slice(1) - 1].classList.add(className);
-        }
-    }
-    if (cell.parentElement.nextSibling != null) {
-        if (cell.parentElement.nextSibling.children[cell.id.slice(1) - 1] != null) {
-            cell.parentElement.nextSibling.children[cell.id.slice(1) - 1].classList.add(className);
-        }
-    }
-}
 */
 
 /*
-DISEÑO:
-Menu principal con 3 botones en el medio
-Jugar online
-Partida custom (tambien puede ser con IA o con codigo para meterse)
-Jugar offline
-En el popup arriba derecha ponemos el boton de help y con el cursor ese de help que existe
-y explicamos como poner barcos
-https://vibhorjaiswal.github.io/Cursor-Test/
-*/
-
-/*
-COMO VOY A TENER QUE HACER QUE DOS JUGADORES SE ENFRENTEN ENTRE ELLOS
-Sistema ELO
-y opcion de partida custom en la que pueden cambiar opciones como barcos etc (no cuenta para ELO)
-*/
-
-/*
-TAMBIEN QUIERO QUE EN VEZ DE PONER LAS CELLS AUZL DE UNA QUE LAS AÑADO EN ARRAY
-Y DESPUES SI ACASO LAS HAGO AZUL
-
-nuevoBarco.length suena mejor cambiar la variable celdasSeleccionadas a eso
-newShip en ingles obviamente
-y hacer una funcion 
-ENCIMA ESTA VARIABLE NO SE PORQUE DECIDI PUSHEAR SOLO LA ID???
-MAKES NO SENSE
-*/
-
-/*
-PUES DEBAJO DE DONDE COLOCAS TUS BARCOS
-QUIERO un barco de dos hacia abajo
-a la derecha num barcos restantes
-y debajo barco de dos hacia la derecha
-para hacer cuadrado
-quiza encima de eso el nombre del barco o algo
-*/
-
-/*
-COSAS QUE ARREGLAR:
-
-ESTAN REVERTIDAS LAS COORDS? DONT ASK ME HOW - SEMI IMPORTANTE
-Esto es al mandarle a la funcion xyToCoordinates si swapeo la x y la y funca bien xd
-ESTA 1 DETRAS LO DE PONER EN CELESTE - IMPORTANTE
-y quiza que el ultimo que hoverees sea en si azul? total ya de porsi tiene delay de 1
-
-
-cursor: not-allowed;
-en el popup quiero que el jugador escoja su posicion de los barcos
 y tambien la dificultad de a AI con un desplegable
 el desplegable marca el % de random de hacer el mejor movimiento
 el mejor movimiento siempre sera la posicion donde poniendo todas las posiciones de barcos hay mas probabilidad
 */
-
-/*
-Lineas que hay que cambiar si clicked_td lo pusheamos en celdasSeleccionadas
-82, 84, 99, 100, 101, 103, 105, 177
-Lineas que quiza hay que cambiar
-88, 93, 121, 141
-Linea 153-154 PUSHEAMOS clicked alli es una opcion
-PLUS las lineas que afectas colores porque ahora las cells seleccionadas tendran el color: colorSelected
-*/
-
-/*
-recuerda para darle la vuelta a un numero
-1, 10
-y lo queremos al reves
-maxNum (10) + minNUm(1) - num
-si num era 1 ahora es 10
-si num era 10 ahora es 1
-*/
-
-/*
-BUG: CUANDO HAGO UN BARCO CON ERROR Y LO DRAGGEO APARECE DE VUELTA LA CELDA ROJA
-*/
-
-/*
-dije shift click para eliminar pero y si es para rotar la ficha?
-despues la tendras que mover arrastandola con mecanica grabbing
-*/
-
-/*
-        // TODO ESTO DEBERIA DE ESTAR DENTRO DEL SELECIONANDO !COLOCANDO CELDAS
-        // ya que solo se actualizara la posicion final cuando suelte el click
-        // y cuando lo suelte esto dejara de funcar
-        //addClassSiblings(this, "grabbing");
-        /*
-        si llega a una esquina como no deberias pushear mas dragged_td se convierte la esquina :D
-        moviendo todo asi uno a la izquierda si es que vamos a la derecha
-
-        si posicion es invalida (hay un barco ahi)
-        ponemos la casilla que este en la posicion unvalida en rojo 
-        luego la devolveremos a azul
-        guardando la esta en celdasRojas
-        si sueltas el click en posicion unvalida
-        vuelve a su posicion original
-        por lo tanto areNewCoordsValid es algo que se tiene que chekear para cada cell con un for
-        y si no es valido se pone en rojo o se cambia las coords del draggable
-
-        TAMBIEN
-        quiero que si haces Shift + Click en un barco lo eliminas y lo puedes volver a colocar despues
-        se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
-        quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
-        */
-
-        /* mejor lo elimino y ya
-            toggleBorder(clicked_ship);
-            //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
-            toggleBorder(clicked_ship);
-            */
-
-            /*
-    Podria hacer un fixship antes y guardarlo en shipX idk el nombre
-    Despues getCoordsSHIP[0] y asi
-    Y en drawLine se podra simplificar lo de sumar restar i porque estara fixed
-    NVM si esta fixed el primero podria ser last td q no queremos
-
-    function uniteTDs(td_1, td_2) {
-    let sameColumn = newShip[0].id.slice(1) == newShip[1].id.slice(1);
-    let lowToHigh = (parseInt(newShip[0].id.slice(1)) < parseInt(newShip[1].id.slice(1)) || (newShip[0].id[0] < newShip[1].id[0] && newShip[0].id.slice(1) == newShip[1].id.slice(1)));
-    if (!lowToHigh) {
-        [td_1, td_2] = [td_2, td_1];
-    }
-    if (sameColumn) {
-        td_1.style.borderBottom = "none";
-        td_2.style.borderTop = "none";
-    } else {
-        td_1.style.borderRight = "none";
-        td_2.style.borderLeft = "none";   
-    }
-}
-    */
