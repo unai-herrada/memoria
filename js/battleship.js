@@ -162,32 +162,13 @@ function toggleBorder(ship) {
     }
 }
 
-function uniteTDs(td_1, td_2) {
-    let sameColumn = newShip[0].id.slice(1) == newShip[1].id.slice(1);
-    let lowToHigh = (parseInt(newShip[0].id.slice(1)) < parseInt(newShip[1].id.slice(1)) || (newShip[0].id[0] < newShip[1].id[0] && newShip[0].id.slice(1) == newShip[1].id.slice(1)));
-    if (!lowToHigh) {
-        [td_1, td_2] = [td_2, td_1];
-    }
-    if (sameColumn) {
-        td_1.style.borderBottom = "none";
-        td_2.style.borderTop = "none";
-    } else {
-        td_1.style.borderRight = "none";
-        td_2.style.borderLeft = "none";   
-    }
-}
-
 function placingShip(delay) {
     if (newShip.length > 0) {
         if (newShip[0].style.backgroundColor != "red") {
             newShip[0].style.backgroundColor = "blue";
-            /*if (newShip.length > 1 && newShip[1].style.backgroundColor != "red") {
-                uniteTDs(newShip[0], newShip[1]);
-            }*/
         } else {
             newShip[0].style.backgroundColor = colorDefault;
-        }
-        //newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
+        }//newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
         newShip.shift();
         setTimeout(placingShip, delay, delay);
     } else {
@@ -220,7 +201,10 @@ function getTD(row, column) {
     return document.getElementById(xyToCoordinates(row, column, false));
 }
 
-function get_td_from(td, row, column) {
+function get_td_from(td, row, column) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR DESPUES O CON getTD not sure where the problem is
+    //get_td_from(getTD(0, 0), 9, 11)
+    // no corrige bien esto si se pasa eso es el problema
+    // empiezo a dudar si hay error
     let td_coords = getCoords(td);
     td_coords[0] = td_coords[0] + row;
     if (td_coords[0] < 0) {
@@ -565,4 +549,19 @@ despues la tendras que mover arrastandola con mecanica grabbing
     Despues getCoordsSHIP[0] y asi
     Y en drawLine se podra simplificar lo de sumar restar i porque estara fixed
     NVM si esta fixed el primero podria ser last td q no queremos
+
+    function uniteTDs(td_1, td_2) {
+    let sameColumn = newShip[0].id.slice(1) == newShip[1].id.slice(1);
+    let lowToHigh = (parseInt(newShip[0].id.slice(1)) < parseInt(newShip[1].id.slice(1)) || (newShip[0].id[0] < newShip[1].id[0] && newShip[0].id.slice(1) == newShip[1].id.slice(1)));
+    if (!lowToHigh) {
+        [td_1, td_2] = [td_2, td_1];
+    }
+    if (sameColumn) {
+        td_1.style.borderBottom = "none";
+        td_2.style.borderTop = "none";
+    } else {
+        td_1.style.borderRight = "none";
+        td_2.style.borderLeft = "none";   
+    }
+}
     */
