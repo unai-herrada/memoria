@@ -240,39 +240,41 @@ function get_td_from(td, row, column) {
 }
 
 function seleccionandoCeldas() {
-    if (this.style.backgroundColor == "blue" && event.shiftKey) {
-        clicked_ship = getGrabbedShip(this);
-        toggleBorder(clicked_ship);
-        toggleSelectShip(clicked_ship);
-        toggleSelectShip(clicked_ship);
-        barcosPorColocar.push(clicked_ship.length);
-        barcos.splice(barcos.indexOf(clicked_ship), 1);
-        /* mejor lo elimino y ya
-        toggleBorder(clicked_ship);
-        //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
-        toggleBorder(clicked_ship);
-        */
-    } else if (this.style.backgroundColor == "blue") {
-        dragging = true;
-        /*
-        console.log(barcos.length);
-        for (let i = 0; i < barcos.length; i++) {
-            console.log(barcos[i] == grabbed_ship_copia);
-            console.log(barcos[i] + " + " + grabbed_ship_copia);
-            if (barcos[i] == grabbed_ship_copia) {
-                barcos[0] = grabbed_ship;
-            }
-        }
+    if (this.style.backgroundColor == "blue") {
+        if (event.shiftKey) {
+            clicked_ship = getGrabbedShip(this);
+            toggleBorder(clicked_ship);
+            toggleSelectShip(clicked_ship);
+            toggleSelectShip(clicked_ship);
+            barcosPorColocar.push(clicked_ship.length);
+            barcos.splice(barcos.indexOf(clicked_ship), 1);
+            /* mejor lo elimino y ya
+            toggleBorder(clicked_ship);
+            //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
+            toggleBorder(clicked_ship);
             */
-        grabbed_td = this;
-        grabbed_ship = getGrabbedShip(grabbed_td);
-        //barcos.splice(grabbed_ship, 1);
-        barcos.splice(barcos.indexOf(grabbed_ship), 1);
-        grabbed_ship_copia = Array.from(grabbed_ship);
-        toggleSelectShip(grabbed_ship);
-        //addClassSiblings(this, "grabbing");
-        //COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
-    } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging) {
+        } else {
+            dragging = true;
+            grabbed_td = this;
+            grabbed_ship = getGrabbedShip(grabbed_td);
+            //barcos.splice(grabbed_ship, 1);
+            barcos.splice(barcos.indexOf(grabbed_ship), 1);
+            grabbed_ship_copia = Array.from(grabbed_ship);
+            toggleSelectShip(grabbed_ship);
+            /*
+            console.log(barcos.length);
+            for (let i = 0; i < barcos.length; i++) {
+                console.log(barcos[i] == grabbed_ship_copia);
+                console.log(barcos[i] + " + " + grabbed_ship_copia);
+                if (barcos[i] == grabbed_ship_copia) {
+                    barcos[0] = grabbed_ship;
+                }
+            }
+            */
+            //addClassSiblings(this, "grabbing");
+            //COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
+        }
+    } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging && !event.shiftKey) {
         removeCyanCells();
         if (seleccionando) {
             clicked_td.style.backgroundColor = colorDefault;
