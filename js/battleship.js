@@ -87,7 +87,14 @@ function createTable(rows, columns) { // x horizontal y vertical
 function cambiarColor() {
     if (dragging) {
         dragging = false;
-        setTimeout(placingShip, 0, 0); // for now leave it like this
+        barcos.push(grabbed_ship);
+        console.log(grabbed_ship);
+        /*
+        if (newShip.length == 0) {
+            grabbed_td.style.backgroundColor = "blue";
+        } else {*/
+            setTimeout(placingShip, 0, 0); // for now leave it like this
+        //}*/
     } else if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
         seleccionando = false;
         //dragging = false;
@@ -249,6 +256,7 @@ function seleccionandoCeldas() {
             */
         grabbed_td = this;
         grabbed_ship = getGrabbedShip(grabbed_td);
+        barcos.splice(grabbed_ship, 1);
         grabbed_ship_copia = Array.from(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         //addClassSiblings(this, "grabbing");
