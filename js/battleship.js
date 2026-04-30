@@ -22,6 +22,7 @@ let blueCells = [];
 let clicked_ship = [];
 window.onload = iniciar;
 function iniciar() {
+    document.addEventListener("contextmenu", event => event.preventDefault());
     let popup = document.getElementById("popup");
     popup.addEventListener("click", crearContenidoPopup);
 }
@@ -468,7 +469,7 @@ no se elimina de barcos porque quiza cambia el nRows o nColumns despues
 y la verificacion de eso se hace despues de que barcosPorColocar = barcos
 */
 
-/*
+/* en vez de add un switch osea que la nueva class sera la unica que tenga
 function addClassSiblings(cell, className) {
     cell.classList.add(className);
     if (cell.previousSibling != null) {
