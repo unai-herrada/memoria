@@ -87,6 +87,7 @@ function createTable(rows, columns) { // x horizontal y vertical
 function cambiarColor() {
     if (dragging) {
         dragging = false;
+        //barcos.splice(barcos.indexOf(grabbed_ship), 1);
         barcos.push(grabbed_ship);
         console.log(grabbed_ship);
         /*
@@ -256,7 +257,8 @@ function seleccionandoCeldas() {
             */
         grabbed_td = this;
         grabbed_ship = getGrabbedShip(grabbed_td);
-        barcos.splice(grabbed_ship, 1);
+        //barcos.splice(grabbed_ship, 1);
+        barcos.splice(barcos.indexOf(grabbed_ship), 1);
         grabbed_ship_copia = Array.from(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         //addClassSiblings(this, "grabbing");
@@ -293,6 +295,7 @@ function celdaSeleccionada() {
         */
         newShip = [];
         toggleBorder(grabbed_ship);
+        //toggleRedAlert(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         updateGrabbed_td(grabbed_ship_copia, getPositionTD(grabbed_ship_copia, grabbed_td), this);
         let id1;
@@ -309,6 +312,7 @@ function celdaSeleccionada() {
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
         toggleBorder(grabbed_ship);
+        //toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         //tilesOverrided(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         console.log(grabbed_ship);
