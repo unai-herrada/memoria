@@ -91,6 +91,13 @@ function cambiarColor() {
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
         barcos.push(grabbed_ship);
         newShip = Array.from(grabbed_ship);
+        /*
+        let makeLightBlue = [];
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            if (newShip[i].style.backgroundColor == "rgb(0, 181, 255)") {
+                makeLightBlue.push(newShip[i]);
+            }
+        }*/
         //console.log(grabbed_ship);
         /*
         if (newShip.length == 0) {
@@ -98,6 +105,10 @@ function cambiarColor() {
         } else {*/
             setTimeout(placingShip, 0, 0); // for now leave it like this
         //}*/
+        /*
+        for (let i = 0; i < makeLightBlue.length; i++) {
+            makeLightBlue[i].style.backgroundColor == "rgb(0, 181, 255)";
+        }*/
     } else if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
         seleccionando = false;
         //dragging = false;
@@ -181,7 +192,6 @@ function isShipVertical(ship) {
 }
 
 function toggleSelectShip(ship) {
-    console.log(ship);
     for (let i = 0; i < ship.length; i++) {
         if (ship[i].style.backgroundColor == "rgb(0, 181, 255)") {
             ship[i].style.backgroundColor = "blue";
@@ -242,6 +252,7 @@ function seleccionandoCeldas() {
             barcos.splice(barcos.indexOf(grabbed_ship), 1);
             grabbed_ship_copia = Array.from(grabbed_ship);
             toggleSelectShip(grabbed_ship);
+
         }
     } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging && !event.shiftKey) {
         removeCyanCells();
@@ -282,8 +293,12 @@ function celdaSeleccionada() {
             id2 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1));
         }
         newShip.push(id1);
+        console.log(id1);
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
+        if (id1.style.backgroundColor == "blue") {
+            id1.style.backgroundColor = "red"; // o "red"; algo asi esta ocurriendo el bug // "rgb(0, 181, 255)"
+        }
         toggleBorder(grabbed_ship, false);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         toggleSelectShip(grabbed_ship);
     } else if (seleccionando && !colocandoCeldas) {
@@ -415,4 +430,14 @@ no se elimina de barcos porque quiza cambia el nRows o nColumns despues
 y tambien la dificultad de a AI con un desplegable
 el desplegable marca el % de random de hacer el mejor movimiento
 el mejor movimiento siempre sera la posicion donde poniendo todas las posiciones de barcos hay mas probabilidad
+*/
+
+/*
+Okay sigue estando algo raro el tema cuando un ship pasa por encima de otro ship mientras lo arrastro
+*/
+
+/*
+Quiza toggleBorder necesita una variable llamada override
+y de ahi miramos si overrideamos el borde que este en ese momento
+YO PENSE QUE LO HABIA ARREGLADO
 */
