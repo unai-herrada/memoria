@@ -89,7 +89,7 @@ function cambiarColor() {
         dragging = false;
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
         barcos.push(grabbed_ship);
-        console.log(grabbed_ship);
+        //console.log(grabbed_ship);
         /*
         if (newShip.length == 0) {
             grabbed_td.style.backgroundColor = "blue";
@@ -241,8 +241,15 @@ function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue" && event.shiftKey) {
         clicked_ship = getGrabbedShip(this);
         toggleBorder(clicked_ship);
+        toggleSelectShip(clicked_ship);
+        toggleSelectShip(clicked_ship);
+        barcosPorColocar.push(clicked_ship.length);
+        barcos.splice(barcos.indexOf(clicked_ship), 1);
+        /* mejor lo elimino y ya
+        toggleBorder(clicked_ship);
         //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
         toggleBorder(clicked_ship);
+        */
     } else if (this.style.backgroundColor == "blue") {
         dragging = true;
         /*
@@ -315,7 +322,7 @@ function celdaSeleccionada() {
         //toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         //tilesOverrided(grabbed_ship);
         toggleSelectShip(grabbed_ship);
-        console.log(grabbed_ship);
+        //console.log(grabbed_ship);
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
