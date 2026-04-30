@@ -221,7 +221,7 @@ function getTD(row, column) {
 }
 
 function get_td_from(td, row, column) {
-    let xtd_coords = getCoords(td);
+    let td_coords = getCoords(td);
     td_coords[0] = td_coords[0] + row;
     if (td_coords[0] < 0) {
         td_coords[0] = 0;
