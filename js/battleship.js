@@ -19,6 +19,7 @@ let grabbed_ship;
 let grabbed_ship_copia;
 let selectedCells = [];
 let ghostShip = [];
+let blueCells = [];
 window.onload = iniciar;
 function iniciar() {
     let popup = document.getElementById("popup");
@@ -85,7 +86,10 @@ function createTable(rows, columns) { // x horizontal y vertical
 }
 
 function cambiarColor() {
-    if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
+    if (dragging) {
+        dragging = false;
+        setTimeout(placingShip, 0);
+    } else if ((!colocandoCeldas && seleccionando)/* || dragging*/) {
         seleccionando = false;
         //dragging = false;
         if (newShip.length - celdasRojas.length != 0 && barcosPorColocar.includes(newShip.length - celdasRojas.length)) {
@@ -188,7 +192,9 @@ function isShipVertical(ship) {
 
 function toggleSelectShip(ship) {
     for (let i = 0; i < ship.length; i++) {
-        if (ship[i].style.backgroundColor != colorSelected) {
+        /*if (blueCells.includes(ship[i])) {
+            ship[i].style.backgroundColor = "red";
+        } else */if (ship[i].style.backgroundColor != colorSelected) {
             ship[i].style.backgroundColor = colorSelected;
         } else {
             ship[i].style.backgroundColor = colorDefault;
@@ -223,13 +229,23 @@ function seleccionandoCeldas() {
     }   
 }
 
+function tilesOverrided(ship) {
+    blueCells = [];
+    for (let i = 0; i < ship.length; i++) {
+        if (ship[i].style.backgroundColor == "blue") {
+            blueCells.push(ship[i]);
+        }
+    }
+    console.log(blueCells);
+}
+
 function celdaSeleccionada() {
     //dragging = false;
     if (dragging) {
         newShip = [];
         toggleBorder(grabbed_ship);
         toggleSelectShip(grabbed_ship);
-        updateGrabbed_td(grabbed_ship_copia, grabbed_td, this);
+        updateGrabbed_td(grabbed_ship_copia, getPositionTD(grabbed_ship_copia, grabbed_td), this);
         if (isShipVertical(grabbed_ship)) {
             //xyToCoordinates(a, parseInt(this.id.slice(1)));
         } else {// el vertical siempre tiene los mismos numeros
@@ -248,16 +264,19 @@ function celdaSeleccionada() {
         let id2;
         let this_td_coords = getCoords(this);
         if (isShipVertical(grabbed_ship_copia)) {
-            console.log("Vertical");
-            id1 = document.getElementById((this_td_coords[0] - getPositionTD(grabbed_ship_copia, grabbed_td)), this.id.slice(1));
-            id2 = document.getElementById((this_td_coords[0] - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1), this.id.slice(1));
+            //console.log("Vertical");
+            id1 = document.getElementById(numberToLetter(this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)) + this.id.slice(1));
+            id2 = document.getElementById(numberToLetter(this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1) + this.id.slice(1));
         } else {
-            console.log("Horizontal");
+            //console.log("Horizontal");
             id1 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)));
             id2 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1));
         }
-        console.log(id1);
-        console.log(id2);
+        //console.log(this_td_coords[0] + " + 1 - " + getPositionTD(grabbed_ship_copia, grabbed_td));
+        //console.log(numberToLetter((this_td_coords[0] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td))));
+        //console.log(this.id.slice(1));
+        //console.log(id1);
+        //console.log(id2);
         //console.log(document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td))));
         //console.log(document.getElementById(this.id[0] + ((parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)) + grabbed_ship.length - 1)));
         //let id1 = document.getElementById(this.id[0] + (parseInt(this.id.slice(1)) - getPositionTD(grabbed_ship_copia, grabbed_td)));
@@ -269,9 +288,10 @@ function celdaSeleccionada() {
         newShip.push(id1);
         //console.log(document.getElementById(this.id[0] + grabbed_ship[0].id.slice(1)));
         //console.log(document.getElementById(this.id[0] + grabbed_ship[grabbed_ship.length - 1].id.slice(1)));
-        drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship));
+        drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
         toggleBorder(grabbed_ship);
+        //tilesOverrided(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         console.log(grabbed_ship);
         //*/
@@ -288,23 +308,23 @@ function celdaSeleccionada() {
     }
 }
 
-function updateGrabbed_td(ship, td, this_td) {
-    let td_position = getPositionTD(ship, td);
+function numberToLetter(num) {
+    return String.fromCharCode(64 + num);;
+}
+
+function updateGrabbed_td(ship, td_position, this_td) {
     let this_td_coords = getCoords(this_td);
+    let num = 1;
+    let nSize = nRows;
     if (isShipVertical(ship)) {
-        if (this_td_coords[0] - td_position < 0) {
-            grabbed_td = ship[this_td_coords[0]];
-        }
-        if (this_td_coords[0] + ship.length - td_position > 10) {
-            grabbed_td = ship[ship.length - nRows + this_td_coords[0]];
-        }
-    } else {
-        if (this_td_coords[1] - td_position < 0) {
-            grabbed_td = ship[this_td_coords[1]];
-        }
-        if (this_td_coords[1] + ship.length - td_position > 10) {
-            grabbed_td = ship[ship.length - nColumns + this_td_coords[1]];
-        }
+        num = 0;
+        nSize = nColumns;
+    }
+    if (this_td_coords[num] - td_position < 0) {
+        grabbed_td = ship[this_td_coords[num]];
+    }
+    if (this_td_coords[num] + ship.length - td_position > nSize) {
+        grabbed_td = ship[ship.length - nRows + this_td_coords[num]];
     }
     //console.log(grabbed_td);
     //return grabbed_td.id;
