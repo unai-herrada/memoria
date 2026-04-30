@@ -90,6 +90,7 @@ function cambiarColor() {
         dragging = false;
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
         barcos.push(grabbed_ship);
+        newShip = Array.from(grabbed_ship);
         //console.log(grabbed_ship);
         /*
         if (newShip.length == 0) {
