@@ -5,7 +5,7 @@ let newShip = [];
 let colocandoCeldas = false;
 let colorDefault = "rgb(227, 242, 253)";
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10];
+let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10]; // if suma array > nRows * nColumns evitar ese ultimo barco colocado
 let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
@@ -189,7 +189,7 @@ function placingShip(delay) {
         }
         //newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
         newShip.shift();
-        setTimeout(placingShip, delay);
+        setTimeout(placingShip, delay, delay);
     } else {
         colocandoCeldas = false;
     }
@@ -201,9 +201,7 @@ function isShipVertical(ship) {
 
 function toggleSelectShip(ship) {
     for (let i = 0; i < ship.length; i++) {
-        /*if (blueCells.includes(ship[i])) {
-            ship[i].style.backgroundColor = "red";
-        } else */if (ship[i].style.backgroundColor != colorSelected) {
+        if (ship[i].style.backgroundColor != colorSelected) {
             ship[i].style.backgroundColor = colorSelected;
         } else {
             ship[i].style.backgroundColor = colorDefault;
@@ -248,31 +246,13 @@ function seleccionandoCeldas() {
             toggleSelectShip(clicked_ship);
             barcosPorColocar.push(clicked_ship.length);
             barcos.splice(barcos.indexOf(clicked_ship), 1);
-            /* mejor lo elimino y ya
-            toggleBorder(clicked_ship);
-            //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
-            toggleBorder(clicked_ship);
-            */
-        } else {
+        } else {//addClassSiblings(this, "grabbing");
             dragging = true;
             grabbed_td = this;
             grabbed_ship = getGrabbedShip(grabbed_td);
-            //barcos.splice(grabbed_ship, 1);
             barcos.splice(barcos.indexOf(grabbed_ship), 1);
             grabbed_ship_copia = Array.from(grabbed_ship);
             toggleSelectShip(grabbed_ship);
-            /*
-            console.log(barcos.length);
-            for (let i = 0; i < barcos.length; i++) {
-                console.log(barcos[i] == grabbed_ship_copia);
-                console.log(barcos[i] + " + " + grabbed_ship_copia);
-                if (barcos[i] == grabbed_ship_copia) {
-                    barcos[0] = grabbed_ship;
-                }
-            }
-            */
-            //addClassSiblings(this, "grabbing");
-            //COMO ESTO SE REPITE EN EL HOVER PORQUE NO LLAMAMOS A celdaSeleccionada Y PUNTO asi de una
         }
     } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging && !event.shiftKey) {
         removeCyanCells();
@@ -298,15 +278,8 @@ function tilesOverrided(ship) {
 
 function celdaSeleccionada() {
     if (dragging) {
-        /*
-        grabbedShip = newShip;
-        de esta forma siempre tendremos grabbed ship
-        y podremos hacer que barcos guarde grabbed ship al instante
-        para el getGrabberSHip
-        */
         newShip = [];
-        toggleBorder(grabbed_ship);
-        //toggleRedAlert(grabbed_ship);
+        toggleBorder(grabbed_ship);//toggleRedAlert(grabbed_ship);
         toggleSelectShip(grabbed_ship);
         updateGrabbed_td(grabbed_ship_copia, getPositionTD(grabbed_ship_copia, grabbed_td), this);
         let id1;
@@ -322,11 +295,11 @@ function celdaSeleccionada() {
         newShip.push(id1);
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
-        toggleBorder(grabbed_ship);
-        //toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
-        //tilesOverrided(grabbed_ship);
+        toggleBorder(grabbed_ship);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
+        /*if (ship[i].style.backgroundColor = "blue") {
+            ship[i].style.backgroundColor = "red";
+        }*/
         toggleSelectShip(grabbed_ship);
-        //console.log(grabbed_ship);
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
@@ -340,16 +313,16 @@ function numberToLetter(num) {
 function updateGrabbed_td(ship, td_position, this_td) {
     let this_td_coords = getCoords(this_td);
     let num = 1;
-    let nSize = nRows;
+    let nSize = nColumns;
     if (isShipVertical(ship)) {
         num = 0;
-        nSize = nColumns;
+        nSize = nRows;
     }
     if (this_td_coords[num] - td_position < 0) {
         grabbed_td = ship[this_td_coords[num]];
     }
     if (this_td_coords[num] + ship.length - td_position > nSize) {
-        grabbed_td = ship[ship.length - nRows + this_td_coords[num]];
+        grabbed_td = ship[ship.length - nSize + this_td_coords[num]];
     }
 }
 
@@ -434,12 +407,10 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             } else {
                 break;
             }
-            //if (!dragging) {// en vez de esto hago en el if un || dragging asi clereo las rojas
-                celdasRojas.push(actual_td);
-                if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)] || dragging) {
-                    celdasRojas = [];
-                }
-            //} // o un if dragging y hago mi logica de si actual_td = blue push :D
+            celdasRojas.push(actual_td);
+            if (newShip.length == barcosPorColocar[barcosPorColocar.indexOf(newShip.length)] || dragging) {
+                celdasRojas = [];
+            }
         }
     }
 }
@@ -597,3 +568,9 @@ despues la tendras que mover arrastandola con mecanica grabbing
         se que esto se puede hacer con lo de event que si un check si tienes presionadas varias teclas
         quiza añadir algo de Ctrl + Z aunque no se si es posible pero deberia de serlo
         */
+
+        /* mejor lo elimino y ya
+            toggleBorder(clicked_ship);
+            //rotateShip(clicked_ship, getPositionTD(clicked_ship, this));
+            toggleBorder(clicked_ship);
+            */
