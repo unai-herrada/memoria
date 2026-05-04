@@ -1,0 +1,11 @@
+.grabbing {
+    cursor: grabbing !important;
+}
+
+.grab {
+    cursor: grab;
+}
+
+.pointer {
+    cursor: pointer;
+}
