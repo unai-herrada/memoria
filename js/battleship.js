@@ -422,7 +422,7 @@ function a() {
 
 }
 
-function drawLine2(td_coords_1, td_coords_2) {
+function selectCellsBetween(td_coords_1, td_coords_2) {
     // esto es 10 veces mejor, luego cuando devuelvas las celdas seleccionadas
     // las coloreas a corde a si estan permitidas etc
     // fixship antes de venir
@@ -452,7 +452,10 @@ function drawLine2(td_coords_1, td_coords_2) {
     return bar;
 }
 
-function toggleBorder2(ship, putBorders) { // toggleBorder2(drawLine2([0, 0], [3, 1]), false);
+// creo lo de abajo esta mal porque es td row column y row es el -1 por ejemplo
+// pero eso es coger el de arriba cuando es row que deberia de ser el de la izquierda
+// mirar despues
+function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([0, 0], [3, 1]), false);
     for (let i = 0; i < ship.length; i++) {
         if (get_td_from(ship[i], -1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], -1, 0))) {
             console.log("arriba " + i);
