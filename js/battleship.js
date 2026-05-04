@@ -5,7 +5,7 @@ let newShip = [];
 let colocandoCeldas = false;
 let colorDefault = "rgb(227, 242, 253)"; // los colores puedes ponerse en el css creo yo usando class
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5];  // tecnicamente puedo hacer esto una doble array no? para x barcos ejemplo 2x2.
+let barcosDisponibles = [2, 3, 3, 4, 5, 1];  // tecnicamente puedo hacer esto una doble array no? para x barcos ejemplo 2x2.
 // o quiza con decimales. 2,2 = 2x2 2,1 = 2 1,2 = 2
 // si esto fuera asi tambien se puede forzar en que direccion tiene que estar X barco
 // y si es 2 = 2,1; 1,2
@@ -452,7 +452,7 @@ function drawLine2(td_coords_1, td_coords_2) {
     return bar;
 }
 
-function toggleBorder2(ship, putBorders) {
+function toggleBorder2(ship, putBorders) { // toggleBorder2(drawLine2([0, 0], [3, 1]), false);
     for (let i = 0; i < ship.length; i++) {
         if (get_td_from(ship[i], -1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], -1, 0))) {
             console.log("arriba " + i);
@@ -533,6 +533,18 @@ function xyToCoordinates(x, y, reverseOrder) {
     Math.abs(numero).toString().length
     tambien quiero la logica que cree una vez en el blockblast del excel
     AA...AZ, BA y todo eso
+    ASI ES
+
+    let xCoordinate = "";
+    while (x >= 0) {
+        xCoordinate = String.fromCharCode((x % 26) + 65) + xCoordinate;
+        x = Math.floor(x / 26) - 1;
+    }
+    console.log(xCoordinate);
+    // aunque no voy a hacer A01 thats lame 
+    quiero hacer un convertor de letters into numero X que daria ese resultado
+    1422733970 = DOSINAI
+    xyToCoordinates(1422733970, 0, false);
     */
 }
 
@@ -664,4 +676,20 @@ quiero hacerlo como otras patch notes entoces investigar sobre esto
 porq servira para la memoria
 
 cargar la imagen en hidden es mas rapido para que se carge despues
+*/
+
+/*
+cuando actualize los border de un barco
+actualizo todos los borders de todos los barcos
+por si acaso
+y de paso les doy toggle color por si acaso
+
+hg = mercurio
+mercurio apellidos en google
+origen vinculado etimologicamente a merx (mencancia) y mercani (comerciar)
+*/
+
+/*
+añadir a una array las celdas que se sobrepasan con otra celda y cuando se cambie un barco que celdasSobrepasadas.includes(barco[i])
+se actualize o algo asi THANKS
 */
