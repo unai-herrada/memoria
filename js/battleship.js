@@ -528,3 +528,11 @@ ejemplo 10-10 (11x11)
 1-9 (2x10)
 porque el AAAAAAA1000 es mucho mas dificil de calcular
 */
+
+/*
+RESULTA QUE en las reglas dice que los barcos no se pueden tocar uno al otro
+Eso significa que en configuraciones habra que añadir una opcion sobre esta posibilidad
+
+aunque segun chatgpt en las reglas clasicas si se pueden tocar
+investigar sobre este topic para el nombre de la configuarion
+*/
