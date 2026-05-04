@@ -174,7 +174,7 @@ function fixShip(ship) {
     return ship;
 }
 
-function toggleBorder(ship, putBorders) {
+function toggleBorder(ship, putBorders) { // on y off variable "switch"
     for (let i = 1; i < ship.length; i++) {
         if (isShipVertical(ship)) {
             if (putBorders) {
@@ -196,7 +196,7 @@ function toggleBorder(ship, putBorders) {
     }
 }
 
-function placingShip(delay) {
+function placingShip(delay) { // darle variable ship y isReversed para que empieze al reves
     if (newShip.length > 0) {
         if (newShip[0].style.backgroundColor != "red") {
             newShip[0].style.backgroundColor = "blue";
@@ -231,8 +231,10 @@ function toggleSelectShip(ship) {
 function rotateShip(ship, td_position) {
     rotatedShip = [];
     for (let i = 0; i < ship.length; i++) {
-
+        console.log(rotatedShip);
+        rotatedShip.push(get_td_from(ship[i]), i, i);
     }
+    console.log(rotatedShip);
 }
 
 function getTD(row, column) {
@@ -401,6 +403,10 @@ function getCoords(td) {
     return [parseInt(td.id[0].charCodeAt(0) - 65), parseInt(td.id.slice(1) - 1)];
 }
 
+function a() {
+
+}
+
 function drawLine(td_coords_1, td_coords_2, boolean) {
     //let newShip = []; // quiero que en el futuro newShip no sea una variable global
     newShip.push(document.getElementById(xyToCoordinates(td_coords_1[0], td_coords_1[1], false)));
@@ -535,4 +541,45 @@ Eso significa que en configuraciones habra que añadir una opcion sobre esta pos
 
 aunque segun chatgpt en las reglas clasicas si se pueden tocar
 investigar sobre este topic para el nombre de la configuarion
+*/
+
+/*
+para calcular las rusas y tal
+haremos que un borde se extienda hacia fuera del barco que estara en un barco
+*/
+
+/*
+quiza en ver de checkear si esta azul, se checkea si esta en algun barco
+*/
+
+/*
+A1 = coordenada
+A = columna
+1 = fila
+esto es confuso investigar mejor
+*/
+
+/*
+conf de cuando le das a un barco te dice que barco le has dado (ej de 4 casillas)
+otra conf si esta enabled es que si solo la primera vez que le des a ese barco
+no tiene mucho sentido but who knows
+a la ai le ayuda esa info
+
+en las confs tambien para escoger que barcos quieres añadir literalmente los dibujas dentro
+de esta forma como en las conf es aleatorio ya estara puesto los barcos customs
+y en el boton de reiniciar vuelve a la posicion primera random
+
+
+IMPORTANTE:
+quiero tener un txt dentro del git llamado Patch Notes
+sera asi
+Versión 1.0.0
+Funciona el juego idk
+Versión 1.0.1
+Si tocabas X pieza haciendo Z pasaba Y de manera intencional or whatever
+
+quiero hacerlo como otras patch notes entoces investigar sobre esto
+porq servira para la memoria
+
+cargar la imagen en hidden es mas rapido para que se carge despues
 */
