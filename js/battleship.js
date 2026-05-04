@@ -438,7 +438,6 @@ function drawLine2(td_coords_1, td_coords_2) {
     barcosPorColocar.push([4, 2]);
     let includesArray = barcosPorColocar.some(barco => Array.isArray(barco) && barco[0] === (td_coords_2[0] - td_coords_1[0] + 1) && barco[1] === (td_coords_2[1] - td_coords_1[1] + 1));
     if (includesArray || barcosPorColocar.includes(bar.length)) {
-        console.log("si que esta");
         for (let i = 0; i < bar.length; i++) {
             bar[i].style.backgroundColor = "blue";
         }
@@ -450,6 +449,44 @@ function drawLine2(td_coords_1, td_coords_2) {
     if that thing up there includes this ship then border fuera
     entoces seria un for y dentro 4 ifs
     */
+    return bar;
+}
+
+function toggleBorder2(ship, putBorders) {
+    for (let i = 0; i < ship.length; i++) {
+        if (get_td_from(ship[i], -1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], -1, 0))) {
+            console.log("arriba " + i);
+            if (putBorders) {
+                ship[i].style.borderTop = "1px inset grey";
+            } else {
+                ship[i].style.borderTop = "none";
+            }
+        }
+        if (get_td_from(ship[i], 0, -1) !== ship[i] && ship.includes(get_td_from(ship[i], 0, -1))) {
+            console.log("izquierda " + i);
+            if (putBorders) {
+                ship[i].style.borderLeft = "1px inset grey";
+            } else {
+                ship[i].style.borderLeft = "none";
+            }
+        }
+        if (get_td_from(ship[i], 0, 1) !== ship[i] && ship.includes(get_td_from(ship[i], 0, 1))) {
+            console.log("derecha " + i);
+            if (putBorders) {
+                ship[i].style.borderRight = "1px inset grey";
+            } else {
+                ship[i].style.borderRight = "none";
+            }
+        }
+        if (get_td_from(ship[i], 1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], 1, 0))) {
+            console.log("abajo " + i);
+            if (putBorders) {
+                ship[i].style.borderBottom = "1px inset grey";
+            } else {
+                ship[i].style.borderBottom = "none";
+            }
+        }
+    }
 }
 
 function drawLine(td_coords_1, td_coords_2, boolean) {
