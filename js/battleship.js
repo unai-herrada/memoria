@@ -9,8 +9,7 @@ let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10]; // if suma array > nRows * nC
 let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
-let nColumns = 10;
-//console.log(Math.abs(nColumns).toString().length);
+let nColumns = 10; //console.log(Math.abs(nColumns).toString().length);
 let dragging = false;
 let barcos = [];
 let grabbed_td;
@@ -292,7 +291,7 @@ function celdaSeleccionada() {
             id1 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td)));
             id2 = document.getElementById(this.id[0] + (this_td_coords[1] + 1 - getPositionTD(grabbed_ship_copia, grabbed_td) + grabbed_ship.length - 1));
         }
-        newShip.push(id1);
+        //newShip.push(id1);
         console.log(id1);
         drawLine(getCoords(id1), getCoords(id2), isShipVertical(grabbed_ship_copia));
         grabbed_ship = Array.from(newShip);
@@ -362,9 +361,9 @@ function removeCyanCells() {
 }
 
 function calculateLine(last_td) {
-    newShip.push(clicked_td);
-    drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
-    for (let i = 0; i < newShip.length; i++) {
+    //newShip.push(clicked_td);
+    newShip = drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
+    for (let i = 0; i < ship.length; i++) {
         if (newShip[i].style.backgroundColor != colorSelected) {
             newShip[i].style.backgroundColor = "cyan";
         }
@@ -379,6 +378,8 @@ function getCoords(td) {
 }
 
 function drawLine(td_coords_1, td_coords_2, boolean) {
+    //let newShip = []; // quiero que en el futuro newShip no sea una variable global
+    newShip.push(document.getElementById(xyToCoordinates(td_coords_1[0], td_coords_1[1], false)));
     let num1 = 0, num2 = 1;
     if (boolean) {
         [num1, num2] = [num2, num1];
@@ -405,6 +406,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
         }
     }
+    return newShip;
 }
 
 function xyToCoordinates(x, y, reverseOrder) {
