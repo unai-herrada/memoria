@@ -3,10 +3,25 @@ let clicked_td;
 let unclicked_td;
 let newShip = [];
 let colocandoCeldas = false;
-let colorDefault = "rgb(227, 242, 253)";
+let colorDefault = "rgb(227, 242, 253)"; // los colores puedes ponerse en el css creo yo usando class
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5]; // if suma array > nRows * nColumns evitar ese ultimo barco colocado
-let barcosPorColocar = Array.from(barcosDisponibles);
+let barcosDisponibles = [2, 3, 3, 4, 5];  // tecnicamente puedo hacer esto una doble array no? para x barcos ejemplo 2x2.
+// o quiza con decimales. 2,2 = 2x2 2,1 = 2 1,2 = 2
+// si esto fuera asi tambien se puede forzar en que direccion tiene que estar X barco
+// y si es 2 = 2,1; 1,2
+// eso si la logica actual se romperia y habria que hacerla para las celdas rojas
+// pero como creo que va a ser que mande todas las casillas al array
+// y luego se colorean estara bien
+// y si es asi la logica puede ser
+// 2,1 por ejemplo
+// while 2,1 > 1
+// 2,1 - 1
+// 1,1 - 1
+// despues del while
+// 0,1 x 10 = 1
+// LO MALO DE ESTO EN VEZ DE ARRAY ES QUE COMO MIRO NUMEROS COMO 10 ya que serian 0,10 x 10 = 1
+// tecnicamente puede ser un string y cambio caracter 1 por el mismo - 1 y despues quito la , y se me queda otro string de un numero
+let barcosPorColocar = Array.from(barcosDisponibles); // if suma array > nRows * nColumns evitar ese ultimo barco colocado
 let celdasRojas = [];
 let nRows = 10;
 let nColumns = 10; //console.log(Math.abs(nColumns).toString().length);
@@ -405,6 +420,36 @@ function getCoords(td) {
 
 function a() {
 
+}
+
+function drawLine2(td_coords_1, td_coords_2) {
+    // esto es 10 veces mejor, luego cuando devuelvas las celdas seleccionadas
+    // las coloreas a corde a si estan permitidas etc
+    // fixship antes de venir
+    bar = [];
+    //bar.push(document.getElementById(xyToCoordinates(td_coords_1[0], td_coords_1[1], false)));
+    for (let x = td_coords_1[0]; x <= td_coords_2[0]; x++) {
+        for (let y = td_coords_1[1]; y <= td_coords_2[1]; y++) {
+            bar.push(document.getElementById(xyToCoordinates(x, y, false)));
+        }
+    }
+    console.log(bar);
+    // despues devolvermos bar y hacemos
+    barcosPorColocar.push([4, 2]);
+    let includesArray = barcosPorColocar.some(barco => Array.isArray(barco) && barco[0] === (td_coords_2[0] - td_coords_1[0] + 1) && barco[1] === (td_coords_2[1] - td_coords_1[1] + 1));
+    if (includesArray || barcosPorColocar.includes(bar.length)) {
+        console.log("si que esta");
+        for (let i = 0; i < bar.length; i++) {
+            bar[i].style.backgroundColor = "blue";
+        }
+    } else {
+        console.log("no esta");
+    }
+    /*
+    para el toggle border tenia planeado get_td_from (td, (-1 0; 0 -1; 1 0; 0 1)) && get td from != this td
+    if that thing up there includes this ship then border fuera
+    entoces seria un for y dentro 4 ifs
+    */
 }
 
 function drawLine(td_coords_1, td_coords_2, boolean) {
