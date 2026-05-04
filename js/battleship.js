@@ -28,13 +28,17 @@ function iniciar() {
         }
     });
     let popup = document.getElementById("popup");
-    popup.addEventListener("click", crearContenidoPopup);
+    popup.addEventListener("click", function() {
+        barcosPorColocar = Array.from(barcosDisponibles);
+        barcos = [];
+        crearContenidoPopup();
+    });
 }
 
 function crearContenidoPopup() {
     //barcosPorColocar = barcos; // bug aunque ponga esto si pones todos los barcos y clikeas fuera del popup y lo abres de vuelta no se reinicia
     let table = createTable(nRows, nColumns);
-    table.id = "tableMenu";
+    //table.id = "tableMenu";
     let menu = document.getElementById("menu");
     menu.innerHTML = "";
     menu.appendChild(table);
@@ -61,18 +65,12 @@ function crearContenidoPopup() {
     buttonSave.setAttribute("popovertarget", "menu");
     buttonSave.setAttribute("popovertargetaction", "hide");
     center.appendChild(buttonSave);
-    buttonSave.addEventListener("click", saveShips);
-}
-
-function saveShips() { // quiza lo mueva al load aka iniciar
-    if (barcos.length == barcosDisponibles.length) {
-        let menu = document.getElementById("menu");
-        let tableMenu = document.getElementById("tableMenu");
-        menu.removeChild(tableMenu);
-        let board1 = document.getElementById("board1");
-        //let table = createTable(nRows, nColumns);
-        board1.innerHTML = tableMenu;
-    }
+    buttonSave.addEventListener("click", function() {
+        if (barcos.length == barcosDisponibles.length) {
+            let board1 = document.getElementById("board1");
+            board1.appendChild(table); // menu.removeChild(table); // un child no puede tener dos padres entoces se elimina solo del menu
+        }
+    });
 }
 
 function createTable(rows, columns) { // x horizontal y vertical
@@ -488,4 +486,45 @@ else
 igual con la y
 
 clicked td = cell x y
+*/
+
+/*
+version 0 hacia abajo seran versiones no jugables
+despues de la version 1 ya se podra jugar
+cada ver que añada una nueva funcion al juego se subira 1 punto 1.0.0 to 1.1.0
+de 1.1.0 a 1.1.1 se requiere actualizar algun bug o optimizar codigo etc
+*/
+
+/*
+tan solo cuandas hayas puesto tus barcos puedes empezar a buscar partida
+en customs como hay conf a parte
+esperaras a que se una el otro para poner barcos
+Y SIEMPRE al principio la posicion de los barcos sera random
+*/
+
+/*
+con el servidor quiero hacerlo que guarde presets de posiciones que puedas usar de barcos
+y tambien presets de configuraciones custom
+eso se trackearia con el usuario
+todos pueden acceder a los presets de los demas
+pero solo puedes añadir un preset a un usuario si inicias sesion como el (contraseña patron)
+o contraseña normal pero tus presets son visibles debloqueandolo con una contraseña patron
+
+limite de presets por usuario normal son 8
+*/
+
+/*
+en las custom puedes forzar barcos random
+y el las ranked quiza sea random siempre? no me gusta esta idea pero una idea es una idea
+*/
+
+/*
+voy a llevar todo esto a un nuevo git para hacerlo desde casa
+*/
+
+/*
+mejor sistema de coords seria x-y
+ejemplo 10-10 (11x11)
+1-9 (2x10)
+porque el AAAAAAA1000 es mucho mas dificil de calcular
 */
