@@ -5,7 +5,7 @@ let newShip = [];
 let colocandoCeldas = false;
 let colorDefault = "rgb(227, 242, 253)";
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5, 1, 9, 10]; // if suma array > nRows * nColumns evitar ese ultimo barco colocado
+let barcosDisponibles = [2, 3, 3, 4, 5]; // if suma array > nRows * nColumns evitar ese ultimo barco colocado
 let barcosPorColocar = Array.from(barcosDisponibles);
 let celdasRojas = [];
 let nRows = 10;
@@ -19,9 +19,14 @@ let selectedCells = [];
 let ghostShip = [];
 let blueCells = [];
 let clicked_ship = [];
+let rightClick = false;
 window.onload = iniciar;
 function iniciar() {
-    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("contextmenu", function() {
+        if (!rightClick) {
+            event.preventDefault()
+        }
+    });
     let popup = document.getElementById("popup");
     popup.addEventListener("click", crearContenidoPopup);
 }
@@ -29,24 +34,45 @@ function iniciar() {
 function crearContenidoPopup() {
     //barcosPorColocar = barcos; // bug aunque ponga esto si pones todos los barcos y clikeas fuera del popup y lo abres de vuelta no se reinicia
     let table = createTable(nRows, nColumns);
+    table.id = "tableMenu";
     let menu = document.getElementById("menu");
     menu.innerHTML = "";
     menu.appendChild(table);
     let center = document.createElement("center");
     menu.appendChild(center);
-    let button = document.createElement("button");
+    center.style.marginTop = "20px";
+    let buttonRestart = document.createElement("button");
     //button.setAttribute("popovertarget", "menu");
     //button.setAttribute("popovertargetaction", "hide");
-    button.innerHTML = "Reiniciar";
-    button.style.marginTop = "20px";
-    center.appendChild(button);
-    button.addEventListener("click", function() {
+    buttonRestart.innerHTML = "Reiniciar";
+    //buttonRestart.style.marginTop = "20px";
+    center.appendChild(buttonRestart);
+    buttonRestart.addEventListener("click", function() {
         menu.removeChild(table);
         table = createTable(nRows, nColumns);
         menu.appendChild(table);
         menu.appendChild(center);
         barcosPorColocar = Array.from(barcosDisponibles);
     });
+    let buttonSave = document.createElement("button");
+    buttonSave.innerHTML = "Empezar";
+    buttonSave.style.marginLeft = "5px";
+    //buttonSave.style.marginTop = "20px";
+    buttonSave.setAttribute("popovertarget", "menu");
+    buttonSave.setAttribute("popovertargetaction", "hide");
+    center.appendChild(buttonSave);
+    buttonSave.addEventListener("click", saveShips);
+}
+
+function saveShips() { // quiza lo mueva al load aka iniciar
+    if (barcos.length == barcosDisponibles.length) {
+        let menu = document.getElementById("menu");
+        let tableMenu = document.getElementById("tableMenu");
+        menu.removeChild(tableMenu);
+        let board1 = document.getElementById("board1");
+        //let table = createTable(nRows, nColumns);
+        board1.innerHTML = tableMenu;
+    }
 }
 
 function createTable(rows, columns) { // x horizontal y vertical
@@ -362,8 +388,8 @@ function removeCyanCells() {
 
 function calculateLine(last_td) {
     //newShip.push(clicked_td);
-    newShip = drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
-    for (let i = 0; i < ship.length; i++) {
+    /*newShip = */drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
+    for (let i = 0; i < newShip.length; i++) {
         if (newShip[i].style.backgroundColor != colorSelected) {
             newShip[i].style.backgroundColor = "cyan";
         }
@@ -384,12 +410,13 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
     if (boolean) {
         [num1, num2] = [num2, num1];
     }
+    //console.log(td_coords_1[num1] + " == " + td_coords_2[num1]);
     if (td_coords_1[num1] == td_coords_2[num1]) {
         for (let i = td_coords_1[num2]; i != td_coords_2[num2];) {
             if (td_coords_1[num2] < td_coords_2[num2]) {
-                i++; //actual_td.style.borderRight = "none";
+                i++;
             } else {
-                i--; //actual_td.style.borderLeft = "none";
+                i--;
             }
             let actual_td = document.getElementById(xyToCoordinates(td_coords_1[num1], i, boolean));
             if (actual_td.style.backgroundColor != "blue") {
@@ -406,7 +433,7 @@ function drawLine(td_coords_1, td_coords_2, boolean) {
             }
         }
     }
-    return newShip;
+    //return newShip;
 }
 
 function xyToCoordinates(x, y, reverseOrder) {
@@ -442,4 +469,23 @@ Okay sigue estando algo raro el tema cuando un ship pasa por encima de otro ship
 Quiza toggleBorder necesita una variable llamada override
 y de ahi miramos si overrideamos el borde que este en ese momento
 YO PENSE QUE LO HABIA ARREGLADO
+*/
+
+/*
+futuro lejano del proyecto hacer que puedas mover de lugar un barco fuera de la tabla
+para hacer eso cogo las coords de la tabla y tambien cuanto es el widht de cada cell
+despues switch
+mouseX < lateral izquierdo && mouseY < lateral arriba
+    clicked td = cell 0 0
+
+O
+
+if (mouseX < lateral derecho)
+    x = mouseX - lateral izquierdo mathfloor / width de cell
+else
+    x = lastCell
+
+igual con la y
+
+clicked td = cell x y
 */
