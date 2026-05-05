@@ -496,26 +496,46 @@ function getCoordsTDfromShip(ship, td) {
 }
 
 function moveShip(ship, [row, column], this_td) {
-    /*console.log(grabbed_td);
+    /*console.log(grabbed_td);// toggleBorder2(selectCellsBetween([0, 0], [2, 2], false));
     console.log(ship);
     console.log([row, column]);*/
+    console.log("YES");
+    console.log(get_td_from(this_td, [row, column]));
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
-        if (newShip.includes(get_td_from(ship[i], [row, column]))) {
+        let td = get_td_from(ship[i], [row, column]);
+        console.log(td);
+        if (newShip.includes(td)) {
             /*
-            let index = getIndex(ship, get_td_from(grabbed_td, [row, column]));
+            
             console.log(index);
             console.log(ship);
             console.log(grabbed_td);
-            newRow = Math.floor(index / getShipWidth(ship));
-            newColumn = index % getShipHeight(ship);
+            
             grabbed_td = get_td_from(grabbed_td, [row, column]);
             console.log(newRow + " + " + newColumn);
             //return moveShip(ship, [row - newRow, column - newColumn]);
             */
             //this_td = get_td_from(grabbed_td, [row, column]);
-            reverse_td = get_td_from(grabbed_td, [-row, -column]);
-            grabbed_td = this_td;
+            //reverse_td = get_td_from(grabbed_td, [-row, -column]);
+            console.log(this_td);
+            console.log(grabbed_td);
+            console.log([row, column]);
+            let index = getIndex(ship, grabbed_td);
+            newRow = Math.floor(index / getShipWidth(ship));
+            newColumn = index % getShipHeight(ship);
+            //*
+            if (row + newRow >= 10) {
+                newRow = 10 - row - newRow;
+            }
+            if (column + newColumn >= 10) {
+                newColumn = 10 - column - newColumn;
+            }
+            //*/
+            console.log("[" + newRow + ", " + newColumn + "] + " + index);
+            grabbed_td = get_td_from(grabbed_td, [-newRow, -newColumn]);
+            console.log(grabbed_td); // LO QUE ESTOY HACIENDO DEBERIA HACERSE ANTES DEL moveShip y este if se quitaria
+            //grabbed_td = this_td;
             return moveShip(ship, difference(grabbed_td, this_td), this_td);
             //return moveShip(ship, [0, 0]);
             /*
@@ -536,7 +556,7 @@ function moveShip(ship, [row, column], this_td) {
             //return ship;
             //return moveShip(ship, difference(ship[i], get_td_from(newShip[i - 1], [newShip.length / getShipWidth(ship), newShip.length])));
         } else {
-            newShip.push(get_td_from(ship[i], [row, column]));
+            newShip.push(td);
             ship[i].style.backgroundColor = colorDefault;
         }
     }
@@ -840,4 +860,9 @@ X = COLUMNS
 porque y es la altura (deberia) y la altura depende de que row estes
 
 square = casilla
+*/
+
+/*
+IMPORTANTE X3
+EN EL HOVER LE METEMOS UN event.mouseClick o la q sea seguro hay evento de holdear click
 */
