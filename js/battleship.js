@@ -321,7 +321,7 @@ function celdaSeleccionada() {
     if (dragging) {
         //updateGrabbed_td2(grabbed_ship, this);
         toggleBorder2(grabbed_ship, true);
-        newShip = moveShip(grabbed_ship, diference(grabbed_td, this));
+        newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
         if (newShip === grabbed_ship) {
             grabbed_td = this;
         }
@@ -469,31 +469,31 @@ function selectCellsBetween(td_coords_1, td_coords_2) {
     return bar;
 }
 
-function diference(td1, td2) {//get_td_from(getTD(4, 4), diference(getTD(4, 4), getTD(5, 5))[0], diference(getTD(4, 4), getTD(5, 5))[1]);
+function difference(td1, td2) {//get_td_from(getTD(4, 4), difference(getTD(4, 4), getTD(5, 5))[0], difference(getTD(4, 4), getTD(5, 5))[1]);
     td1_coords = getCoords(td1);
     td2_coords = getCoords(td2);
     return [td2_coords[0] - td1_coords[0], td2_coords[1] - td1_coords[1]];
 }
 
-function moveShip(ship, distance) {
+function moveShip(ship, [row, column]) {
     /*console.log(grabbed_td);
     console.log(ship);
-    console.log(distance);*/
+    console.log([row, column]);*/
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
-        if (newShip.includes(get_td_from(ship[i], distance))) {
-            //grabbed_td = get_td_from(grabbed_td, distance);
+        if (newShip.includes(get_td_from(ship[i], [row, column]))) {
+            //grabbed_td = get_td_from(grabbed_td, [row, column]);
             //grabbed_td = this;
             console.log(ship);
             console.log(newShip);
             console.log(grabbed_td);
             console.log(newShip[i - 1]);
             console.log(ship[i]);
-            console.log(diference(ship[i], get_td_from(newShip[i - 1], [0, -newShip.length + 1])));
-            return ship;
-            //return moveShip(ship, diference(ship[i], newShip[i - 1]));
+            console.log(difference(ship[i], get_td_from(newShip[i - 1], [0, newShip.length])));
+            //return ship;
+            return moveShip(ship, difference(ship[i], get_td_from(newShip[i - 1], [0, newShip.length])));
         } else {
-            newShip.push(get_td_from(ship[i], distance));
+            newShip.push(get_td_from(ship[i], [row, column]));
             ship[i].style.backgroundColor = colorDefault;
         }
     }
@@ -503,7 +503,13 @@ function moveShip(ship, distance) {
     toggleBorder2(newShip, false);
     barcos.splice(getShipIndex(ship), 1, newShip);*/
     //toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
-    //moveShip(barcos[0], diference(barcos[0][0], getTD(3, 3)));
+    //moveShip(barcos[0], difference(barcos[0][0], getTD(3, 3)));
+}
+
+// get coords de ship
+// asi podremos hacer la diferencia de las dos
+function get() {
+
 }
 
 function getShipIndex(ship) {
