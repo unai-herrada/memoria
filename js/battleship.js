@@ -458,20 +458,15 @@ function diference(td1, td2) {//get_td_from(getTD(4, 4), diference(getTD(4, 4), 
 }
 
 function moveShip(ship, distance) {
-    let barc = [];
+    let newShip = [];
     for (let i = 0; i < ship.length; i++) {
-        barc.push(get_td_from(ship[i], distance));
-    }
-    for (let i = 0; i < ship.length; i++) {
+        newShip.push(get_td_from(ship[i], distance));
         ship[i].style.backgroundColor = colorDefault;
+        newShip[i].style.backgroundColor = "blue";
     }
     toggleBorder2(ship, true);
-    toggleBorder2(barc, false);
-    for (let i = 0; i < barc.length; i++) {
-        barc[i].style.backgroundColor = "blue";
-    }
-    index = getShipIndex(ship);
-    barcos.splice(index, 1, barc);
+    toggleBorder2(newShip, false);
+    barcos.splice(getShipIndex(ship), 1, newShip);
     //toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
     //moveShip(barcos[0], diference(getTD(0, 0), getTD(3, 3)));
     //moveShip(barcos[0], diference(barcos[0][0], getTD(3, 3)));
@@ -479,7 +474,7 @@ function moveShip(ship, distance) {
 
 function getShipIndex(ship) {
     for (let i = 0; i < barcos.length; i++) {
-        if (barcos[i] == ship) {
+        if (barcos[i] === ship) {
             return i;
         }
     }
