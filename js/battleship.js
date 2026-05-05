@@ -322,6 +322,9 @@ function celdaSeleccionada() {
         //updateGrabbed_td2(grabbed_ship, this);
         toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, diference(grabbed_td, this));
+        if (newShip === grabbed_ship) {
+            grabbed_td = this;
+        }
         for (let i = 0; i < newShip.length; i++) {
             newShip[i].style.backgroundColor = "blue";
         }
@@ -473,14 +476,22 @@ function diference(td1, td2) {//get_td_from(getTD(4, 4), diference(getTD(4, 4), 
 }
 
 function moveShip(ship, distance) {
+    /*console.log(grabbed_td);
+    console.log(ship);
+    console.log(distance);*/
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
         if (newShip.includes(get_td_from(ship[i], distance))) {
+            //grabbed_td = get_td_from(grabbed_td, distance);
+            //grabbed_td = this;
+            console.log(ship);
+            console.log(newShip);
             console.log(grabbed_td);
-            grabbed_td = get_td_from(grabbed_td, distance);
-            console.log(grabbed_td);
-            return moveShip(ship, [0, 0]);
-            // diference(grabbed_td, this)
+            console.log(newShip[i - 1]);
+            console.log(ship[i]);
+            console.log(diference(ship[i], get_td_from(newShip[i - 1], [0, -newShip.length + 1])));
+            return ship;
+            //return moveShip(ship, diference(ship[i], newShip[i - 1]));
         } else {
             newShip.push(get_td_from(ship[i], distance));
             ship[i].style.backgroundColor = colorDefault;
