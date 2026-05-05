@@ -5,7 +5,7 @@ let newShip = [];
 let colocandoCeldas = false;
 let colorDefault = "rgb(227, 242, 253)"; // los colores puedes ponerse en el css creo yo usando class
 let colorSelected = "rgb(0, 127, 255)";
-let barcosDisponibles = [2, 3, 3, 4, 5, 1];  // tecnicamente puedo hacer esto una doble array no? para x barcos ejemplo 2x2.
+let barcosDisponibles = [2, 3, 3, 4, 5, 1, [4, 2], [3, 3]];  // tecnicamente puedo hacer esto una doble array no? para x barcos ejemplo 2x2.
 // o quiza con decimales. 2,2 = 2x2 2,1 = 2 1,2 = 2
 // si esto fuera asi tambien se puede forzar en que direccion tiene que estar X barco
 // y si es 2 = 2,1; 1,2
@@ -247,7 +247,7 @@ function rotateShip(ship, td_position) {
     rotatedShip = [];
     for (let i = 0; i < ship.length; i++) {
         console.log(rotatedShip);
-        rotatedShip.push(get_td_from(ship[i]), i, i);
+        rotatedShip.push(get_td_from(ship[i]), [i, i]);
     }
     console.log(rotatedShip);
 }
@@ -256,7 +256,8 @@ function getTD(row, column) {
     return document.getElementById(xyToCoordinates(row, column, false));
 }
 
-function get_td_from(td, row, column) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR DESPUES O CON getTD not sure where the problem is
+function get_td_from(td, [row, column]) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR DESPUES O CON getTD not sure where the problem is
+    // nueva act le ponemos modo array
     //get_td_from(getTD(0, 0), 9, 11)
     // no corrige bien esto si se pasa eso es el problema
     // empiezo a dudar si hay error
@@ -426,16 +427,13 @@ function selectCellsBetween(td_coords_1, td_coords_2) {
     // esto es 10 veces mejor, luego cuando devuelvas las celdas seleccionadas
     // las coloreas a corde a si estan permitidas etc
     // fixship antes de venir
-    bar = [];
+    let bar = [];
     //bar.push(document.getElementById(xyToCoordinates(td_coords_1[0], td_coords_1[1], false)));
     for (let x = td_coords_1[0]; x <= td_coords_2[0]; x++) {
         for (let y = td_coords_1[1]; y <= td_coords_2[1]; y++) {
             bar.push(document.getElementById(xyToCoordinates(x, y, false)));
         }
     }
-    console.log(bar);
-    // despues devolvermos bar y hacemos
-    barcosPorColocar.push([4, 2]);
     let includesArray = barcosPorColocar.some(barco => Array.isArray(barco) && barco[0] === (td_coords_2[0] - td_coords_1[0] + 1) && barco[1] === (td_coords_2[1] - td_coords_1[1] + 1));
     if (includesArray || barcosPorColocar.includes(bar.length)) {
         for (let i = 0; i < bar.length; i++) {
@@ -449,15 +447,50 @@ function selectCellsBetween(td_coords_1, td_coords_2) {
     if that thing up there includes this ship then border fuera
     entoces seria un for y dentro 4 ifs
     */
+    barcos.push(bar)
     return bar;
+}
+
+function diference(td1, td2) {//get_td_from(getTD(4, 4), diference(getTD(4, 4), getTD(5, 5))[0], diference(getTD(4, 4), getTD(5, 5))[1]);
+    td1_coords = getCoords(td1);
+    td2_coords = getCoords(td2);
+    return [td2_coords[0] - td1_coords[0], td2_coords[1] - td1_coords[1]];
+}
+
+function moveShip(ship, distance) {
+    let barc = [];
+    for (let i = 0; i < ship.length; i++) {
+        barc.push(get_td_from(ship[i], distance));
+    }
+    for (let i = 0; i < ship.length; i++) {
+        ship[i].style.backgroundColor = colorDefault;
+    }
+    toggleBorder2(ship, true);
+    toggleBorder2(barc, false);
+    for (let i = 0; i < barc.length; i++) {
+        barc[i].style.backgroundColor = "blue";
+    }
+    index = getShipIndex(ship);
+    barcos.splice(index, 1, barc);
+    //toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
+    //moveShip(barcos[0], diference(getTD(0, 0), getTD(3, 3)));
+    //moveShip(barcos[0], diference(barcos[0][0], getTD(3, 3)));
+}
+
+function getShipIndex(ship) {
+    for (let i = 0; i < barcos.length; i++) {
+        if (barcos[i] == ship) {
+            return i;
+        }
+    }
 }
 
 // creo lo de abajo esta mal porque es td row column y row es el -1 por ejemplo
 // pero eso es coger el de arriba cuando es row que deberia de ser el de la izquierda
 // mirar despues
-function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([0, 0], [3, 1]), false);
+function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
     for (let i = 0; i < ship.length; i++) {
-        if (get_td_from(ship[i], -1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], -1, 0))) {
+        if (get_td_from(ship[i], [-1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [-1, 0]))) {
             console.log("arriba " + i);
             if (putBorders) {
                 ship[i].style.borderTop = "1px inset grey";
@@ -465,7 +498,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
                 ship[i].style.borderTop = "none";
             }
         }
-        if (get_td_from(ship[i], 0, -1) !== ship[i] && ship.includes(get_td_from(ship[i], 0, -1))) {
+        if (get_td_from(ship[i], [0, -1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, -1]))) {
             console.log("izquierda " + i);
             if (putBorders) {
                 ship[i].style.borderLeft = "1px inset grey";
@@ -473,7 +506,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
                 ship[i].style.borderLeft = "none";
             }
         }
-        if (get_td_from(ship[i], 0, 1) !== ship[i] && ship.includes(get_td_from(ship[i], 0, 1))) {
+        if (get_td_from(ship[i], [0, 1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, 1]))) {
             console.log("derecha " + i);
             if (putBorders) {
                 ship[i].style.borderRight = "1px inset grey";
@@ -481,7 +514,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
                 ship[i].style.borderRight = "none";
             }
         }
-        if (get_td_from(ship[i], 1, 0) !== ship[i] && ship.includes(get_td_from(ship[i], 1, 0))) {
+        if (get_td_from(ship[i], [1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [1, 0]))) {
             console.log("abajo " + i);
             if (putBorders) {
                 ship[i].style.borderBottom = "1px inset grey";
@@ -695,4 +728,10 @@ origen vinculado etimologicamente a merx (mencancia) y mercani (comerciar)
 /*
 añadir a una array las celdas que se sobrepasan con otra celda y cuando se cambie un barco que celdasSobrepasadas.includes(barco[i])
 se actualize o algo asi THANKS
+*/
+
+/*
+en el propio popup estan los 3 listeners que tal si los hago funcion() {
+});
+y dentro pongo las tres variables, seleccionando, dragging, etc
 */
