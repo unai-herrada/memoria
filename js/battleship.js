@@ -508,10 +508,19 @@ function moveShip(ship, [row, column]) {
 
 // get coords de ship
 // asi podremos hacer la diferencia de las dos
-function get() {
-
+function getShipHeight(ship) {
+    first_td = getCoords(ship[0]);
+    last_td = getCoords(ship[ship.length - 1]);
+    return last_td[0] - first_td[0] + 1;
 }
 
+function getShipWidth(ship) {
+    first_td = getCoords(ship[0]);
+    last_td = getCoords(ship[ship.length - 1]);
+    return last_td[1] - first_td[1] + 1;
+}
+
+// quiza hacer un switch con index width y height y el index este esta array.indexOf()
 function getShipIndex(ship) {
     for (let i = 0; i < barcos.length; i++) {
         if (barcos[i] === ship) {
