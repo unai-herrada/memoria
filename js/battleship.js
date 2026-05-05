@@ -290,8 +290,8 @@ function seleccionandoCeldas() {
             dragging = true;
             grabbed_td = this;
             grabbed_ship = getGrabbedShip(grabbed_td);
-            barcos.splice(barcos.indexOf(grabbed_ship), 1);
-            grabbed_ship_copia = Array.from(grabbed_ship);
+            //barcos.splice(barcos.indexOf(grabbed_ship), 1);
+            //grabbed_ship_copia = Array.from(grabbed_ship);
             toggleSelectShip(grabbed_ship);
 
         }
@@ -319,6 +319,19 @@ function tilesOverrided(ship) {
 
 function celdaSeleccionada() {
     if (dragging) {
+        //updateGrabbed_td2(grabbed_ship, this);
+        toggleBorder2(grabbed_ship, true);
+        newShip = moveShip(grabbed_ship, diference(grabbed_td, this));
+        for (let i = 0; i < newShip.length; i++) {
+            newShip[i].style.backgroundColor = "blue";
+        }
+        toggleBorder2(newShip, false);
+        barcos.splice(getShipIndex(grabbed_ship), 1, newShip);
+        grabbed_ship = newShip;
+        grabbed_td = this;
+        //updateGrabbed_td(grabbed_ship, getPositionTD(grabbed_ship, grabbed_td), this);
+        //toggleBorder2()
+        /*
         newShip = [];
         toggleBorder(grabbed_ship, true);//toggleRedAlert(grabbed_ship);
         toggleSelectShip(grabbed_ship);
@@ -342,6 +355,7 @@ function celdaSeleccionada() {
         }
         toggleBorder(grabbed_ship, false);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         toggleSelectShip(grabbed_ship);
+        */
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
@@ -350,6 +364,10 @@ function celdaSeleccionada() {
 
 function numberToLetter(num) {
     return String.fromCharCode(64 + num);;
+}
+
+function updateGrabbed_td2(ship, td) {
+    
 }
 
 function updateGrabbed_td(ship, td_position, this_td) {
@@ -419,9 +437,6 @@ function getCoords(td) {
     return [parseInt(td.id[0].charCodeAt(0) - 65), parseInt(td.id.slice(1) - 1)];
 }
 
-function a() {
-
-}
 
 function selectCellsBetween(td_coords_1, td_coords_2) {
     // esto es 10 veces mejor, luego cuando devuelvas las celdas seleccionadas
@@ -460,15 +475,23 @@ function diference(td1, td2) {//get_td_from(getTD(4, 4), diference(getTD(4, 4), 
 function moveShip(ship, distance) {
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
-        newShip.push(get_td_from(ship[i], distance));
-        ship[i].style.backgroundColor = colorDefault;
-        newShip[i].style.backgroundColor = "blue";
+        if (newShip.includes(get_td_from(ship[i], distance))) {
+            console.log(grabbed_td);
+            grabbed_td = get_td_from(grabbed_td, distance);
+            console.log(grabbed_td);
+            return moveShip(ship, [0, 0]);
+            // diference(grabbed_td, this)
+        } else {
+            newShip.push(get_td_from(ship[i], distance));
+            ship[i].style.backgroundColor = colorDefault;
+        }
     }
+    return newShip;
+    /*
     toggleBorder2(ship, true);
     toggleBorder2(newShip, false);
-    barcos.splice(getShipIndex(ship), 1, newShip);
+    barcos.splice(getShipIndex(ship), 1, newShip);*/
     //toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
-    //moveShip(barcos[0], diference(getTD(0, 0), getTD(3, 3)));
     //moveShip(barcos[0], diference(barcos[0][0], getTD(3, 3)));
 }
 
@@ -486,7 +509,7 @@ function getShipIndex(ship) {
 function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
     for (let i = 0; i < ship.length; i++) {
         if (get_td_from(ship[i], [-1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [-1, 0]))) {
-            console.log("arriba " + i);
+            //console.log("arriba " + i);
             if (putBorders) {
                 ship[i].style.borderTop = "1px inset grey";
             } else {
@@ -494,7 +517,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             }
         }
         if (get_td_from(ship[i], [0, -1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, -1]))) {
-            console.log("izquierda " + i);
+            //console.log("izquierda " + i);
             if (putBorders) {
                 ship[i].style.borderLeft = "1px inset grey";
             } else {
@@ -502,7 +525,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             }
         }
         if (get_td_from(ship[i], [0, 1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, 1]))) {
-            console.log("derecha " + i);
+            //console.log("derecha " + i);
             if (putBorders) {
                 ship[i].style.borderRight = "1px inset grey";
             } else {
@@ -510,7 +533,7 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             }
         }
         if (get_td_from(ship[i], [1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [1, 0]))) {
-            console.log("abajo " + i);
+            //console.log("abajo " + i);
             if (putBorders) {
                 ship[i].style.borderBottom = "1px inset grey";
             } else {
@@ -729,4 +752,9 @@ se actualize o algo asi THANKS
 en el propio popup estan los 3 listeners que tal si los hago funcion() {
 });
 y dentro pongo las tres variables, seleccionando, dragging, etc
+*/
+
+/*
+si haces click para poner una pieza con shift se elegira esa y la siguiente pieza sera la primera sin que toques sin shift
+para hacer en diagonal barcos
 */
