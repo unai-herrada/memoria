@@ -321,7 +321,23 @@ function celdaSeleccionada() {
     if (dragging) {
         //updateGrabbed_td2(grabbed_ship, this);
         toggleBorder2(grabbed_ship, true);
-        newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
+        //a = get_td_from(grabbed_td, [row, column]); // this
+        /*
+        a = getCoords(this);
+        b = getCoords(grabbed_td);
+        if (a[0] > nRows || a[0] <= 0) {
+            console.log("rows: " + a[0]);
+        }
+        if (a[1] > nColumns || a[1] <= 0) {
+            console.log("cols: " + a[1]);
+        }
+        console.log(a);
+        console.log(b);
+        if (1 === 1) {
+            grabbed_td = this;
+        }
+        */
+        newShip = moveShip(grabbed_ship, difference(grabbed_td, this), this);
         if (newShip === grabbed_ship) {
             grabbed_td = this;
         }
@@ -329,7 +345,7 @@ function celdaSeleccionada() {
             newShip[i].style.backgroundColor = "blue";
         }
         toggleBorder2(newShip, false);
-        barcos.splice(getShipIndex(grabbed_ship), 1, newShip);
+        barcos.splice(getIndex(barcos, grabbed_ship), 1, newShip);
         grabbed_ship = newShip;
         grabbed_td = this;
         //updateGrabbed_td(grabbed_ship, getPositionTD(grabbed_ship, grabbed_td), this);
@@ -475,28 +491,59 @@ function difference(td1, td2) {//get_td_from(getTD(4, 4), difference(getTD(4, 4)
     return [td2_coords[0] - td1_coords[0], td2_coords[1] - td1_coords[1]];
 }
 
-function moveShip(ship, [row, column]) {
+function getCoordsTDfromShip(ship, td) {
+    // dame ship y td y te digo las coords del td de dentro del ship
+}
+
+function moveShip(ship, [row, column], this_td) {
     /*console.log(grabbed_td);
     console.log(ship);
     console.log([row, column]);*/
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
         if (newShip.includes(get_td_from(ship[i], [row, column]))) {
+            /*
+            let index = getIndex(ship, get_td_from(grabbed_td, [row, column]));
+            console.log(index);
+            console.log(ship);
+            console.log(grabbed_td);
+            newRow = Math.floor(index / getShipWidth(ship));
+            newColumn = index % getShipHeight(ship);
+            grabbed_td = get_td_from(grabbed_td, [row, column]);
+            console.log(newRow + " + " + newColumn);
+            //return moveShip(ship, [row - newRow, column - newColumn]);
+            */
+            //this_td = get_td_from(grabbed_td, [row, column]);
+            reverse_td = get_td_from(grabbed_td, [-row, -column]);
+            grabbed_td = this_td;
+            return moveShip(ship, difference(grabbed_td, this_td), this_td);
+            //return moveShip(ship, [0, 0]);
+            /*
+
+            */
+            //console.log("si");
+            //return moveShip(ship, [nRows - getShipHeight(ship), nColumns - getShipWidth(ship)]);
             //grabbed_td = get_td_from(grabbed_td, [row, column]);
-            //grabbed_td = this;
+            /*
             console.log(ship);
             console.log(newShip);
             console.log(grabbed_td);
             console.log(newShip[i - 1]);
             console.log(ship[i]);
             console.log(difference(ship[i], get_td_from(newShip[i - 1], [0, newShip.length])));
+            */
+            //console.log("(" + newShip.length + " % " + getShipWidth(ship) + ") === 0");
             //return ship;
-            return moveShip(ship, difference(ship[i], get_td_from(newShip[i - 1], [0, newShip.length])));
+            //return moveShip(ship, difference(ship[i], get_td_from(newShip[i - 1], [newShip.length / getShipWidth(ship), newShip.length])));
         } else {
             newShip.push(get_td_from(ship[i], [row, column]));
             ship[i].style.backgroundColor = colorDefault;
         }
     }
+    for (let i = 0; i < ship; i++) {
+        //ship[i].style.backgroundColor = colorDefault;
+    }
+    console.log(newShip);
     return newShip;
     /*
     toggleBorder2(ship, true);
@@ -521,9 +568,9 @@ function getShipWidth(ship) {
 }
 
 // quiza hacer un switch con index width y height y el index este esta array.indexOf()
-function getShipIndex(ship) {
-    for (let i = 0; i < barcos.length; i++) {
-        if (barcos[i] === ship) {
+function getIndex(array, element) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === element) {
             return i;
         }
     }
@@ -783,4 +830,14 @@ y dentro pongo las tres variables, seleccionando, dragging, etc
 /*
 si haces click para poner una pieza con shift se elegira esa y la siguiente pieza sera la primera sin que toques sin shift
 para hacer en diagonal barcos
+*/
+
+/*
+IMPORTANTE
+Y = ROWS
+X = COLUMNS
+
+porque y es la altura (deberia) y la altura depende de que row estes
+
+square = casilla
 */
