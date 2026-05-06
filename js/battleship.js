@@ -131,8 +131,10 @@ function cambiarColor() {
     if (dragging) {
         dragging = false;
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
-        barcos.push(grabbed_ship);
+        //barcos.push(grabbed_ship);
+        //barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
         newShip = Array.from(grabbed_ship);
+        
         /*
         let makeLightBlue = [];
         for (let i = 0; i < grabbed_ship.length; i++) {
@@ -342,17 +344,20 @@ function celdaSeleccionada() {
         */
         /**/
         toggleBorder2(grabbed_ship, true);
-        newShip = moveShip(grabbed_ship, difference(grabbed_td, this), this);
-        if (newShip === grabbed_ship) {
-            grabbed_td = this;
-        }
+        newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
         for (let i = 0; i < newShip.length; i++) {
-            newShip[i].style.backgroundColor = "blue";
+            if (newShip[i].style.backgroundColor === "blue") {
+                newShip[i].style.backgroundColor = "rgb(0, 181, 255)";
+            } else {
+                newShip[i].style.backgroundColor = colorSelected;
+            }
         }
         toggleBorder2(newShip, false);
-        barcos.splice(getIndex(barcos, grabbed_ship), 1, newShip);
+        //console.log(barcos.indexOf(grabbed_ship));
+        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
         grabbed_ship = newShip;
         grabbed_td = this;
+        // barcos.splice(barcos.indexOf(clicked_ship), 1);
         //updateGrabbed_td(grabbed_ship, getPositionTD(grabbed_ship, grabbed_td), this);
         //toggleBorder2()
         /*/
@@ -500,133 +505,41 @@ function getCoordsTDfromShip(ship, td) {
     // dame ship y td y te digo las coords del td de dentro del ship
 }
 
-function moveShip(ship, [row, column], this_td) {
-    /*console.log(grabbed_td);// toggleBorder2(selectCellsBetween([0, 0], [2, 2], false));
-    console.log(ship);
-    console.log([row, column]);*/
-    //console.log("YES");
-    //console.log(get_td_from(this_td, [row, column]));
+function moveShip(ship, [row, column]) {
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
         let td = get_td_from(ship[i], [row, column]);
-        if (newShip.includes(td)) {
-            td_coords = getCoords(td);
-            grabbed_td_coords = getCoords(grabbed_td);
+        if (newShip.includes(td)) { // posible optimizacion un bucle q se repite dos veces y [row, column] sea dimeniones[row, column] para llamarlo asi o sin el row column
             first_td_coords = getCoords(ship[0]);
             shipWxH = getWxH(ship);
-            //console.log(td_coords);
-            //console.log(td_coords[0]);
-            //console.log(grabbed_td_coords);
-            //console.log(first_td_coords);
-            //console.log(shipWxH);
-            //console.log(row + shipWxH[1] + first_td_coords[0]); // + current row
-            //console.log(row);
             if (row + shipWxH[1] + first_td_coords[0] > nRows) {
                 row = nRows - shipWxH[1] - first_td_coords[0];
             }
-            //console.log(first_td_coords[0] + row);
             if (first_td_coords[0] + row < 0) {
-                //console.log(row);
                 row = 0 - first_td_coords[0];
             }
-            //console.log(row);
             if (column + shipWxH[0] + first_td_coords[1] > nColumns) {
                 column = nColumns - shipWxH[0] - first_td_coords[1];
             }
             if (first_td_coords[1] + column < 0) {
                 column = 0 - first_td_coords[1];
             }
-            return moveShip(ship, [row, column], this_td);
-            //console.log(td);
-            //console.log(i);
-            //console.log(i / getShipHeight(ship));
-            //console.log(i / getShipWidth(ship));
-            /*
-            let newRow = (i / getShipWidth(ship) - getShipHeight(ship));
-            newRow = getShipHeight(ship) % i + ;
-            let newColumn = i % getShipWidth(ship);
-            console.log(newRow);
-            console.log(newColumn);
-            console.log("row: " + (row + newRow) + " column: " + (column + newColumn));
-            if (row + newRow > 20 || row + newRow < -20) {
-            } else {
-                return moveShip(ship, [row + newRow, column + newColumn], this_td);
-            }
-                */
-            //console.log(this_td);
-            //console.log(grabbed_td);
-            /*
-            
-            console.log(index);
-            console.log(ship);
-            console.log(grabbed_td);
-            
-            grabbed_td = get_td_from(grabbed_td, [row, column]);
-            console.log(newRow + " + " + newColumn);
-            //return moveShip(ship, [row - newRow, column - newColumn]);
-            */
-            //this_td = get_td_from(grabbed_td, [row, column]);
-            //reverse_td = get_td_from(grabbed_td, [-row, -column]);
-            /*
-            console.log(this_td);
-            console.log(grabbed_td);
-            console.log([row, column]);
-            let index = getIndex(ship, grabbed_td);
-            newRow = Math.floor(index / getShipWidth(ship));
-            newColumn = index % getShipHeight(ship);
-            */
-            /*
-            if (row + newRow >= 10) {
-                newRow = 10 - row - newRow;
-            }
-            if (column + newColumn >= 10) {
-                newColumn = 10 - column - newColumn;
-            }
-            //*/
-            /*
-            console.log("[" + newRow + ", " + newColumn + "] + " + index);
-            grabbed_td = get_td_from(grabbed_td, [-newRow, -newColumn]);
-            console.log(grabbed_td); // LO QUE ESTOY HACIENDO DEBERIA HACERSE ANTES DEL moveShip y este if se quitaria
-            //grabbed_td = this_td;
-            return moveShip(ship, difference(grabbed_td, this_td), this_td);
-            //return moveShip(ship, [0, 0]);
-            /*
-
-            */
-            //console.log("si");
-            //return moveShip(ship, [nRows - getShipHeight(ship), nColumns - getShipWidth(ship)]);
-            //grabbed_td = get_td_from(grabbed_td, [row, column]);
-            /*
-            console.log(ship);
-            console.log(newShip);
-            console.log(grabbed_td);
-            console.log(newShip[i - 1]);
-            console.log(ship[i]);
-            console.log(difference(ship[i], get_td_from(newShip[i - 1], [0, newShip.length])));
-            */
-            //console.log("(" + newShip.length + " % " + getShipWidth(ship) + ") === 0");
-            //return ship;
-            //return moveShip(ship, difference(ship[i], get_td_from(newShip[i - 1], [newShip.length / getShipWidth(ship), newShip.length])));
+            return moveShip(ship, [row, column]);
         } else {
             newShip.push(td);
-            ship[i].style.backgroundColor = colorDefault;
+            if (ship[i].style.backgroundColor === colorSelected) {
+                ship[i].style.backgroundColor = "blue";
+            } else {
+                ship[i].style.backgroundColor = colorDefault;
+            }
         }
     }
     for (let i = 0; i < ship; i++) {
         //ship[i].style.backgroundColor = colorDefault;
     }
-    console.log(newShip);
     return newShip;
-    /*
-    toggleBorder2(ship, true);
-    toggleBorder2(newShip, false);
-    barcos.splice(getShipIndex(ship), 1, newShip);*/
-    //toggleBorder2(selectCellsBetween([0, 0], [3, 1], false));
-    //moveShip(barcos[0], difference(barcos[0][0], getTD(3, 3)));
 }
 
-// get coords de ship
-// asi podremos hacer la diferencia de las dos
 function getWxH(ship) {
     first_td = getCoords(ship[0]);
     last_td = getCoords(ship[ship.length - 1]);
