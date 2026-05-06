@@ -72,6 +72,7 @@ function crearContenidoPopup() {
         menu.appendChild(table);
         menu.appendChild(center);
         barcosPorColocar = Array.from(barcosDisponibles);
+        barcos = [];
         toggleBorder2(selectCellsBetween([0, 7], [2, 9], false));
         //toggleBorder2(selectCellsBetween([0, 8], [3, 9], false));
     });
@@ -219,7 +220,17 @@ function toggleBorder(ship, putBorders) { // on y off variable "switch"
 
 function placingShip(delay) { // darle variable ship y isReversed para que empieze al reves
     if (newShip.length > 0) {
-        if (newShip[0].style.backgroundColor != "red") {
+        if (newShip[0].style.backgroundColor === "rgb(0, 181, 255)") {
+            console.log("HOLA");
+            newShip[0].style.backgroundColor = colorSelected;
+            let intersectingShips = getGrabbedShip(newShip[0], true);
+            console.log(intersectingShips);
+            for (let i = 0; i < intersectingShips.length; i++) {
+                if (intersectingShips[i] !== grabbed_ship) {
+                    toggleBorder2(intersectingShips[i], true);
+                }
+            }
+        } else if (newShip[0].style.backgroundColor !== "red") {
             newShip[0].style.backgroundColor = "blue";
         } else {
             newShip[0].style.backgroundColor = colorDefault;
@@ -286,7 +297,7 @@ function get_td_from(td, [row, column]) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR
 function seleccionandoCeldas() {
     if (this.style.backgroundColor == "blue") {
         if (event.shiftKey) {
-            clicked_ship = getGrabbedShip(this);
+            clicked_ship = getGrabbedShip(this, false);
             toggleBorder(clicked_ship, true);
             toggleSelectShip(clicked_ship);
             toggleSelectShip(clicked_ship);
@@ -295,7 +306,7 @@ function seleccionandoCeldas() {
         } else {//addClassSiblings(this, "grabbing");
             dragging = true;
             grabbed_td = this;
-            grabbed_ship = getGrabbedShip(grabbed_td);
+            grabbed_ship = getGrabbedShip(grabbed_td, false);
             //barcos.splice(barcos.indexOf(grabbed_ship), 1);
             //grabbed_ship_copia = Array.from(grabbed_ship);
             toggleSelectShip(grabbed_ship);
@@ -325,26 +336,19 @@ function tilesOverrided(ship) {
 
 function celdaSeleccionada() {
     if (dragging) {
-        //updateGrabbed_td2(grabbed_ship, this);
-        //a = get_td_from(grabbed_td, [row, column]); // this
-        /*
-        a = getCoords(this);
-        b = getCoords(grabbed_td);
-        if (a[0] > nRows || a[0] <= 0) {
-            console.log("rows: " + a[0]);
-        }
-        if (a[1] > nColumns || a[1] <= 0) {
-            console.log("cols: " + a[1]);
-        }
-        console.log(a);
-        console.log(b);
-        if (1 === 1) {
-            grabbed_td = this;
-        }
-        */
         /**/
         toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
+        toggleBorder2(newShip, false);
+        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
+                toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
+                grabbed_ship[i].style.backgroundColor = "blue";
+            } else {
+                grabbed_ship[i].style.backgroundColor = colorDefault;
+            }
+        }
         for (let i = 0; i < newShip.length; i++) {
             if (newShip[i].style.backgroundColor === "blue") {
                 newShip[i].style.backgroundColor = "rgb(0, 181, 255)";
@@ -352,14 +356,8 @@ function celdaSeleccionada() {
                 newShip[i].style.backgroundColor = colorSelected;
             }
         }
-        toggleBorder2(newShip, false);
-        //console.log(barcos.indexOf(grabbed_ship));
-        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
         grabbed_ship = newShip;
         grabbed_td = this;
-        // barcos.splice(barcos.indexOf(clicked_ship), 1);
-        //updateGrabbed_td(grabbed_ship, getPositionTD(grabbed_ship, grabbed_td), this);
-        //toggleBorder2()
         /*/
         newShip = [];
         toggleBorder(grabbed_ship, true);//toggleRedAlert(grabbed_ship);
@@ -430,12 +428,18 @@ function removeSelectedCells() {
     selectedCells = [];
 }
 
-function getGrabbedShip(grabbed_td) {
+function getGrabbedShip(element, returnArray) {
+    let array = [];
     for (let i = 0; i < barcos.length; i++) {
-        if (barcos[i].includes(grabbed_td)) {
-            return barcos[i];
+        if (barcos[i].includes(element)) {
+            if (returnArray) {
+                array.push(barcos[i]);
+            } else {
+                return barcos[i];
+            }
         }
     }
+    return array;
 }
 
 function removeCyanCells() {
@@ -527,11 +531,6 @@ function moveShip(ship, [row, column]) {
             return moveShip(ship, [row, column]);
         } else {
             newShip.push(td);
-            if (ship[i].style.backgroundColor === colorSelected) {
-                ship[i].style.backgroundColor = "blue";
-            } else {
-                ship[i].style.backgroundColor = colorDefault;
-            }
         }
     }
     for (let i = 0; i < ship; i++) {
