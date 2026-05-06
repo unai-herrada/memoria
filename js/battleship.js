@@ -284,7 +284,7 @@ function toggleSelectShip(ship) {
     for (let i = 0; i < ship.length; i++) {
         if (ship[i].style.backgroundColor == "rgb(0, 181, 255)") {
             ship[i].style.backgroundColor = "blue";
-        } else if (ship[i].style.backgroundColor == "red") {
+        } else if (ship[i].style.backgroundColor == "rgb(0, 127, 255)") { // esto estaba como red lo cambio a 127
             ship[i].style.backgroundColor = "rgb(0, 181, 255)";
         } else if (ship[i].style.backgroundColor != colorSelected) {
             ship[i].style.backgroundColor = colorSelected;
@@ -374,17 +374,22 @@ function celdaSeleccionada() {
     if (dragging) {
         /*
         LO ULTIMO QUE ESTOY HACIENDO
-        A
-        A
-        A
-        A
-        A
-        A
-        A
-        A
-
-        A
+        hay error todavia aqui planeo arreglarlo dont worry
         */
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            afectededShip = getGrabbedShip(grabbed_ship[i], true);
+            for (let l = 0; l < afectededShip.length; l++) {
+                if (afectededShip[l] !== grabbed_ship) {
+                    for (let j = 0; j < afectededShip[l].length; j++) {
+                        afectededShip[l][j].style.backgroundColor = "blue";
+                    }
+                    console.log(afectededShip[l])
+                    toggleBorder2(afectededShip[l], false);
+                }
+            }
+        }
+        /*
+        console.log(grabbed_ship);
         afectededShip = getGrabbedShip(grabbed_td, true);
         if (afectededShip.length >= 2) {
             for (let i = 0; i < afectededShip.length; i++) {
@@ -396,6 +401,8 @@ function celdaSeleccionada() {
             }
             //grabbed_td.style.backgroundColor = "blue";
         }
+            */
+
         toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
         toggleBorder2(newShip, false);
@@ -403,6 +410,10 @@ function celdaSeleccionada() {
         for (let i = 0; i < grabbed_ship.length; i++) {
             if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
                 toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
+                // RARO EL BORDE NO FUNCA BIEN EXPLICO
+                // tengo linea de 3 vertical y la paso con el 3x3 de derecha a izq y se quedan lineas
+                // si bajo una casilla no tapandolo entero se queda una linea
+                // si bajo dos ya no queda linea
                 grabbed_ship[i].style.backgroundColor = "blue";
             } else if (grabbed_ship[i].style.backgroundColor !== "blue") {
                 grabbed_ship[i].style.backgroundColor = colorDefault;
@@ -889,4 +900,12 @@ BUG si crear una linea algo larga y drageas una ya existente por ella se bugea
 IDEA
 lineas de estas - - - - 
 para los ships que se sobre ponen
+*/
+
+/*
+on click remover bordes por si acaso mas que nada que veo q se pueden quedar bordes
+*/
+
+/*
+BUG SI HAGO CLICK NORMAL PARA ARRASTRAR Y HAGO CLICK DERECHO SE BUGEA BUG IMPORTANTE TO ARREGLAR (3-5 business)
 */
