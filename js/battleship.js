@@ -72,6 +72,8 @@ function crearContenidoPopup() {
         menu.appendChild(table);
         menu.appendChild(center);
         barcosPorColocar = Array.from(barcosDisponibles);
+        toggleBorder2(selectCellsBetween([0, 7], [2, 9], false));
+        //toggleBorder2(selectCellsBetween([0, 8], [3, 9], false));
     });
     let buttonSave = document.createElement("button");
     buttonSave.innerHTML = "Empezar";
@@ -86,6 +88,8 @@ function crearContenidoPopup() {
             board1.appendChild(table); // menu.removeChild(table); // un child no puede tener dos padres entoces se elimina solo del menu
         }
     });
+    toggleBorder2(selectCellsBetween([0, 7], [2, 9], false));
+    //toggleBorder2(selectCellsBetween([0, 8], [3, 9], false));
 }
 
 function createTable(rows, columns) { // x horizontal y vertical
@@ -320,7 +324,6 @@ function tilesOverrided(ship) {
 function celdaSeleccionada() {
     if (dragging) {
         //updateGrabbed_td2(grabbed_ship, this);
-        toggleBorder2(grabbed_ship, true);
         //a = get_td_from(grabbed_td, [row, column]); // this
         /*
         a = getCoords(this);
@@ -337,6 +340,8 @@ function celdaSeleccionada() {
             grabbed_td = this;
         }
         */
+        /**/
+        toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, difference(grabbed_td, this), this);
         if (newShip === grabbed_ship) {
             grabbed_td = this;
@@ -350,7 +355,7 @@ function celdaSeleccionada() {
         grabbed_td = this;
         //updateGrabbed_td(grabbed_ship, getPositionTD(grabbed_ship, grabbed_td), this);
         //toggleBorder2()
-        /*
+        /*/
         newShip = [];
         toggleBorder(grabbed_ship, true);//toggleRedAlert(grabbed_ship);
         toggleSelectShip(grabbed_ship);
@@ -374,7 +379,7 @@ function celdaSeleccionada() {
         }
         toggleBorder(grabbed_ship, false);//toggleRedAlert(grabbed_ship); // mira las posiciones y pone los border en rojo si algun barco esta sobre otro barco
         toggleSelectShip(grabbed_ship);
-        */
+        //*/
     } else if (seleccionando && !colocandoCeldas) {
         removeCyanCells();
         calculateLine(this);
@@ -499,13 +504,57 @@ function moveShip(ship, [row, column], this_td) {
     /*console.log(grabbed_td);// toggleBorder2(selectCellsBetween([0, 0], [2, 2], false));
     console.log(ship);
     console.log([row, column]);*/
-    console.log("YES");
-    console.log(get_td_from(this_td, [row, column]));
+    //console.log("YES");
+    //console.log(get_td_from(this_td, [row, column]));
     let newShip = [];
     for (let i = 0; i < ship.length; i++) {
         let td = get_td_from(ship[i], [row, column]);
-        console.log(td);
         if (newShip.includes(td)) {
+            td_coords = getCoords(td);
+            grabbed_td_coords = getCoords(grabbed_td);
+            first_td_coords = getCoords(ship[0]);
+            shipWxH = getWxH(ship);
+            //console.log(td_coords);
+            //console.log(td_coords[0]);
+            //console.log(grabbed_td_coords);
+            //console.log(first_td_coords);
+            //console.log(shipWxH);
+            //console.log(row + shipWxH[1] + first_td_coords[0]); // + current row
+            //console.log(row);
+            if (row + shipWxH[1] + first_td_coords[0] > nRows) {
+                row = nRows - shipWxH[1] - first_td_coords[0];
+            }
+            //console.log(first_td_coords[0] + row);
+            if (first_td_coords[0] + row < 0) {
+                //console.log(row);
+                row = 0 - first_td_coords[0];
+            }
+            //console.log(row);
+            if (column + shipWxH[0] + first_td_coords[1] > nColumns) {
+                column = nColumns - shipWxH[0] - first_td_coords[1];
+            }
+            if (first_td_coords[1] + column < 0) {
+                column = 0 - first_td_coords[1];
+            }
+            return moveShip(ship, [row, column], this_td);
+            //console.log(td);
+            //console.log(i);
+            //console.log(i / getShipHeight(ship));
+            //console.log(i / getShipWidth(ship));
+            /*
+            let newRow = (i / getShipWidth(ship) - getShipHeight(ship));
+            newRow = getShipHeight(ship) % i + ;
+            let newColumn = i % getShipWidth(ship);
+            console.log(newRow);
+            console.log(newColumn);
+            console.log("row: " + (row + newRow) + " column: " + (column + newColumn));
+            if (row + newRow > 20 || row + newRow < -20) {
+            } else {
+                return moveShip(ship, [row + newRow, column + newColumn], this_td);
+            }
+                */
+            //console.log(this_td);
+            //console.log(grabbed_td);
             /*
             
             console.log(index);
@@ -518,13 +567,15 @@ function moveShip(ship, [row, column], this_td) {
             */
             //this_td = get_td_from(grabbed_td, [row, column]);
             //reverse_td = get_td_from(grabbed_td, [-row, -column]);
+            /*
             console.log(this_td);
             console.log(grabbed_td);
             console.log([row, column]);
             let index = getIndex(ship, grabbed_td);
             newRow = Math.floor(index / getShipWidth(ship));
             newColumn = index % getShipHeight(ship);
-            //*
+            */
+            /*
             if (row + newRow >= 10) {
                 newRow = 10 - row - newRow;
             }
@@ -532,6 +583,7 @@ function moveShip(ship, [row, column], this_td) {
                 newColumn = 10 - column - newColumn;
             }
             //*/
+            /*
             console.log("[" + newRow + ", " + newColumn + "] + " + index);
             grabbed_td = get_td_from(grabbed_td, [-newRow, -newColumn]);
             console.log(grabbed_td); // LO QUE ESTOY HACIENDO DEBERIA HACERSE ANTES DEL moveShip y este if se quitaria
@@ -575,16 +627,10 @@ function moveShip(ship, [row, column], this_td) {
 
 // get coords de ship
 // asi podremos hacer la diferencia de las dos
-function getShipHeight(ship) {
+function getWxH(ship) {
     first_td = getCoords(ship[0]);
     last_td = getCoords(ship[ship.length - 1]);
-    return last_td[0] - first_td[0] + 1;
-}
-
-function getShipWidth(ship) {
-    first_td = getCoords(ship[0]);
-    last_td = getCoords(ship[ship.length - 1]);
-    return last_td[1] - first_td[1] + 1;
+    return [last_td[1] - first_td[1] + 1, last_td[0] - first_td[0] + 1];
 }
 
 // quiza hacer un switch con index width y height y el index este esta array.indexOf()
