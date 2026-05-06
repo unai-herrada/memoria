@@ -121,8 +121,8 @@ function createTable(rows, columns) { // x horizontal y vertical
         tbody.appendChild(tr);
     }
     table.style.borderCollapse = "collapse";
-    table.setAttribute("border", "2");
     //table.style.borderSpacing = "0";
+    table.setAttribute("border", "2");
     //table.setAttribute("border", "0");
     table.appendChild(tbody);
     return table;
@@ -148,7 +148,7 @@ function cambiarColor() {
         if (newShip.length == 0) {
             grabbed_td.style.backgroundColor = "blue";
         } else {*/
-            setTimeout(placingShip, 0, 0); // for now leave it like this
+            setTimeout(placingShip, 0, Array.from(grabbed_ship), 0); // for now leave it like this
         //}*/
         /*
         for (let i = 0; i < makeLightBlue.length; i++) {
@@ -166,7 +166,7 @@ function cambiarColor() {
             }*/
             barcos.push(fixShip(newShip));
             toggleBorder(barcos[barcos.length - 1], false);
-            setTimeout(placingShip, 50, 75);
+            setTimeout(placingShip, 50, newShip, 75);
         } else {
             newShip = [];
             for (let i = 0; i < celdasRojas.length; i++) {
@@ -218,25 +218,59 @@ function toggleBorder(ship, putBorders) { // on y off variable "switch"
     }
 }
 
-function placingShip(delay) { // darle variable ship y isReversed para que empieze al reves
-    if (newShip.length > 0) {
-        if (newShip[0].style.backgroundColor === "rgb(0, 181, 255)") {
-            console.log("HOLA");
-            newShip[0].style.backgroundColor = colorSelected;
-            let intersectingShips = getGrabbedShip(newShip[0], true);
-            console.log(intersectingShips);
+function toggleBorderOutside(ship, colorBorder) {
+    let style = "1px inset " + colorBorder;
+    for (let i = 0; i < ship.length; i++) {
+        /*
+        if (get_td_from(ship[i], [-1, 0]) === ship[i]) {
+            console.log("Hola");
+            ship[i].style.borderTop = style;
+        } else {
+            get_td_from(ship[i], [-1, 0]).style.borderBottom = style;
+        }
+        if (get_td_from(ship[i], [0, -1]) === ship[i]) {
+            console.log("Hola");
+            ship[i].style.borderLeft = style;
+        } else {
+            get_td_from(ship[i], [0, -1]).style.borderRight = style;
+        }
+        ship[i].style.borderRight = style;*/
+        /*
+        pasamos de hacer una tabla, tocara hacer un grid...
+        */
+        //ship[i].style.border = "hidden"; // "rgba(255, 127, 255, 0.3) -20px 2px 0px 2px" // rgba(255, 0, 0, 0.25) -20px 2px 0px 2px // interesante ig
+        //ship[i].style.border = style;
+        /* // for now at least
+        ship[i].style.outline = style;
+        ship[i].style.outlineOffset = "-1px";
+        //*/
+        //ship[i].style.boxShadow = "0 0 0 2px red";
+    }
+}
+
+function placingShip(ship, delay) { // darle variable ship y isReversed para que empieze al reves
+    if (ship.length > 0) {
+        if (ship[0].style.backgroundColor === "rgb(0, 181, 255)") {
+            //console.log("HOLA");
+            ship[0].style.backgroundColor = colorSelected; // blue en vez de colorSelected
+            let intersectingShips = getGrabbedShip(ship[0], true);
+            //console.log(intersectingShips);
+            //console.log(grabbed_ship);
             for (let i = 0; i < intersectingShips.length; i++) {
-                if (intersectingShips[i] !== grabbed_ship) {
+                if (intersectingShips[i] !== grabbed_ship) { // este if debe impedir al mas grande SOLO
+                    //console.log(intersectingShips[i]);
+                    //toggleBorderOutside(intersectingShips[i], "red");
                     toggleBorder2(intersectingShips[i], true);
+                    toggleBorder2(intersectingShips[i], false);
                 }
             }
-        } else if (newShip[0].style.backgroundColor !== "red") {
-            newShip[0].style.backgroundColor = "blue";
+        } else if (ship[0].style.backgroundColor !== "red") {
+            ship[0].style.backgroundColor = "blue";
         } else {
-            newShip[0].style.backgroundColor = colorDefault;
+            ship[0].style.backgroundColor = colorDefault;
         }//newShip[0].classList.add("grab"); // grab or move esta divertido quiza futura funcion
-        newShip.shift();
-        setTimeout(placingShip, delay, delay);
+        ship.shift();
+        setTimeout(placingShip, delay, ship, delay);
     } else {
         colocandoCeldas = false;
     }
@@ -295,7 +329,7 @@ function get_td_from(td, [row, column]) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR
 }
 
 function seleccionandoCeldas() {
-    if (this.style.backgroundColor == "blue") {
+    if (this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) {
         if (event.shiftKey) {
             clicked_ship = getGrabbedShip(this, false);
             toggleBorder(clicked_ship, true);
@@ -305,6 +339,8 @@ function seleccionandoCeldas() {
             barcos.splice(barcos.indexOf(clicked_ship), 1);
         } else {//addClassSiblings(this, "grabbing");
             dragging = true;
+            /* */
+            this.style.backgroundColor = "blue";
             grabbed_td = this;
             grabbed_ship = getGrabbedShip(grabbed_td, false);
             //barcos.splice(barcos.indexOf(grabbed_ship), 1);
@@ -336,7 +372,30 @@ function tilesOverrided(ship) {
 
 function celdaSeleccionada() {
     if (dragging) {
-        /**/
+        /*
+        LO ULTIMO QUE ESTOY HACIENDO
+        A
+        A
+        A
+        A
+        A
+        A
+        A
+        A
+
+        A
+        */
+        afectededShip = getGrabbedShip(grabbed_td, true);
+        if (afectededShip.length >= 2) {
+            for (let i = 0; i < afectededShip.length; i++) {
+                if (afectededShip[i] !== grabbed_ship) {
+                    for (let l = 0; l < afectededShip[i]; l++) {
+                        afectededShip[i][l].style.backgroundColor = "blue";
+                    }
+                }
+            }
+            //grabbed_td.style.backgroundColor = "blue";
+        }
         toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
         toggleBorder2(newShip, false);
@@ -345,7 +404,7 @@ function celdaSeleccionada() {
             if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
                 toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
                 grabbed_ship[i].style.backgroundColor = "blue";
-            } else {
+            } else if (grabbed_ship[i].style.backgroundColor !== "blue") {
                 grabbed_ship[i].style.backgroundColor = colorDefault;
             }
         }
@@ -532,9 +591,6 @@ function moveShip(ship, [row, column]) {
         } else {
             newShip.push(td);
         }
-    }
-    for (let i = 0; i < ship; i++) {
-        //ship[i].style.backgroundColor = colorDefault;
     }
     return newShip;
 }
@@ -823,4 +879,14 @@ square = casilla
 /*
 IMPORTANTE X3
 EN EL HOVER LE METEMOS UN event.mouseClick o la q sea seguro hay evento de holdear click
+*/
+
+/*
+BUG si crear una linea algo larga y drageas una ya existente por ella se bugea
+*/
+
+/*
+IDEA
+lineas de estas - - - - 
+para los ships que se sobre ponen
 */
