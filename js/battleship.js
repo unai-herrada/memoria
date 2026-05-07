@@ -136,6 +136,7 @@ function cambiarColor() {
         //barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
         //newShip = Array.from(grabbed_ship); // esto estaba activado antes en la 4.6.3
         newShip = []; // puse esta despues porque si movias un barco y colocabas una pieca newShip seguia teniendo el valor de barco draggeado
+        celdasRojas = [];
         /*
         let makeLightBlue = [];
         for (let i = 0; i < grabbed_ship.length; i++) {
@@ -218,23 +219,27 @@ function toggleBorder(ship, putBorders) { // on y off variable "switch"
     }
 }
 
-function toggleBorderOutside(ship, colorBorder) {
-    let style = "1px dashed " + colorBorder;
+function toggleBorderOutside(ship, typeBorder, colorBorder) {
+    let style = "1px " + typeBorder + " " + colorBorder;
     for (let i = 0; i < ship.length; i++) {
         if (get_td_from(ship[i], [-1, 0]) !== ship[i] && !ship.includes(get_td_from(ship[i], [-1, 0]))) {
             //console.log("arriba");
+            get_td_from(ship[i], [-1, 0]).style.borderBottom = style;
             ship[i].style.borderTop = style;
         }
         if (get_td_from(ship[i], [0, -1]) !== ship[i] && !ship.includes(get_td_from(ship[i], [0, -1]))) {
             //console.log("izquierda");
+            get_td_from(ship[i], [0, -1]).style.borderRight = style;
             ship[i].style.borderLeft = style;
         }
         if (get_td_from(ship[i], [0, 1]) !== ship[i] && !ship.includes(get_td_from(ship[i], [0, 1]))) {
             //console.log("derecha");
+            get_td_from(ship[i], [0, 1]).style.borderLeft = style;
             ship[i].style.borderRight = style;
         }
         if (get_td_from(ship[i], [1, 0]) !== ship[i] && !ship.includes(get_td_from(ship[i], [1, 0]))) {
             //console.log("abajo");
+            get_td_from(ship[i], [1, 0]).style.borderTop = style;
             ship[i].style.borderBottom = style;
         }
         /*
@@ -281,11 +286,13 @@ function placingShip(ship, delay) { // darle variable ship y isReversed para que
             for (let i = 0; i < intersectingShips.length; i++) {
                 if (intersectingShips[i] !== grabbed_ship) { // este if debe impedir al mas grande SOLO
                     //console.log(intersectingShips[i]);
-                    toggleBorderOutside(intersectingShips[i], "red");
+                    toggleBorderOutside(intersectingShips[i], "inset", colorDefault); // hacer que solo ponga borde dentro del ship
+                    // en vez del dashed red; inset colorDefault queda muy bien
                     //toggleBorder2(intersectingShips[i], true);
                     //toggleBorder2(intersectingShips[i], false);
                 }
             }
+            toggleBorderOutside(grabbed_ship, "inset", "grey"); // no se deberia llamar toggle la funcion xd
         } else if (ship[0].style.backgroundColor !== "red") {
             ship[0].style.backgroundColor = "blue";
         } else {
@@ -365,9 +372,9 @@ function seleccionandoCeldas() {
             } // NO ME CONVENCE PORQUE LOS BORDER NO ESTAN AL ELIMINAR OSEA QUE HAY QUE HACER UNA FUNCION QUE CONTROLE ESTO
             //console.log(getWxH(clicked_ship));
             if (getWxH(clicked_ship)[0] === 1 || getWxH(clicked_ship)[1] === 1) {
-                barcosPorColocar.push(getWxH(clicked_ship));
-            } else {
                 barcosPorColocar.push(clicked_ship.length);
+            } else {
+                barcosPorColocar.push(getWxH(clicked_ship));
             }
             barcos.splice(barcos.indexOf(clicked_ship), 1);
         } else {//addClassSiblings(this, "grabbing");
@@ -667,7 +674,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderTop = "none";
             }
-        } else {
+        } else if (get_td_from(ship[i], [-1, 0]) !== ship[i]) {
+            get_td_from(ship[i], [-1, 0]).style.borderBottom = "1px inset grey";
             ship[i].style.borderTop = "1px inset grey";
         }
         if (get_td_from(ship[i], [0, -1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, -1]))) {
@@ -677,7 +685,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderLeft = "none";
             }
-        } else {
+        } else if (get_td_from(ship[i], [0, -1]) !== ship[i]) {
+            get_td_from(ship[i], [0, -1]).style.borderRight = "1px inset grey";
             ship[i].style.borderLeft = "1px inset grey";
         }
         if (get_td_from(ship[i], [0, 1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, 1]))) {
@@ -687,7 +696,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderRight = "none";
             }
-        } else {
+        } else if (get_td_from(ship[i], [0, 1]) !== ship[i]) {
+            get_td_from(ship[i], [0, 1]).style.borderLeft = "1px inset grey";
             ship[i].style.borderRight = "1px inset grey";
         }
         if (get_td_from(ship[i], [1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [1, 0]))) {
@@ -697,7 +707,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderBottom = "none";
             }
-        } else {
+        } else if (get_td_from(ship[i], [1, 0]) !== ship[i]) {
+            get_td_from(ship[i], [1, 0]).style.borderTop = "1px inset grey";
             ship[i].style.borderBottom = "1px inset grey";
         }
     }
@@ -969,4 +980,21 @@ el 3x3 claramente gana
 /*
 digamos q el 3x3 sobrepasa un 2x1 pero la otra partde del 2x1 esta fuera del 3x3
 el borde del 3x3 en esta parte deberia de ser 1px dashed grey
+y el borde del 3x3 en este caso q no pueda ser el dashed rojo
+solo puede ser dashed grey si hay algo fuera
+o inset
+dashed red no deberia de pasar para eso tan solo es poner otro borde despues del ship mas grande
+
+Y CUANDO ESTA EN EL DRAGGED tambien deberia de ser dashed grey si sobresale algo de otro barco
+*/
+
+/*
+bug, cuando un 5x1 tiene a un 1x1 atrapado y otro ship digamos el 3x3 le toca
+el borde se reinicia cuando este ship haga cualquier movimiento despues de ya a ver entrado dentro
+esto inlcuye el borde rojo del 1x1 y su color que marca que hay mas de un barco alli
+*/
+
+/*
+digamos que hay dos ships al lado y pongo un 3x3 por encima
+es dijicil saber que hay 2 barcos dentro del 3x3 por eso un borde de dashed del colorSelected no vendria nada mal me thinks
 */
