@@ -132,60 +132,6 @@ function createTable(rows, columns) { // x horizontal y vertical
 
 /*function scrollWheel() {
     event.preventDefault();
-    /*
-    grabbed_td = this;
-        grabbed_ship = getGrabbedShip(grabbed_td, false); // preferia scrollShip como nombre
-        //let newShip = [];
-        //toggleSelectShip(grabbed_ship);
-        for (let i = 0; i < grabbed_ship.length; i++) {
-            grabbed_ship[i].style.backgroundColor = colorDefault;
-        }
-        toggleBorder2(grabbed_ship, true);
-        for (let i = 0; i < grabbed_ship.length; i++) {
-            afectededShip = getGrabbedShip(grabbed_ship[i], true);
-            for (let l = 0; l < afectededShip.length; l++) {
-                if (afectededShip[l] !== grabbed_ship) {
-                    for (let j = 0; j < afectededShip[l].length; j++) {
-                        afectededShip[l][j].style.backgroundColor = "blue";
-                    }
-                    //console.log(afectededShip[l])
-                    toggleBorder2(afectededShip[l], false);
-                }
-            }
-        }
-        if (event.deltaY > 0) {
-            if (event.shiftKey) {
-                newShip = moveShip(grabbed_ship, [0, 1]);
-            } else {
-                newShip = moveShip(grabbed_ship, [1, 0]);
-            }
-        } else {
-            if (event.shiftKey) {
-                newShip = moveShip(grabbed_ship, [0, -1]);
-            } else {
-                newShip = moveShip(grabbed_ship, [-1, 0]);
-            }
-        }
-        toggleBorder2(newShip, false);
-        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
-        for (let i = 0; i < grabbed_ship.length; i++) {
-            if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
-                toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
-                grabbed_ship[i].style.backgroundColor = "blue";
-            } else if (grabbed_ship[i].style.backgroundColor !== "blue") {
-                grabbed_ship[i].style.backgroundColor = colorDefault;
-            }
-        }
-        for (let i = 0; i < newShip.length; i++) {
-            if (newShip[i].style.backgroundColor === "blue") {
-                newShip[i].style.backgroundColor = "rgb(0, 181, 255)";
-            } else {
-                newShip[i].style.backgroundColor = "blue";
-            }
-        }
-        newShip = [];
-        celdasRojas = [];
-        setTimeout(placingShip, 0, Array.from(newShip), 0);*/
     if ((this.style.backgroundColor === "blue" && !dragging && !colocandoCeldas && !seleccionando) || scrolling && !dragging && !colocandoCeldas && !seleccionando) {
         if (scrolling && this.style.backgroundColor !== "blue") {
             grabbed_ship = newShip;
