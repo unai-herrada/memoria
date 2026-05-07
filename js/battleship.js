@@ -639,7 +639,8 @@ function removeCyanCells() {
 
 function calculateLine(last_td) {
     //newShip.push(clicked_td);
-    /*newShip = */drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
+    /*newShip = *///drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
+    selectCellsBetween(getCoords(clicked_td), getCoords(last_td));
     for (let i = 0; i < newShip.length; i++) {
         if (newShip[i].style.backgroundColor != colorSelected) {
             newShip[i].style.backgroundColor = "cyan";
@@ -1098,6 +1099,13 @@ for (let i = 0; i < unBarco.length; i++) {
     unBarco[i].style.backgroundColor = "blue";
 }
 barcos.push(unBarco);
+
+unBarco = [getTD(0, 1), getTD(0, 2), getTD(0, 3), getTD(1, 0), getTD(1, 4), getTD(2, 0), getTD(2, 4), getTD(3, 0), getTD(3, 4), getTD(4, 1), getTD(4, 2), getTD(4, 3)];
+toggleBorder2(unBarco, false);
+for (let i = 0; i < unBarco.length; i++) {
+    unBarco[i].style.backgroundColor = "blue";
+}
+barcos.push(unBarco);
 */
 
 /*
@@ -1121,4 +1129,9 @@ otra opcion es hacer que los barcos atraviesen paredes en la coloqacion para que
 /*
 en casa ordenar por prioridades en archivos js
 osea cosas que se usan mucho alta prioridad etc
+*/
+
+/*
+nueva funcion: getElementsFromTo(getTD(0, 0), getTD(0,3)) //array de linea de 4 (aunque creo que esta ya esta) entoces solo hacer la de abajo
+nueva funcion: arrayPushElements(array, elements[])
 */
