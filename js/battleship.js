@@ -998,3 +998,24 @@ esto inlcuye el borde rojo del 1x1 y su color que marca que hay mas de un barco 
 digamos que hay dos ships al lado y pongo un 3x3 por encima
 es dijicil saber que hay 2 barcos dentro del 3x3 por eso un borde de dashed del colorSelected no vendria nada mal me thinks
 */
+
+/*
+funcion para meter / añadir un barco
+asi se corrigue el solo el barcosPorColocar
+*/
+
+/*
+unBarco = [getTD(0, 0), getTD(0, 4), getTD(1, 1), getTD(1, 3), getTD(2, 2), getTD(3, 3), getTD(3, 1), getTD(4, 4), getTD(4, 0)];
+toggleBorder2(unBarco, false);
+for (let i = 0; i < unBarco.length; i++) {
+    unBarco[i].style.backgroundColor = "blue";
+}
+barcos.push(unBarco);
+
+unBarco = [getTD(0, 0), getTD(0, 1), getTD(1, 1), getTD(1, 2)];
+toggleBorder2(unBarco, false);
+for (let i = 0; i < unBarco.length; i++) {
+    unBarco[i].style.backgroundColor = "blue";
+}
+barcos.push(unBarco);
+*/
