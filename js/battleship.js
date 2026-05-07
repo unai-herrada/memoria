@@ -1091,6 +1091,13 @@ for (let i = 0; i < unBarco.length; i++) {
     unBarco[i].style.backgroundColor = "blue";
 }
 barcos.push(unBarco);
+
+unBarco = [getTD(2, 1), getTD(1, 2), getTD(2, 2), getTD(3, 2), getTD(2, 3)];
+toggleBorder2(unBarco, false);
+for (let i = 0; i < unBarco.length; i++) {
+    unBarco[i].style.backgroundColor = "blue";
+}
+barcos.push(unBarco);
 */
 
 /*
@@ -1109,4 +1116,9 @@ version 4.7.1 also asi u know
 
 /*
 otra opcion es hacer que los barcos atraviesen paredes en la coloqacion para que no sean rectos esto funciona bien con barcos raros
+*/
+
+/*
+en casa ordenar por prioridades en archivos js
+osea cosas que se usan mucho alta prioridad etc
 */
