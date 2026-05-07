@@ -1127,6 +1127,7 @@ otra opcion es hacer que los barcos atraviesen paredes en la coloqacion para que
 */
 
 /*
+PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA, PRIORIDAD ABSOLUTA
 en casa ordenar por prioridades en archivos js
 osea cosas que se usan mucho alta prioridad etc
 */
@@ -1134,4 +1135,5 @@ osea cosas que se usan mucho alta prioridad etc
 /*
 nueva funcion: getElementsFromTo(getTD(0, 0), getTD(0,3)) //array de linea de 4 (aunque creo que esta ya esta) entoces solo hacer la de abajo
 nueva funcion: arrayPushElements(array, elements[])
+nueva funcion: colorArray(array, color) // y ya ... asi no me lio TANTO como lo hago
 */
