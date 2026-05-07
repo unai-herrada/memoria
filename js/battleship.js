@@ -329,7 +329,7 @@ function get_td_from(td, [row, column]) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR
 }
 
 function seleccionandoCeldas() {
-    if (this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) {
+    if ((this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) && event.button === 0) {
         if (event.shiftKey) {
             clicked_ship = getGrabbedShip(this, false);
             toggleBorder(clicked_ship, true);
@@ -348,8 +348,9 @@ function seleccionandoCeldas() {
             toggleSelectShip(grabbed_ship);
 
         }
-    } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging && !event.shiftKey) {
-        removeCyanCells();
+    } else if (!colocandoCeldas && barcosPorColocar.length != 0 && !dragging && !event.shiftKey && event.button === 0) { // not real que tenga tantos ANDs
+        removeCyanCells(); // de alguna forma quitar esta linea arregla un bug
+        // el bug en cuestion, no hago newShip = [] despues de crear el 3x3 de nomral estaria bien
         if (seleccionando) {
             clicked_td.style.backgroundColor = colorDefault;
         }
@@ -372,6 +373,7 @@ function tilesOverrided(ship) {
 
 function celdaSeleccionada() {
     if (dragging) {
+        toggleBorder2(grabbed_ship, true);
         /*
         LO ULTIMO QUE ESTOY HACIENDO
         hay error todavia aqui planeo arreglarlo dont worry
@@ -403,7 +405,6 @@ function celdaSeleccionada() {
         }
             */
 
-        toggleBorder2(grabbed_ship, true);
         newShip = moveShip(grabbed_ship, difference(grabbed_td, this));
         toggleBorder2(newShip, false);
         barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
@@ -908,4 +909,12 @@ on click remover bordes por si acaso mas que nada que veo q se pueden quedar bor
 
 /*
 BUG SI HAGO CLICK NORMAL PARA ARRASTRAR Y HAGO CLICK DERECHO SE BUGEA BUG IMPORTANTE TO ARREGLAR (3-5 business)
+*/
+
+/*
+para el futuro cuando quieras personalizar el mapa literalmente
+dejando huecos en el grid
+cuando hacedomos get_td_from en el moveShip
+lo ponemos en if () {} y si tiene un valor entrara
+y si no la funcion devolvera false que hara que no entre
 */
