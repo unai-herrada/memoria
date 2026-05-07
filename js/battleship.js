@@ -383,11 +383,11 @@ function isShipVertical(ship) {
 
 function toggleSelectShip(ship) {
     for (let i = 0; i < ship.length; i++) {
-        if (ship[i].style.backgroundColor == "rgb(0, 181, 255)") {
+        if (ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
             ship[i].style.backgroundColor = "blue";
-        } else if (ship[i].style.backgroundColor == "rgb(0, 127, 255)") { // esto estaba como red lo cambio a 127
+        } else if (ship[i].style.backgroundColor === colorSelected) { // esto estaba como red lo cambio a 127
             ship[i].style.backgroundColor = "rgb(0, 181, 255)";
-        } else if (ship[i].style.backgroundColor != colorSelected) {
+        } else if (ship[i].style.backgroundColor !== colorSelected) {
             ship[i].style.backgroundColor = colorSelected;
         } else {
             ship[i].style.backgroundColor = colorDefault;
@@ -453,7 +453,7 @@ function seleccionandoCeldas() {
         } else {//addClassSiblings(this, "grabbing");
             dragging = true;
             /* */
-            this.style.backgroundColor = "blue"; // ???
+            //this.style.backgroundColor = "blue"; // ???
             grabbed_td = this;
             grabbed_ship = getGrabbedShip(grabbed_td, false);
             //barcos.splice(barcos.indexOf(grabbed_ship), 1);
