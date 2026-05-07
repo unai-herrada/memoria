@@ -35,6 +35,7 @@ let ghostShip = [];
 let blueCells = [];
 let clicked_ship = [];
 let rightClick = false;
+let scrolling = false;
 window.onload = iniciar;
 function iniciar() {
     document.addEventListener("contextmenu", function() {
@@ -114,6 +115,7 @@ function createTable(rows, columns) { // x horizontal y vertical
             td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
+            td.addEventListener("wheel", scrollWheel);
             //let txt = document.createTextNode("");
             //td.appendChild(txt);
             tr.appendChild(td);
@@ -128,7 +130,131 @@ function createTable(rows, columns) { // x horizontal y vertical
     return table;
 }
 
+/*function scrollWheel() {
+    event.preventDefault();
+    /*
+    grabbed_td = this;
+        grabbed_ship = getGrabbedShip(grabbed_td, false); // preferia scrollShip como nombre
+        //let newShip = [];
+        //toggleSelectShip(grabbed_ship);
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            grabbed_ship[i].style.backgroundColor = colorDefault;
+        }
+        toggleBorder2(grabbed_ship, true);
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            afectededShip = getGrabbedShip(grabbed_ship[i], true);
+            for (let l = 0; l < afectededShip.length; l++) {
+                if (afectededShip[l] !== grabbed_ship) {
+                    for (let j = 0; j < afectededShip[l].length; j++) {
+                        afectededShip[l][j].style.backgroundColor = "blue";
+                    }
+                    //console.log(afectededShip[l])
+                    toggleBorder2(afectededShip[l], false);
+                }
+            }
+        }
+        if (event.deltaY > 0) {
+            if (event.shiftKey) {
+                newShip = moveShip(grabbed_ship, [0, 1]);
+            } else {
+                newShip = moveShip(grabbed_ship, [1, 0]);
+            }
+        } else {
+            if (event.shiftKey) {
+                newShip = moveShip(grabbed_ship, [0, -1]);
+            } else {
+                newShip = moveShip(grabbed_ship, [-1, 0]);
+            }
+        }
+        toggleBorder2(newShip, false);
+        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
+                toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
+                grabbed_ship[i].style.backgroundColor = "blue";
+            } else if (grabbed_ship[i].style.backgroundColor !== "blue") {
+                grabbed_ship[i].style.backgroundColor = colorDefault;
+            }
+        }
+        for (let i = 0; i < newShip.length; i++) {
+            if (newShip[i].style.backgroundColor === "blue") {
+                newShip[i].style.backgroundColor = "rgb(0, 181, 255)";
+            } else {
+                newShip[i].style.backgroundColor = "blue";
+            }
+        }
+        newShip = [];
+        celdasRojas = [];
+        setTimeout(placingShip, 0, Array.from(newShip), 0);*/
+    if ((this.style.backgroundColor === "blue" && !dragging && !colocandoCeldas && !seleccionando) || scrolling && !dragging && !colocandoCeldas && !seleccionando) {
+        if (scrolling && this.style.backgroundColor !== "blue") {
+            grabbed_ship = newShip;
+        } else {
+            grabbed_td = this;
+            grabbed_ship = getGrabbedShip(grabbed_td, false);
+        }
+        scrolling = true;
+        // preferia scrollShip como nombre
+        //let newShip = [];
+        //toggleSelectShip(grabbed_ship);
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            grabbed_ship[i].style.backgroundColor = colorDefault;
+        }
+        toggleBorder2(grabbed_ship, true);
+        
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            afectededShip = getGrabbedShip(grabbed_ship[i], true);
+            for (let l = 0; l < afectededShip.length; l++) {
+                if (afectededShip[l] !== grabbed_ship) {
+                    for (let j = 0; j < afectededShip[l].length; j++) {
+                        afectededShip[l][j].style.backgroundColor = "blue";
+                    }
+                    //console.log(afectededShip[l])
+                    toggleBorder2(afectededShip[l], false);
+                }
+            }
+        }
+
+        if (event.deltaY > 0) {
+            if (event.shiftKey) { // QUIZA CON MAYUS??? // TAMBIEN CON LAS FLECHAS Y WASD SERIA GOD // y lateral si presionas las dos
+                newShip = moveShip(grabbed_ship, [0, 1]);
+            } else {
+                newShip = moveShip(grabbed_ship, [1, 0]);
+            }
+        } else {
+            if (event.shiftKey) {
+                newShip = moveShip(grabbed_ship, [0, -1]);
+            } else {
+                newShip = moveShip(grabbed_ship, [-1, 0]);
+            }
+        }
+        toggleBorder2(newShip, false);
+        barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
+        
+        for (let i = 0; i < grabbed_ship.length; i++) {
+            if (grabbed_ship[i].style.backgroundColor === "rgb(0, 181, 255)") {
+                toggleBorder2(getGrabbedShip(grabbed_ship[i], false), false);
+                grabbed_ship[i].style.backgroundColor = "blue";
+            } else if (grabbed_ship[i].style.backgroundColor !== "blue") {
+                grabbed_ship[i].style.backgroundColor = colorDefault;
+            }
+        }
+        
+        for (let i = 0; i < newShip.length; i++) {
+            if (newShip[i].style.backgroundColor === "blue") {
+                newShip[i].style.backgroundColor = "rgb(0, 181, 255)";
+            } else {
+                newShip[i].style.backgroundColor = "blue";
+            }
+        }
+        //newShip = [];
+        //celdasRojas = [];
+        setTimeout(placingShip, 0, Array.from(newShip), 0);
+    }
+}*/
+
 function cambiarColor() {
+    scrolling = false;
     if (dragging) {
         dragging = false;
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
@@ -358,7 +484,8 @@ function get_td_from(td, [row, column]) { // ESTO ESTA MAL SI ES MAS DE 10 MIRAR
 }
 
 function seleccionandoCeldas() {
-    if ((this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) && event.button === 0) {
+    scrolling = false;
+    if ((this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) && event.button === 0 && !colocandoCeldas) {
         if (event.shiftKey) {
             clicked_ship = getGrabbedShip(this, false);
             toggleBorder2(clicked_ship, true);
@@ -380,7 +507,7 @@ function seleccionandoCeldas() {
         } else {//addClassSiblings(this, "grabbing");
             dragging = true;
             /* */
-            this.style.backgroundColor = "blue";
+            this.style.backgroundColor = "blue"; // ???
             grabbed_td = this;
             grabbed_ship = getGrabbedShip(grabbed_td, false);
             //barcos.splice(barcos.indexOf(grabbed_ship), 1);
@@ -1018,4 +1145,22 @@ for (let i = 0; i < unBarco.length; i++) {
     unBarco[i].style.backgroundColor = "blue";
 }
 barcos.push(unBarco);
+*/
+
+/*
+como en TOS2 el casual mode tiene varios modos y se escogen varios modos random de esa pool de modos y los jugadores votan al modo que quieran
+podemos tener el modo wildcard que sera un modo con confs aleatorias
+
+y mientras buscas partida custom con X conf PODRAS mirar los detalles
+y buscar con X opciones on u off
+*/
+
+/*
+conf toggle de que puedes moldear los barcos raros
+eemplo la cruz
+version 4.7.1 also asi u know
+*/
+
+/*
+otra opcion es hacer que los barcos atraviesen paredes en la coloqacion para que no sean rectos esto funciona bien con barcos raros
 */
