@@ -134,8 +134,8 @@ function cambiarColor() {
         //barcos.splice(barcos.indexOf(grabbed_ship), 1);
         //barcos.push(grabbed_ship);
         //barcos.splice(barcos.indexOf(grabbed_ship), 1, newShip);
-        newShip = Array.from(grabbed_ship);
-        
+        //newShip = Array.from(grabbed_ship); // esto estaba activado antes en la 4.6.3
+        newShip = []; // puse esta despues porque si movias un barco y colocabas una pieca newShip seguia teniendo el valor de barco draggeado
         /*
         let makeLightBlue = [];
         for (let i = 0; i < grabbed_ship.length; i++) {
@@ -219,8 +219,24 @@ function toggleBorder(ship, putBorders) { // on y off variable "switch"
 }
 
 function toggleBorderOutside(ship, colorBorder) {
-    let style = "1px inset " + colorBorder;
+    let style = "1px dashed " + colorBorder;
     for (let i = 0; i < ship.length; i++) {
+        if (get_td_from(ship[i], [-1, 0]) !== ship[i] && !ship.includes(get_td_from(ship[i], [-1, 0]))) {
+            //console.log("arriba");
+            ship[i].style.borderTop = style;
+        }
+        if (get_td_from(ship[i], [0, -1]) !== ship[i] && !ship.includes(get_td_from(ship[i], [0, -1]))) {
+            //console.log("izquierda");
+            ship[i].style.borderLeft = style;
+        }
+        if (get_td_from(ship[i], [0, 1]) !== ship[i] && !ship.includes(get_td_from(ship[i], [0, 1]))) {
+            //console.log("derecha");
+            ship[i].style.borderRight = style;
+        }
+        if (get_td_from(ship[i], [1, 0]) !== ship[i] && !ship.includes(get_td_from(ship[i], [1, 0]))) {
+            //console.log("abajo");
+            ship[i].style.borderBottom = style;
+        }
         /*
         if (get_td_from(ship[i], [-1, 0]) === ship[i]) {
             console.log("Hola");
@@ -254,14 +270,20 @@ function placingShip(ship, delay) { // darle variable ship y isReversed para que
             //console.log("HOLA");
             ship[0].style.backgroundColor = colorSelected; // blue en vez de colorSelected
             let intersectingShips = getGrabbedShip(ship[0], true);
+            /*
+            console.log(intersectingShips);
+            console.log(grabbed_ship);
+            console.log(intersectingShips.indexOf(grabbed_ship));
+            console.log(intersectingShips[intersectingShips.indexOf(grabbed_ship)]);
+            */
+            intersectingShips.splice(intersectingShips.indexOf(grabbed_ship), 1);
             //console.log(intersectingShips);
-            //console.log(grabbed_ship);
             for (let i = 0; i < intersectingShips.length; i++) {
                 if (intersectingShips[i] !== grabbed_ship) { // este if debe impedir al mas grande SOLO
                     //console.log(intersectingShips[i]);
-                    //toggleBorderOutside(intersectingShips[i], "red");
-                    toggleBorder2(intersectingShips[i], true);
-                    toggleBorder2(intersectingShips[i], false);
+                    toggleBorderOutside(intersectingShips[i], "red");
+                    //toggleBorder2(intersectingShips[i], true);
+                    //toggleBorder2(intersectingShips[i], false);
                 }
             }
         } else if (ship[0].style.backgroundColor !== "red") {
@@ -332,10 +354,21 @@ function seleccionandoCeldas() {
     if ((this.style.backgroundColor === "blue" || this.style.backgroundColor === colorSelected) && event.button === 0) {
         if (event.shiftKey) {
             clicked_ship = getGrabbedShip(this, false);
-            toggleBorder(clicked_ship, true);
-            toggleSelectShip(clicked_ship);
-            toggleSelectShip(clicked_ship);
-            barcosPorColocar.push(clicked_ship.length);
+            toggleBorder2(clicked_ship, true);
+            //toggleSelectShip(clicked_ship);
+            for (let i = 0; i < clicked_ship.length; i++) {
+                if (getGrabbedShip(clicked_ship[i], true).length < 2) {
+                    clicked_ship[i].style.backgroundColor = colorDefault;
+                } else {
+                    clicked_ship[i].style.backgroundColor = "blue";
+                }
+            } // NO ME CONVENCE PORQUE LOS BORDER NO ESTAN AL ELIMINAR OSEA QUE HAY QUE HACER UNA FUNCION QUE CONTROLE ESTO
+            //console.log(getWxH(clicked_ship));
+            if (getWxH(clicked_ship)[0] === 1 || getWxH(clicked_ship)[1] === 1) {
+                barcosPorColocar.push(getWxH(clicked_ship));
+            } else {
+                barcosPorColocar.push(clicked_ship.length);
+            }
             barcos.splice(barcos.indexOf(clicked_ship), 1);
         } else {//addClassSiblings(this, "grabbing");
             dragging = true;
@@ -385,7 +418,7 @@ function celdaSeleccionada() {
                     for (let j = 0; j < afectededShip[l].length; j++) {
                         afectededShip[l][j].style.backgroundColor = "blue";
                     }
-                    console.log(afectededShip[l])
+                    //console.log(afectededShip[l])
                     toggleBorder2(afectededShip[l], false);
                 }
             }
@@ -634,6 +667,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderTop = "none";
             }
+        } else {
+            ship[i].style.borderTop = "1px inset grey";
         }
         if (get_td_from(ship[i], [0, -1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, -1]))) {
             //console.log("izquierda " + i);
@@ -642,6 +677,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderLeft = "none";
             }
+        } else {
+            ship[i].style.borderLeft = "1px inset grey";
         }
         if (get_td_from(ship[i], [0, 1]) !== ship[i] && ship.includes(get_td_from(ship[i], [0, 1]))) {
             //console.log("derecha " + i);
@@ -650,6 +687,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderRight = "none";
             }
+        } else {
+            ship[i].style.borderRight = "1px inset grey";
         }
         if (get_td_from(ship[i], [1, 0]) !== ship[i] && ship.includes(get_td_from(ship[i], [1, 0]))) {
             //console.log("abajo " + i);
@@ -658,6 +697,8 @@ function toggleBorder2(ship, putBorders) { // toggleBorder2(selectCellsBetween([
             } else {
                 ship[i].style.borderBottom = "none";
             }
+        } else {
+            ship[i].style.borderBottom = "1px inset grey";
         }
     }
 }
@@ -917,4 +958,15 @@ dejando huecos en el grid
 cuando hacedomos get_td_from en el moveShip
 lo ponemos en if () {} y si tiene un valor entrara
 y si no la funcion devolvera false que hara que no entre
+*/
+
+/*
+funcion que te diga el ship que esta mas expuesto osea si hay dos barcos juntos que te diga el barco que es mas grande
+ejemplo un barco 3x3 contra uno 3x1 metido dentro
+el 3x3 claramente gana
+*/
+
+/*
+digamos q el 3x3 sobrepasa un 2x1 pero la otra partde del 2x1 esta fuera del 3x3
+el borde del 3x3 en esta parte deberia de ser 1px dashed grey
 */
