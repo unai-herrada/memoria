@@ -115,7 +115,7 @@ function createTable(rows, columns) { // x horizontal y vertical
             td.addEventListener("mouseup", cambiarColor);
             td.addEventListener("mousedown", seleccionandoCeldas);
             td.addEventListener("mouseover", celdaSeleccionada);
-            td.addEventListener("wheel", scrollWheel);
+            //td.addEventListener("wheel", scrollWheel);
             //let txt = document.createTextNode("");
             //td.appendChild(txt);
             tr.appendChild(td);
