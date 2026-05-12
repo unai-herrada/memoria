@@ -641,6 +641,7 @@ function calculateLine(last_td) {
     //newShip.push(clicked_td);
     /*newShip = *///drawLine(getCoords(clicked_td), getCoords(last_td), isShipVertical(fixShip([clicked_td, last_td])));
     selectCellsBetween(getCoords(clicked_td), getCoords(last_td));
+    /*
     for (let i = 0; i < newShip.length; i++) {
         if (newShip[i].style.backgroundColor != colorSelected) {
             newShip[i].style.backgroundColor = "cyan";
@@ -649,6 +650,7 @@ function calculateLine(last_td) {
     for (let i = 0; i < celdasRojas.length; i++) {
         celdasRojas[i].style.backgroundColor = "red";
     }
+    */
 }
 
 function getCoords(td) {
@@ -672,9 +674,9 @@ function selectCellsBetween(td_coords_1, td_coords_2) {
         for (let i = 0; i < bar.length; i++) {
             bar[i].style.backgroundColor = "blue";
         }
-    } else {
+    }/* else {
         console.log("no esta");
-    }
+    }*/
     /*
     para el toggle border tenia planeado get_td_from (td, (-1 0; 0 -1; 1 0; 0 1)) && get td from != this td
     if that thing up there includes this ship then border fuera
